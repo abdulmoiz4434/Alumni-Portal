@@ -1,0 +1,583 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Main container */
+.auth-main {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: url("/Cover-Alumni.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Auth container */
+.auth-container {
+  position: relative;
+  width: 100%;
+  max-width: 56rem;
+  height: 30.25rem;
+  background: rgba(87, 87, 65, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  transition: transform 0.7s ease-in-out;
+}
+
+/* Slide up animation for login container */
+.auth-container.slide-up {
+  transform: translateY(-150%);
+}
+
+/* Auth panels */
+.auth-panel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 2rem 2rem 2rem;
+  transition: transform 0.7s ease-in-out;
+  width: 43%;
+}
+
+/* Sign In Panel */
+.student-sign-in-panel {
+  left: 0;
+}
+
+.student-sign-in-panel.active {
+  transform: translateX(0);
+}
+
+.student-sign-in-panel.hidden-left {
+  transform: translateX(-100%);
+}
+
+/* Sign Up Panel */
+.Alumni-sign-in-panel {
+  left: 50%;
+}
+
+.Alumni-sign-in-panel.active {
+  transform: translateX(0);
+}
+
+.Alumni-sign-in-panel.hidden-right {
+  transform: translateX(100%);
+}
+
+.middle-panel {
+  display: flex;
+  z-index: 5;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Logo Image Control */
+.middle-panel-logo {
+  max-width: 100%;
+  max-height: 75%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  margin-bottom: 8rem;
+}
+
+.middle-panel.middle-right {
+  left: 50%;
+  transform: translateX(0);
+}
+
+.middle-panel.middle-left {
+  left: 50%;
+  transform: translateX(-100%);
+}
+
+/* Panel content */
+.login-form-panel-title {
+  color: white;
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 3rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+/* Auth input */
+.auth-input {
+  padding: 3rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  color: white;
+  background: transparent;
+}
+
+.auth-input::placeholder {
+  color: rgb(238, 228, 228);
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.auth-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #9ca3af;
+}
+
+/* Remember Me & Forgot Password Container */
+.remember-forgot-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+.remember-me-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: white;
+  font-size: 0.875rem;
+  user-select: none;
+}
+
+.remember-me-checkbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: #e6bb2f;
+}
+
+.remember-me-label span {
+  font-weight: 500;
+}
+
+.remember-me-label:hover span {
+  color: #c5cacd;
+}
+
+/* Forgot Password Link */
+.forgot-password-link {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+  color: #c5cacd;
+  text-decoration: underline;
+}
+
+/* Auth buttons */
+.auth-button {
+  width: 100%;
+  font-size: 16px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  background: #e6bb2f;
+  color: black;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.student-sign-in-button {
+  margin-top: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.Alumni-sign-in-button {
+  margin-top: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.auth-button:hover {
+  background: #ae9139;
+}
+
+.toggle-button {
+  position: absolute;
+  bottom: 122px;
+  right: 142px;
+  background: #e6bb2f;
+  border-radius: 0.75rem;
+  color: #1a1a1a;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.75rem;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 10;
+  border: none;
+}
+
+.toggle-button:hover {
+  background: #ae9139;
+}
+
+.register-link {
+  color: white;
+  align-self: flex-end;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1.1rem;
+  position: absolute;
+  bottom: 5.5rem;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+/* ============================
+   REGISTRATION CONTAINER
+============================ */
+.registration-container {
+  position: absolute;
+  width: 100%;
+  max-width: 55rem;
+  min-height: 40rem; /* Increased height */
+  background: rgba(87, 87, 65, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  text-align: center;
+
+  transform: translateY(150%);
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    transform 0.7s ease-in-out,
+    opacity 0.7s ease-in-out;
+  z-index: 1;
+}
+
+.registration-container.slide-up-active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+  z-index: 10;
+}
+
+/* ============================
+   MONOGRAM PLACEHOLDER
+============================ */
+.registration-monogram {
+  margin: 0;
+}
+
+.registration-monogram img {
+  width: 490px; /* Adjust size as needed */
+  height: 150px;
+}
+
+/* ============================
+   FORM CONTAINER
+============================ */
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.registration-form-panel-title {
+  color: white;
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-top: 1rem; /* remove default h2 margin */
+  margin-bottom: 2rem; /* optional spacing after title */
+  text-align: center;
+}
+/* ============================
+   FORM ROWS (3 INPUTS PER ROW)
+============================ */
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .auth-input {
+  flex: 1;
+}
+
+/* Special case for last row with single input */
+.form-row.single-input {
+  justify-content: flex-start;
+  width: 50%;
+}
+
+/* Force full-width when needed */
+.form-row.full {
+  flex-direction: column;
+}
+
+/* ============================
+   INPUT FIELD POLISH
+============================ */
+.auth-input {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  outline: none;
+}
+
+.registration-button {
+  width: 100%;
+  padding: 0.9rem;
+  background: #e6bb2f;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 0.6rem;
+  margin-top: 1rem;
+}
+
+.registration-button:hover {
+  background: #ae9139;
+}
+
+.back-to-login-link {
+  color: white;
+  align-self: flex-end;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1.1rem;
+  position: absolute;
+  bottom: 1rem;
+}
+
+.back-to-login-link:hover {
+  text-decoration: underline;
+}
+@media (min-width: 426px) {
+  /* Change background image on mobile */
+  .mobile-auth-toggle {
+    display: none;
+  }
+}
+/* =========================================
+   MOBILE RESPONSIVE AUTH (TABLET + PHONE)
+========================================= */
+@media (max-width: 426px) {
+  /* Change background image on mobile */
+  .auth-main {
+    background: url("/Block-3.png");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .auth-container {
+    max-width: 225px;
+    height: auto;
+    padding: 1rem;
+    flex-direction: column;
+    background: rgba(87, 87, 65, 0.25);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  /* Disable sliding animations on mobile */
+  .auth-panel {
+    position: relative ; /* remove absolute positioning */
+    width: 100% ; /* take full container width */
+    left: 0 ; /* reset left offsets */
+    transform: none ;
+    padding: 1rem; /* adjust padding */
+  }
+
+  .student-sign-in-panel,
+  .Alumni-sign-in-panel {
+    display: none;
+  }
+
+  .student-sign-in-panel.active,
+  .Alumni-sign-in-panel.active {
+    display: flex;
+    padding: 0;
+  }
+
+  .login-form-panel-title {
+    font-size: 1.4rem;
+    margin: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  /* Show only active panel */
+
+  .middle-panel {
+    display: none;
+  }
+
+  .mobile-auth-toggle {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .mobile-auth-toggle button {
+    flex: 1;
+    padding: 0.6rem 0;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .mobile-auth-toggle button.active {
+    background: #e6bb2f;
+    color: #1a1a1a;
+  }
+
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+  }
+  /* Inputs tighter for mobile */
+  .auth-input {
+    padding: 12px;
+    font-size: 16px; /* important: prevents iOS zoom */
+    border-radius: 8px;
+  }
+
+  /* Placeholder text */
+  .auth-input::placeholder {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(238, 228, 228, 0.85);
+  }
+  .remember-forgot-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.25rem;
+    width: 100%;
+  }
+
+  .remember-me-label {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    cursor: pointer;
+    color: white;
+    font-size: 10px;
+    user-select: none;
+  }
+
+  .remember-me-checkbox {
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    accent-color: #e6bb2f;
+  }
+
+  .remember-me-label span {
+    font-weight: 500;
+  }
+
+  .remember-me-label:hover span {
+    color: #c5cacd;
+  }
+
+  /* Forgot Password Link */
+  .forgot-password-link {
+    color: white;
+    font-size: 10px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .forgot-password-link:hover {
+    color: #c5cacd;
+    text-decoration: underline;
+  }
+  .register-link {
+    color: white;
+    align-self: flex-end;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 10px;
+    position: absolute;
+    bottom: 5.5rem;
+  }
+  .auth-button-container {
+    display: flex;
+    justify-content: center;
+  }
+  .auth-button {
+    width: 100%;
+    font-size: 14px;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background: #e6bb2f;
+    color: black;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  /* Registration panels mobile */
+  .registration-container {
+    width: 300px;
+    min-height: auto;
+    padding-bottom: 4rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .registration-monogram img {
+    width: 220px;
+    height: auto;
+  }
+
+  .back-to-login-link {
+    position: static;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .register-link {
+    position: static;
+    margin-top: 4px;
+    text-align: center;
+  }
+}
