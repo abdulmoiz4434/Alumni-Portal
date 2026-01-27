@@ -284,6 +284,7 @@ body {
 
 .registration-container.slide-up-active {
   transform: translateY(0);
+  position: relative;
   opacity: 1;
   pointer-events: all;
   z-index: 10;
@@ -588,6 +589,14 @@ body {
   margin-top: 0.5rem; /* remove default h2 margin */
   margin-bottom: 1rem; /* optional spacing after title */
   text-align: center;
+}
+.registration-container.slide-up-active {
+  transform: translateY(0);
+  position: relative;
+  opacity: 1;
+  pointer-events: all;
+  z-index: 10;
+  margin-bottom: 10rem;
 }
   .form-row {
     flex-direction: column;
