@@ -1,0 +1,65 @@
+/* Topbar container */
+.topbar {
+  position: relative;
+  height: 40px;
+  display: flex;
+  justify-content: space-between; /* space between left & right */
+  align-items: center;
+  padding: 14px;
+  margin: 0;
+  background: #191a1b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Left side: logo + portal title */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* space between logo and title */
+}
+
+/* Logo image */
+.topbar-logo-img {
+  height: 56px;    /* adjusted from old 70px */
+  width: 56px;     
+  object-fit: contain;
+  border-radius: 4px; /* optional */
+}
+
+/* Portal title next to logo */
+.topbar-logo {
+  font-size: 22px;
+  font-weight: 600;
+  color: #dbdee5;
+  margin: 0;
+}
+
+/* Right side: notifications, social icons, logout */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.topbar-social {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topbar-social img {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.topbar-social img:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}

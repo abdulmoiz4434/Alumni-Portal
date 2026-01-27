@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./AuthPage.css";
 
 export default function AuthPage() {
+  const navigate = useNavigate();
+
   const [isStudent, setIsStudent] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
   const [registrationType, setRegistrationType] = useState("");
@@ -29,7 +32,6 @@ export default function AuthPage() {
   // Alumni Registration
   const [alumniRegFullName, setAlumniRegFullName] = useState("");
   const [alumniRegNo, setAlumniRegNo] = useState("");
-
   const [alumniRegContactNo, setAlumniRegContactNo] = useState("");
   const [alumniRegDepartment, setAlumniRegDepartment] = useState("");
   const [alumniRegGradYear, setAlumniRegGradYear] = useState("");
@@ -50,13 +52,15 @@ export default function AuthPage() {
   const handleStudentLogin = (e) => {
     e.preventDefault();
     if (!studentEmail || !studentPassword) return alert("Missing fields");
-    alert(`Student login: ${studentEmail}`);
+
+    navigate("/dashboard");
   };
 
   const handleAlumniLogin = (e) => {
     e.preventDefault();
     if (!alumniEmail || !alumniPassword) return alert("Missing fields");
-    alert(`Alumni login: ${alumniEmail}`);
+
+    navigate("/dashboard");
   };
 
   const handleStudentRegistration = (e) => {
@@ -64,8 +68,8 @@ export default function AuthPage() {
     if (studentRegPassword !== studentRegConfirmPassword) {
       return alert("Passwords do not match");
     }
-    alert("Student Registered");
-    setShowRegistration(false);
+
+    navigate("/dashboard");
   };
 
   const handleAlumniRegistration = (e) => {
@@ -73,31 +77,30 @@ export default function AuthPage() {
     if (alumniRegPassword !== alumniRegConfirmPassword) {
       return alert("Passwords do not match");
     }
-    alert("Alumni Registered");
-    setShowRegistration(false);
+
+    navigate("/dashboard");
   };
 
   return (
     <main className="auth-main">
       {/* LOGIN CONTAINER */}
-      
       <div className={`auth-container ${showRegistration ? "slide-up" : ""}`}>
         {/* MOBILE TOGGLE BAR */}
-<div className="mobile-auth-toggle">
-  <button
-    className={isStudent ? "active" : ""}
-    onClick={() => setIsStudent(true)}
-  >
-    Student Login
-  </button>
+        <div className="mobile-auth-toggle">
+          <button
+            className={isStudent ? "active" : ""}
+            onClick={() => setIsStudent(true)}
+          >
+            Student Login
+          </button>
 
-  <button
-    className={!isStudent ? "active" : ""}
-    onClick={() => setIsStudent(false)}
-  >
-    Alumni Login
-  </button>
-</div>
+          <button
+            className={!isStudent ? "active" : ""}
+            onClick={() => setIsStudent(false)}
+          >
+            Alumni Login
+          </button>
+        </div>
 
         {/* STUDENT LOGIN */}
         <div
@@ -105,7 +108,6 @@ export default function AuthPage() {
             isStudent ? "active" : "hidden-left"
           }`}
         >
-          
           <h2 className="login-form-panel-title">Student Login</h2>
 
           <form className="auth-form" onSubmit={handleStudentLogin}>
@@ -142,14 +144,15 @@ export default function AuthPage() {
                 Forgot Password?
               </a>
             </div>
-<div className="auth-button-container">            
-  <button
-              type="submit"
-              className="auth-button student-sign-in-button"
-            >
-              Sign In
-            </button></div>
 
+            <div className="auth-button-container">
+              <button
+                type="submit"
+                className="auth-button student-sign-in-button"
+              >
+                Sign In
+              </button>
+            </div>
 
             <p className="register-link" onClick={openStudentRegistration}>
               Register as Student
@@ -243,7 +246,6 @@ export default function AuthPage() {
           className="registration-panel"
           onSubmit={handleStudentRegistration}
         >
-          {/* Monogram */}
           <div className="registration-monogram">
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
@@ -253,7 +255,6 @@ export default function AuthPage() {
           </h2>
 
           <div className="registration-form">
-            {/* Row 1: Full Name, Registration No, Department */}
             <div className="form-row">
               <input
                 className="auth-input"
@@ -272,7 +273,6 @@ export default function AuthPage() {
               />
             </div>
 
-            {/* Row 2: Semester, Email, Contact No */}
             <div className="form-row">
               <input
                 className="auth-input"
@@ -291,7 +291,6 @@ export default function AuthPage() {
               />
             </div>
 
-            {/* Row 3: Password, Confirm Password */}
             <div className="form-row">
               <input
                 className="auth-input"
@@ -310,6 +309,7 @@ export default function AuthPage() {
                 onChange={(e) => setStudentRegContactNo(e.target.value)}
               />
             </div>
+
             <div className="form-row">
               <input
                 className="auth-input"
@@ -355,15 +355,15 @@ export default function AuthPage() {
           className="registration-panel"
           onSubmit={handleAlumniRegistration}
         >
-          {/* Monogram */}
           <div className="registration-monogram">
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
 
-          <h2 className="registration-form-panel-title">Alumni Registration</h2>
+          <h2 className="registration-form-panel-title">
+            Alumni Registration
+          </h2>
 
           <div className="registration-form">
-            {/* Row 1: Full Name, Department, Graduation Year */}
             <div className="form-row">
               <input
                 className="auth-input"
@@ -373,7 +373,6 @@ export default function AuthPage() {
                 value={alumniRegFullName}
                 onChange={(e) => setAlumniRegFullName(e.target.value)}
               />
-
               <input
                 className="auth-input"
                 type="text"
@@ -383,6 +382,7 @@ export default function AuthPage() {
                 onChange={(e) => setAlumniRegGradYear(e.target.value)}
               />
             </div>
+
             <div className="form-row">
               <input
                 className="auth-input"
@@ -400,6 +400,7 @@ export default function AuthPage() {
                 onChange={(e) => setAlumniRegNo(e.target.value)}
               />
             </div>
+
             <div className="form-row">
               <input
                 className="auth-input"
@@ -419,7 +420,6 @@ export default function AuthPage() {
               />
             </div>
 
-            {/* Row 3: Password, Confirm Password */}
             <div className="form-row">
               <input
                 className="auth-input"

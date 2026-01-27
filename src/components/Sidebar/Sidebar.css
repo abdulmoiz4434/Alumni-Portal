@@ -1,0 +1,45 @@
+.sidebar {
+  width: 240px;
+  background: #191a1b;
+  color: #ffffff;
+  padding: 16px;
+  box-sizing: border-box;
+  flex-shrink: 0; 
+}
+
+
+/* Apply link styles to buttons inside sidebar-nav */
+.sidebar-nav a,
+.sidebar-nav button {
+  color: #d7d7d8;
+  text-decoration: none;
+  padding: 8px 16px;
+  padding-left: 0px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  display: flex;         
+  align-items: center;
+  gap: 12px;            
+  position: relative;
+  background: none;      /* remove default button bg */
+  border: none;          /* remove border */
+  cursor: pointer;       /* pointer on hover */
+  font: inherit;         /* match font of links */
+}
+
+/* Hollow circle for both links and button */
+.sidebar-nav a::before,
+.sidebar-nav button::before {
+  content: "○";
+  font-size: 30px;
+  color: #ffffff;
+}
+
+/* Hover & active styles */
+
+
+.sidebar-nav a:hover::before,
+.sidebar-nav button:hover::before,
+.sidebar-nav a.active::before {
+  color: #ffffff;
+}

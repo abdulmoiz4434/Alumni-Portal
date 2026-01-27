@@ -20,7 +20,7 @@ body {
 
 /* Auth container */
 .auth-container {
-  position: relative;
+  position: absolute;
   width: 100%;
   max-width: 56rem;
   height: 30.25rem;
@@ -83,6 +83,7 @@ body {
   z-index: 5;
   align-items: center;
   justify-content: center;
+  background: rgba(87, 87, 65, 0.5);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
@@ -258,6 +259,7 @@ body {
 ============================ */
 .registration-container {
   position: absolute;
+
   width: 100%;
   max-width: 55rem;
   min-height: 40rem; /* Increased height */
@@ -381,7 +383,7 @@ body {
 .back-to-login-link:hover {
   text-decoration: underline;
 }
-@media (min-width: 426px) {
+@media (min-width: 470px) {
   /* Change background image on mobile */
   .mobile-auth-toggle {
     display: none;
@@ -390,16 +392,18 @@ body {
 /* =========================================
    MOBILE RESPONSIVE AUTH (TABLET + PHONE)
 ========================================= */
-@media (max-width: 435px) {
+@media (min-width: 320px) and (max-width: 768px){
   /* Change background image on mobile */
   .auth-main {
     background: url("/Block-3.png");
     background-size: cover;
     background-position: center;
+    overflow-y: scroll;
   }
 
   .auth-container {
     max-width: 270px;
+    top: 100px;
     height: auto;
     padding: 1rem;
     flex-direction: column;
@@ -537,7 +541,6 @@ body {
     cursor: pointer;
     font-size: 10px;
     position: absolute;
-    bottom: 5.5rem;
   }
   .auth-button-container {
     display: flex;
@@ -557,11 +560,36 @@ body {
   }
   /* Registration panels mobile */
   .registration-container {
-    width: 300px;
-    min-height: auto;
-    padding-bottom: 4rem;
+    top: 100px;
+    max-width: 270px;
+    height: auto;
+    padding: 1rem;
+    flex-direction: column;
+    background: rgb(56, 56, 47,0.25);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
   }
-
+  .registration-panel{
+        position: relative ; /* remove absolute positioning */
+    width: 100% ; /* take full container width */
+    left: 0 ; /* reset left offsets */
+    transform: none ;
+  }
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 450px;
+  margin: 0 auto;
+}
+.registration-form-panel-title{
+    color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 0.5rem; /* remove default h2 margin */
+  margin-bottom: 1rem; /* optional spacing after title */
+  text-align: center;
+}
   .form-row {
     flex-direction: column;
   }
@@ -575,11 +603,19 @@ body {
     position: static;
     margin-top: 1rem;
     text-align: center;
+    font-size: 10px;
   }
 
   .register-link {
     position: static;
     margin-top: 4px;
     text-align: center;
+  }
+}
+@media (min-width: 470px) and (max-width: 768px) {
+  .auth-main {
+    background: url("/CBlock-ISP-SEDC.jpg");
+    background-size: cover;
+    background-position: center;
   }
 }
