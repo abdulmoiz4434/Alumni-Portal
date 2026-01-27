@@ -398,7 +398,6 @@ body {
     background: url("/Block-3.png");
     background-size: cover;
     background-position: center;
-    overflow-y: scroll;
   }
 
   .auth-container {
