@@ -21,7 +21,7 @@ export default function Chat() {
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
-        { text: "This is a dummy reply from the bot.", sender: "bot" },
+        { text: "You are a little gay boy .", sender: "bot" },
       ]);
     }, 1000);
   };
