@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/auth/AuthPage";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import Dashboard from "./pages/dashboard/Dashboard";
-import Profile from "./pages/dashboard/profile/profile";
+import Profile from "./pages/dashboard/profile/Profile";
 import Events from "./pages/dashboard/events/Events";
 import Jobs from "./pages/dashboard/jobs/Jobs";
 import Mentorship from "./pages/dashboard/mentorship/Mentorship";
