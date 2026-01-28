@@ -1,0 +1,75 @@
+.success-container {
+  padding: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.success-container h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #2f3640;
+  text-align: center;
+}
+
+.stories-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.story-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex: 1 1 250px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.story-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.story-card h2 {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  color: #2f3640;
+}
+
+.name {
+  font-weight: bold;
+  color: #555;
+}
+
+.field {
+  font-size: 0.9rem;
+  color: #718093;
+  margin-bottom: 0.5rem;
+}
+
+.story {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .stories-list {
+    flex-direction: column;
+    align-items: center;
+  }
+}

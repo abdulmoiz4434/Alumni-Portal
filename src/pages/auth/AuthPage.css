@@ -384,7 +384,7 @@ body {
 .back-to-login-link:hover {
   text-decoration: underline;
 }
-@media (min-width: 470px) {
+@media (min-width: 460px) {
   /* Change background image on mobile */
   .mobile-auth-toggle {
     display: none;
@@ -395,11 +395,13 @@ body {
 ========================================= */
 @media (min-width: 320px) and (max-width: 768px){
   /* Change background image on mobile */
-  .auth-main {
-    background: url("/Block-3.png");
-    background-size: cover;
-    background-position: center;
-  }
+.auth-main {
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden; /* CRITICAL */
+  position: relative;
+}
+
 
   .auth-container {
     max-width: 270px;
@@ -570,7 +572,7 @@ body {
     -webkit-backdrop-filter: blur(5px);
   }
   .registration-panel{
-        position: relative ; /* remove absolute positioning */
+    position: relative ; /* remove absolute positioning */
     width: 100% ; /* take full container width */
     left: 0 ; /* reset left offsets */
     transform: none ;
@@ -619,11 +621,5 @@ body {
     margin-top: 4px;
     text-align: center;
   }
-}
-@media (min-width: 470px) and (max-width: 768px) {
-  .auth-main {
-    background: url("/CBlock-ISP-SEDC.jpg");
-    background-size: cover;
-    background-position: center;
-  }
+  
 }

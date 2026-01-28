@@ -1,45 +1,72 @@
+/* Sidebar container */
 .sidebar {
-  width: 240px;
+  width: 230px;
   background: #191a1b;
   color: #ffffff;
-  padding: 16px;
+  padding: 20px 16px;
   box-sizing: border-box;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
+/* Navigation wrapper */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-/* Apply link styles to buttons inside sidebar-nav */
+/* Shared styles for links & buttons */
 .sidebar-nav a,
 .sidebar-nav button {
-  color: #d7d7d8;
+  color: #d1d5db;                 /* neutral light gray */
   text-decoration: none;
-  padding: 8px 16px;
-  padding-left: 0px;
+  padding: 10px 14px;
   border-radius: 8px;
-  transition: background 0.2s;
-  display: flex;         
+  display: flex;
   align-items: center;
-  gap: 12px;            
+  gap: 12px;
   position: relative;
-  background: none;      /* remove default button bg */
-  border: none;          /* remove border */
-  cursor: pointer;       /* pointer on hover */
-  font: inherit;         /* match font of links */
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-/* Hollow circle for both links and button */
+/* Hollow circle indicator */
 .sidebar-nav a::before,
 .sidebar-nav button::before {
   content: "○";
-  font-size: 30px;
-  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  color: #b5b9c2;                 /* muted gray */
+  transition: color 0.2s ease;
 }
 
-/* Hover & active styles */
-
+/* Hover state */
+.sidebar-nav a:hover,
+.sidebar-nav button:hover {
+  background-color: #27272a;      /* subtle dark hover */
+  color: #ffffff;
+}
 
 .sidebar-nav a:hover::before,
-.sidebar-nav button:hover::before,
-.sidebar-nav a.active::before {
+.sidebar-nav button:hover::before {
   color: #ffffff;
 }
+
+/* Active state */
+.sidebar-nav a.active {
+  background-color: #323235;      /* darker than hover */
+  color: #ffffff;
+}
+
+.sidebar-nav a.active::before {
+  color: #dbde06;                 /* accent color (green) */
+}
+
+

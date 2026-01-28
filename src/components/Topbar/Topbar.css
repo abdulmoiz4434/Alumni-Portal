@@ -9,6 +9,7 @@
   margin: 0;
   background: #191a1b;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 
 /* Left side: logo + portal title */
@@ -33,17 +34,43 @@
   color: #dbdee5;
   margin: 0;
 }
+/* Sliding welcome text */
+.topbar-welcome {
+  position: absolute;
+  left: 470px;                /* distance from Alumni Portal heading */
+  white-space: nowrap;
+  color: #d0cfcb;             /* yellow */
+  font-size: 20px;            /* perfect for 40px height */
+  font-weight: 500;
+  letter-spacing: 0.3px;
+
+  animation: slideInWelcome 2.5s ease-out forwards;
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* Slide from right to fixed position */
+@keyframes slideInWelcome {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
 /* Right side: notifications, social icons, logout */
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 16px;
 }
 .topbar-social {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 24px;
+  padding-right: 30px;
 }
 
 .topbar-social a {
@@ -53,8 +80,8 @@
 }
 
 .topbar-social img {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   cursor: pointer;
   transition: transform 0.2s, opacity 0.2s;
 }
