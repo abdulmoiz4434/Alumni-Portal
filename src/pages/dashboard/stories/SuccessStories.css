@@ -1,75 +1,302 @@
-.success-container {
-  padding: 2rem;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+/* ========================================
+   SUCCESS STORIES - SIMPLE VERSION
+   ======================================== */
+
+.success-stories {
+  background: #f9fafb;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.success-container h1 {
-  margin-bottom: 2rem;
-  font-size: 2rem;
-  color: #2f3640;
+/* HERO */
+.success-stories-hero {
+  background: #1a1a1a;
+  padding: 30px;
   text-align: center;
+  border-radius: 15px;
+  color: #fff;
 }
 
-.stories-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
+.success-stories-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #d4aa28;
+    animation: fadeInUp 0.6s ease-out;
+
 }
 
+.success-stories-subtitle {
+  font-size: 1.15rem;
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* CONTAINER & GRID */
+.success-stories-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 34px 24px;
+}
+
+.success-stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+/* STORY CARD */
 .story-card {
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  flex: 1 1 250px;
-  max-width: 300px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  gap: 16px;
+  transition: all 0.2s ease;
 }
 
 .story-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+    border-color: #e6bb2f;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.story-card img {
-  width: 80px;
-  height: 80px;
+/* CARD HEADER */
+.story-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.story-avatar-wrapper {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
+  overflow: hidden;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-avatar {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  margin-bottom: 1rem;
 }
 
-.story-card h2 {
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
-  color: #2f3640;
+.story-card-info {
+  min-width: 0;
 }
 
-.name {
-  font-weight: bold;
-  color: #555;
+.story-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 2px;
 }
 
-.field {
+.story-meta {
+  font-size: 0.8rem;
+  color: #000000;
+  font-weight: 500;
+  
+}
+
+/* CARD BODY */
+.story-card-body {
+  flex: 1;
+}
+
+.story-text {
   font-size: 0.9rem;
-  color: #718093;
-  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  color: #374151;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.story {
-  font-size: 0.95rem;
-  color: #555;
+/* CARD FOOTER */
+.story-card-footer {
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
 }
 
+.story-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* ADD STORY BUTTON */
+.add-story-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.add-story-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: #e6bb2f;
+  color: #1a1a1a;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-story-button:hover {
+  background: #d4aa28;
+  transform: translateY(-2px);
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-close {
+  background: #f3f3f3;
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  background: #e5e5e5;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.form-input,
+.form-textarea {
+  width: 95%;
+  padding: 10px 12px;
+  border: 1px solid #1a1a1a;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: #ffffff;
+  transition: all 0.4s ease;
+  outline: none;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #e6bb2f;
+  background: #fffef8;
+  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.15);
+}
+.modal-footer{
+    display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+/* MODAL BUTTONS */
+.modal-button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-button-cancel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  color: #111827;
+}
+.modal-button-cancel:hover {
+  background: #1b1a1a;
+  color: #d6d8dc;
+  transition: 0.4s ease;
+}
+
+.modal-button-submit {
+  background: #e6bb2f;
+  color: #1a1a1a;
+}
+
+.modal-button-submit:hover {
+  background: #d4aa28;
+    transition: 0.4s ease;
+
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .stories-list {
-    flex-direction: column;
-    align-items: center;
+  .success-stories-title {
+    font-size: 2rem;
+  }
+
+  .success-stories-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
