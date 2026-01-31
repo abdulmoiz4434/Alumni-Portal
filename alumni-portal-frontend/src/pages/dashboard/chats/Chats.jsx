@@ -21,7 +21,7 @@ export default function Chat() {
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
-        { text: "Kya bey lodu mza ata hai bar bar little gay boy dekhny mey ? .", sender: "bot" },
+        { text: "Kya bey lodu mza atayvy hai bar bar little gay boy dekhny mey ? .", sender: "bot" },
       ]);
     }, 1000);
   };
