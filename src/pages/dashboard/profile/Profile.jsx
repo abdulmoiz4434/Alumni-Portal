@@ -10,7 +10,7 @@ export default function Profile() {
     batch: "2022",
     department: "Computer Science",
     about:
-      "Passionate jews and women hater.",
+      "Passionate jews hater.",
     company: "ABC Technologies",
     jobTitle: "Frontend Developer",
     skills: "React, JavaScript, CSS, UI/UX",

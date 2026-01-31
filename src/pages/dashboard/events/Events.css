@@ -1,61 +1,6 @@
-.events-container {
-  padding: 2rem;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-}
+
 
 .events-container h1 {
   margin-bottom: 2rem;
   font-size: 2rem;
-}
-
-.events-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-
-.event-card {
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  flex: 1 1 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.event-card h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #2f3640;
-}
-
-.event-date,
-.event-location {
-  margin: 0.3rem 0;
-  color: #718093;
-  font-size: 0.95rem;
-}
-
-.event-description {
-  margin: 0.8rem 0 1rem 0;
-  color: #555;
-  font-size: 1rem;
-}
-
-.register-btn {
-  align-self: flex-start;
-  background-color: #4cd137;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.register-btn:hover {
-  background-color: #44bd32;
 }
