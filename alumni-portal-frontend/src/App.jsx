@@ -7,7 +7,7 @@ import Events from "./pages/dashboard/events/Events";
 import Jobs from "./pages/dashboard/jobs/Jobs";
 import Mentorship from "./pages/dashboard/mentorship/Mentorship";
 import SuccessStories from "./pages/dashboard/stories/SuccessStories";
-import Chat from "./pages/dashboard/chats/Chats";
+import Chat from "./pages/dashboard/networking/Networking";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
           <Route path="jobs" element={<Jobs />} />
           <Route path="mentorship" element={<Mentorship />} />
           <Route path="stories" element={<SuccessStories />} />
-          <Route path="chats" element={<Chat />} />
+          <Route path="networking" element={<Chat />} />
 
 
         </Route>

@@ -1,11 +1,10 @@
-import "./Events.css";
 
 export default function Events() {
  
 
   return (
-    <div className="events-container">
-      <h1>Upcoming Events</h1>
-    </div>
+<div className="bg-blue-500 text-white p-14 rounded">
+  Tailwind is working!
+</div>
   );
 }

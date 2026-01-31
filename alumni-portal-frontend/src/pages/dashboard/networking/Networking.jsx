@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import "./Chats.css";
+import "./Networking.css";
 export default function Chat() {
   const [messages, setMessages] = useState([
     { text: "Hello! How can I help you today?", sender: "bot" },
