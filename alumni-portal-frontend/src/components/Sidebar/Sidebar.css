@@ -6,6 +6,8 @@
   padding: 20px 16px;
   box-sizing: border-box;
   flex-shrink: 0;
+  height: 100%;        
+  overflow: hidden;    
 }
 
 /* Navigation wrapper */

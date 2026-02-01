@@ -20,7 +20,7 @@ export default function AuthPage() {
 
   // Student Registration
   const [studentRegFullName, setStudentRegFullName] = useState("");
-  const [studentRegContactNo, setStudentRegContactNo] = useState("");
+  const [studentRegBatchNo, setStudentRegBatchNo] = useState("");
   const [studentRegNo, setStudentRegNo] = useState("");
   const [studentRegDepartment, setStudentRegDepartment] = useState("");
   const [studentRegSemester, setStudentRegSemester] = useState("");
@@ -276,12 +276,13 @@ export default function AuthPage() {
             <div className="form-row">
               <input
                 className="auth-input"
-                type="number"
+                placeholder="Email"
+                type="email"
                 required
-                placeholder="Semester"
-                value={studentRegSemester}
-                onChange={(e) => setStudentRegSemester(e.target.value)}
+                value={studentRegEmail}
+                onChange={(e) => setStudentRegEmail(e.target.value)}
               />
+
               <input
                 className="auth-input"
                 placeholder="Department"
@@ -294,19 +295,20 @@ export default function AuthPage() {
             <div className="form-row">
               <input
                 className="auth-input"
-                placeholder="Email"
-                type="email"
+                type="password"
                 required
-                value={studentRegEmail}
-                onChange={(e) => setStudentRegEmail(e.target.value)}
+                placeholder="Password"
+                value={studentRegPassword}
+                onChange={(e) => setStudentRegPassword(e.target.value)}
               />
+
               <input
                 className="auth-input"
                 type="tel"
                 required
-                placeholder="Contact Number"
-                value={studentRegContactNo}
-                onChange={(e) => setStudentRegContactNo(e.target.value)}
+                placeholder="Batch No"
+                value={studentRegBatchNo}
+                onChange={(e) => setStudentRegBatchNo(e.target.value)}
               />
             </div>
 
@@ -315,17 +317,18 @@ export default function AuthPage() {
                 className="auth-input"
                 type="password"
                 required
-                placeholder="Password"
-                value={studentRegPassword}
-                onChange={(e) => setStudentRegPassword(e.target.value)}
-              />
-              <input
-                className="auth-input"
-                type="password"
-                required
                 placeholder="Confirm Password"
                 value={studentRegConfirmPassword}
                 onChange={(e) => setStudentRegConfirmPassword(e.target.value)}
+              />
+
+              <input
+                className="auth-input"
+                type="number"
+                required
+                placeholder="Semester"
+                value={studentRegSemester}
+                onChange={(e) => setStudentRegSemester(e.target.value)}
               />
             </div>
 
@@ -359,9 +362,7 @@ export default function AuthPage() {
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
 
-          <h2 className="registration-form-panel-title">
-            Alumni Registration
-          </h2>
+          <h2 className="registration-form-panel-title">Alumni Registration</h2>
 
           <div className="registration-form">
             <div className="form-row">
@@ -372,25 +373,6 @@ export default function AuthPage() {
                 required
                 value={alumniRegFullName}
                 onChange={(e) => setAlumniRegFullName(e.target.value)}
-              />
-              <input
-                className="auth-input"
-                type="text"
-                required
-                placeholder="Graduation Year"
-                value={alumniRegGradYear}
-                onChange={(e) => setAlumniRegGradYear(e.target.value)}
-              />
-            </div>
-
-            <div className="form-row">
-              <input
-                className="auth-input"
-                type="text"
-                required
-                placeholder="Department"
-                value={alumniRegDepartment}
-                onChange={(e) => setAlumniRegDepartment(e.target.value)}
               />
               <input
                 className="auth-input"
@@ -410,13 +392,14 @@ export default function AuthPage() {
                 value={alumniRegEmail}
                 onChange={(e) => setAlumniRegEmail(e.target.value)}
               />
+
               <input
                 className="auth-input"
-                type="tel"
+                type="text"
                 required
-                placeholder="Contact Number"
-                value={alumniRegContactNo}
-                onChange={(e) => setAlumniRegContactNo(e.target.value)}
+                placeholder="Graduation Year"
+                value={alumniRegGradYear}
+                onChange={(e) => setAlumniRegGradYear(e.target.value)}
               />
             </div>
 
@@ -431,11 +414,30 @@ export default function AuthPage() {
               />
               <input
                 className="auth-input"
+                type="text"
+                required
+                placeholder="Department"
+                value={alumniRegDepartment}
+                onChange={(e) => setAlumniRegDepartment(e.target.value)}
+              />
+            </div>
+
+            <div className="form-row">
+              <input
+                className="auth-input"
                 type="password"
                 required
                 placeholder="Confirm Password"
                 value={alumniRegConfirmPassword}
                 onChange={(e) => setAlumniRegConfirmPassword(e.target.value)}
+              />
+              <input
+                className="auth-input"
+                type="tel"
+                required
+                placeholder="Contact Number"
+                value={alumniRegContactNo}
+                onChange={(e) => setAlumniRegContactNo(e.target.value)}
               />
             </div>
 
