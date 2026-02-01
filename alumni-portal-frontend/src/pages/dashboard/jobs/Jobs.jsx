@@ -18,9 +18,10 @@ export default function Jobs() {
       salary: "PKR 150,000 - 250,000",
       postedBy: "Alumni",
       postedDate: "2 days ago",
-      description: "We're looking for an experienced Full Stack Developer to join our growing team. You'll work on cutting-edge web applications using React, Node.js, and cloud technologies.",
+      description:
+        "We're looking for an experienced Full Stack Developer to join our growing team. You'll work on cutting-edge web applications using React, Node.js, and cloud technologies.",
       requirements: ["React.js", "Node.js", "MongoDB", "AWS"],
-      category: "job"
+      category: "job",
     },
     {
       id: 2,
@@ -32,9 +33,10 @@ export default function Jobs() {
       salary: "PKR 120,000 - 180,000",
       postedBy: "Admin",
       postedDate: "5 days ago",
-      description: "Join our team to work on cloud-based applications and APIs. Great opportunity for growth and learning.",
+      description:
+        "Join our team to work on cloud-based applications and APIs. Great opportunity for growth and learning.",
       requirements: ["Python", "Django", "REST APIs", "Docker"],
-      category: "job"
+      category: "job",
     },
     {
       id: 3,
@@ -46,9 +48,10 @@ export default function Jobs() {
       salary: "PKR 80,000 - 130,000",
       postedBy: "Alumni",
       postedDate: "1 week ago",
-      description: "Looking for a creative Frontend Developer to build beautiful and responsive user interfaces.",
+      description:
+        "Looking for a creative Frontend Developer to build beautiful and responsive user interfaces.",
       requirements: ["React.js", "CSS3", "JavaScript", "Responsive Design"],
-      category: "job"
+      category: "job",
     },
     {
       id: 4,
@@ -60,9 +63,10 @@ export default function Jobs() {
       salary: "PKR 180,000 - 280,000",
       postedBy: "Admin",
       postedDate: "3 days ago",
-      description: "Seeking a skilled DevOps Engineer to manage our cloud infrastructure and CI/CD pipelines.",
+      description:
+        "Seeking a skilled DevOps Engineer to manage our cloud infrastructure and CI/CD pipelines.",
       requirements: ["Kubernetes", "Docker", "Jenkins", "AWS/Azure"],
-      category: "job"
+      category: "job",
     },
     {
       id: 5,
@@ -74,9 +78,10 @@ export default function Jobs() {
       salary: "PKR 100,000 - 160,000",
       postedBy: "Alumni",
       postedDate: "4 days ago",
-      description: "Develop cross-platform mobile applications using React Native for our diverse client base.",
+      description:
+        "Develop cross-platform mobile applications using React Native for our diverse client base.",
       requirements: ["React Native", "iOS/Android", "Firebase", "Redux"],
-      category: "job"
+      category: "job",
     },
     {
       id: 6,
@@ -88,10 +93,11 @@ export default function Jobs() {
       salary: "PKR 90,000 - 140,000",
       postedBy: "Alumni",
       postedDate: "1 week ago",
-      description: "Create stunning user experiences and interfaces for web and mobile applications.",
+      description:
+        "Create stunning user experiences and interfaces for web and mobile applications.",
       requirements: ["Figma", "Adobe XD", "User Research", "Prototyping"],
-      category: "job"
-    }
+      category: "job",
+    },
   ];
 
   const internships = [
@@ -105,9 +111,10 @@ export default function Jobs() {
       stipend: "PKR 20,000 - 30,000",
       postedBy: "Admin",
       postedDate: "2 days ago",
-      description: "Work on React projects and assist in UI development. Perfect opportunity to learn modern web development.",
+      description:
+        "Work on React projects and assist in UI development. Perfect opportunity to learn modern web development.",
       requirements: ["HTML/CSS", "JavaScript", "React (Basic)", "Git"],
-      category: "internship"
+      category: "internship",
     },
     {
       id: 8,
@@ -119,9 +126,10 @@ export default function Jobs() {
       stipend: "PKR 25,000 - 35,000",
       postedBy: "Alumni",
       postedDate: "5 days ago",
-      description: "Analyze datasets and create actionable reports. Gain hands-on experience with data visualization tools.",
+      description:
+        "Analyze datasets and create actionable reports. Gain hands-on experience with data visualization tools.",
       requirements: ["Excel", "Python", "SQL", "Power BI"],
-      category: "internship"
+      category: "internship",
     },
     {
       id: 9,
@@ -133,9 +141,10 @@ export default function Jobs() {
       stipend: "PKR 22,000 - 32,000",
       postedBy: "Alumni",
       postedDate: "1 week ago",
-      description: "Learn server-side development with Node.js and database management.",
+      description:
+        "Learn server-side development with Node.js and database management.",
       requirements: ["JavaScript", "Node.js", "MongoDB", "Express"],
-      category: "internship"
+      category: "internship",
     },
     {
       id: 10,
@@ -147,9 +156,10 @@ export default function Jobs() {
       stipend: "PKR 18,000 - 28,000",
       postedBy: "Admin",
       postedDate: "3 days ago",
-      description: "Assist in developing mobile applications for Android and iOS platforms.",
+      description:
+        "Assist in developing mobile applications for Android and iOS platforms.",
       requirements: ["Java/Kotlin", "Flutter/React Native", "Git", "Mobile UI"],
-      category: "internship"
+      category: "internship",
     },
     {
       id: 11,
@@ -161,9 +171,15 @@ export default function Jobs() {
       stipend: "PKR 15,000 - 25,000",
       postedBy: "Alumni",
       postedDate: "4 days ago",
-      description: "Learn SEO, social media marketing, and content creation strategies.",
-      requirements: ["Social Media", "Content Writing", "Basic SEO", "Analytics"],
-      category: "internship"
+      description:
+        "Learn SEO, social media marketing, and content creation strategies.",
+      requirements: [
+        "Social Media",
+        "Content Writing",
+        "Basic SEO",
+        "Analytics",
+      ],
+      category: "internship",
     },
     {
       id: 12,
@@ -175,10 +191,16 @@ export default function Jobs() {
       stipend: "PKR 20,000 - 30,000",
       postedBy: "Admin",
       postedDate: "6 days ago",
-      description: "Create visual content for various digital platforms and marketing materials.",
-      requirements: ["Adobe Photoshop", "Illustrator", "Creativity", "Portfolio"],
-      category: "internship"
-    }
+      description:
+        "Create visual content for various digital platforms and marketing materials.",
+      requirements: [
+        "Adobe Photoshop",
+        "Illustrator",
+        "Creativity",
+        "Portfolio",
+      ],
+      category: "internship",
+    },
   ];
 
   // Combine jobs and internships for unified filtering
@@ -186,19 +208,21 @@ export default function Jobs() {
 
   // Filter logic
   const filteredOpportunities = allOpportunities.filter((item) => {
-    const matchesSearch = 
+    const matchesSearch =
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesLocation = 
-      filterLocation === "all" || item.location.toLowerCase().includes(filterLocation.toLowerCase());
-    
-    const matchesType = 
-      filterType === "all" || item.type.toLowerCase() === filterType.toLowerCase();
 
-    const matchesTab = 
-      activeTab === "all" || 
+    const matchesLocation =
+      filterLocation === "all" ||
+      item.location.toLowerCase().includes(filterLocation.toLowerCase());
+
+    const matchesType =
+      filterType === "all" ||
+      item.type.toLowerCase() === filterType.toLowerCase();
+
+    const matchesTab =
+      activeTab === "all" ||
       (activeTab === "jobs" && item.category === "job") ||
       (activeTab === "internships" && item.category === "internship");
 
@@ -206,163 +230,218 @@ export default function Jobs() {
   });
 
   return (
-    <div className="jobs-container">
-      {/* Header Section */}
-      <div className="jobs-header">
-        <h1 className="main-title">Career Opportunities</h1>
-        <p className="subtitle">Explore jobs and internships posted by our alumni network and administrators</p>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="tab-navigation">
-        <button 
-          className={`tab-btn ${activeTab === "all" ? "active" : ""}`}
-          onClick={() => setActiveTab("all")}
-        >
-          All Opportunities ({allOpportunities.length})
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === "jobs" ? "active" : ""}`}
-          onClick={() => setActiveTab("jobs")}
-        >
-          Jobs ({jobs.length})
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === "internships" ? "active" : ""}`}
-          onClick={() => setActiveTab("internships")}
-        >
-          Internships ({internships.length})
-        </button>
-      </div>
-
-      {/* Search and Filter Section */}
-      <div className="search-filter-section">
-        <div className="search-box">
-          <svg className="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search by title, company, or keyword..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-        </div>
-
-        <div className="filters">
-          <select 
-            value={filterLocation} 
-            onChange={(e) => setFilterLocation(e.target.value)}
-            className="filter-select"
-          >
-            <option value="all">All Locations</option>
-            <option value="remote">Remote</option>
-            <option value="lahore">Lahore</option>
-            <option value="karachi">Karachi</option>
-            <option value="islamabad">Islamabad</option>
-          </select>
-
-          <select 
-            value={filterType} 
-            onChange={(e) => setFilterType(e.target.value)}
-            className="filter-select"
-          >
-            <option value="all">All Types</option>
-            <option value="full-time">Full-time</option>
-            <option value="internship">Internship</option>
-          </select>
+    <div className="jobs-page">
+      <div className="jobs-hero">
+        <div className="jobs-hero-content">
+          <h1 className="main-title">Career Opportunities</h1>
+          <p className="subtitle">
+            Explore jobs and internships posted by our alumni network and
+            administrators
+          </p>
         </div>
       </div>
-
-      {/* Results Count */}
-      <div className="results-info">
-        <p>{filteredOpportunities.length} opportunities found</p>
-      </div>
-
-      {/* Opportunities Grid */}
-      <div className="opportunities-grid">
-        {filteredOpportunities.length > 0 ? (
-          filteredOpportunities.map((item) => (
-            <div key={item.id} className={`opportunity-card ${item.category}`}>
-              <div className="card-header">
-                <div className="card-top">
-                  <span className={`badge ${item.category}`}>
-                    {item.category === "job" ? "Job" : "Internship"}
-                  </span>
-                  <span className="posted-date">{item.postedDate}</span>
-                </div>
-                <h2 className="job-title">{item.title}</h2>
-                <p className="company-name">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M3 3h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm0-1a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2H3z"/>
-                    <path d="M5 5h6v1H5V5zm0 2h6v1H5V7z"/>
-                  </svg>
-                  {item.company}
-                </p>
-              </div>
-
-              <div className="card-body">
-                <div className="info-row">
-                  <span className="info-item">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                      <path d="M7 0a7 7 0 100 14A7 7 0 007 0zm0 13A6 6 0 117 1a6 6 0 010 12z"/>
-                      <path d="M7 3v4l3 2-.6.8-3.4-2.3V3H7z"/>
-                    </svg>
-                    {item.category === "job" ? item.experience : item.duration}
-                  </span>
-                  <span className="info-item">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                      <path d="M7 0C4.24 0 2 2.24 2 5c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z"/>
-                    </svg>
-                    {item.location}
-                  </span>
-                  <span className="info-item">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                      <path d="M7 0a7 7 0 100 14A7 7 0 007 0zm1 10H6V6h2v4zm0-5H6V3h2v2z"/>
-                    </svg>
-                    {item.type}
-                  </span>
-                </div>
-
-                <p className="description">{item.description}</p>
-
-                <div className="requirements">
-                  <p className="requirements-label">Required Skills:</p>
-                  <div className="skills-tags">
-                    {item.requirements.map((req, idx) => (
-                      <span key={idx} className="skill-tag">{req}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="card-footer">
-                  <div className="salary-info">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm1 12H7V7h2v5zm0-6H7V4h2v2z"/>
-                    </svg>
-                    <span>{item.category === "job" ? item.salary : item.stipend}</span>
-                  </div>
-                  <span className="posted-by">Posted by {item.postedBy}</span>
-                </div>
-              </div>
-
-              <div className="card-actions">
-                <button className="btn-secondary">View Details</button>
-                <button className="btn-primary">Apply Now</button>
-              </div>
+      <div className="jobs-container">
+        <div className="jobs-filters">
+          {/* Tab Select */}
+          {/* Search and Filter Section */}
+          <div className="search-filter-section">
+            <div className="search-box">
+              <svg
+                className="search-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+              >
+                <path
+                  d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search by title, company, or keyword..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
             </div>
-          ))
-        ) : (
-          <div className="no-results">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-              <circle cx="32" cy="32" r="30" stroke="#E0E0E0" strokeWidth="4"/>
-              <path d="M32 20v16M32 44h.01" stroke="#E0E0E0" strokeWidth="4" strokeLinecap="round"/>
-            </svg>
-            <h3>No opportunities found</h3>
-            <p>Try adjusting your search or filters</p>
+
+            <div className="filters">
+              <select
+                value={filterLocation}
+                onChange={(e) => setFilterLocation(e.target.value)}
+                className="filter-select"
+              >
+                <option value="all">All Locations</option>
+                <option value="remote">Remote</option>
+                <option value="lahore">Lahore</option>
+                <option value="karachi">Karachi</option>
+                <option value="islamabad">Islamabad</option>
+              </select>
+
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="filter-select"
+              >
+                <option value="all">All Types</option>
+                <option value="full-time">Full-time</option>
+                <option value="internship">Internship</option>
+              </select>
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value)}
+                className="tab-select"
+              >
+                <option value="all">
+                  All Opportunities ({allOpportunities.length})
+                </option>
+                <option value="jobs">Jobs ({jobs.length})</option>
+                <option value="internships">
+                  Internships ({internships.length})
+                </option>
+              </select>
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Results Count */}
+        <div className="results-info">
+          <p>{filteredOpportunities.length} opportunities found</p>
+        </div>
+
+        {/* Opportunities Grid */}
+        <div className="opportunities-grid">
+          {filteredOpportunities.length > 0 ? (
+            filteredOpportunities.map((item) => (
+              <div
+                key={item.id}
+                className={`opportunity-card ${item.category}`}
+              >
+                <div className="card-header">
+                  <div className="card-top">
+                    <span className={`badge ${item.category}`}>
+                      {item.category === "job" ? "Job" : "Internship"}
+                    </span>
+                    <span className="posted-date">{item.postedDate}</span>
+                  </div>
+                  <h2 className="job-title">{item.title}</h2>
+                  <p className="company-name">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                    >
+                      <path d="M3 3h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm0-1a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2H3z" />
+                      <path d="M5 5h6v1H5V5zm0 2h6v1H5V7z" />
+                    </svg>
+                    {item.company}
+                  </p>
+                </div>
+
+                <div className="card-body">
+                  <div className="info-row">
+                    <span className="info-item">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="currentColor"
+                      >
+                        <path d="M7 0a7 7 0 100 14A7 7 0 007 0zm0 13A6 6 0 117 1a6 6 0 010 12z" />
+                        <path d="M7 3v4l3 2-.6.8-3.4-2.3V3H7z" />
+                      </svg>
+                      {item.category === "job"
+                        ? item.experience
+                        : item.duration}
+                    </span>
+                    <span className="info-item">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="currentColor"
+                      >
+                        <path d="M7 0C4.24 0 2 2.24 2 5c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z" />
+                      </svg>
+                      {item.location}
+                    </span>
+                    <span className="info-item">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="currentColor"
+                      >
+                        <path d="M7 0a7 7 0 100 14A7 7 0 007 0zm1 10H6V6h2v4zm0-5H6V3h2v2z" />
+                      </svg>
+                      {item.type}
+                    </span>
+                  </div>
+
+                  <p className="description">{item.description}</p>
+
+                  <div className="requirements">
+                    <p className="requirements-label">Required Skills:</p>
+                    <div className="skills-tags">
+                      {item.requirements.map((req, idx) => (
+                        <span key={idx} className="skill-tag">
+                          {req}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="card-footer">
+                    <div className="salary-info">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="currentColor"
+                      >
+                        <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm1 12H7V7h2v5zm0-6H7V4h2v2z" />
+                      </svg>
+                      <span>
+                        {item.category === "job" ? item.salary : item.stipend}
+                      </span>
+                    </div>
+                    <span className="posted-by">Posted by {item.postedBy}</span>
+                  </div>
+                </div>
+
+                <div className="card-actions">
+                  <button className="btn-primary">Apply Now</button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="no-results">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="30"
+                  stroke="#E0E0E0"
+                  strokeWidth="4"
+                />
+                <path
+                  d="M32 20v16M32 44h.01"
+                  stroke="#E0E0E0"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <h3>No opportunities found</h3>
+              <p>Try adjusting your search or filters</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
