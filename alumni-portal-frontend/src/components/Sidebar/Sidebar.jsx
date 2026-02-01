@@ -1,7 +1,13 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/", { replace: true });
+  };
+
   return (
     <>
       <aside className="sidebar">
@@ -13,7 +19,7 @@ export default function Sidebar() {
           <NavLink to="/dashboard/mentorship">Mentorship</NavLink>
           <NavLink to="/dashboard/networking">Networking</NavLink>
           <NavLink to="/dashboard/stories">Success Stories</NavLink>
-          <button>Logout</button>
+          <button onClick={handleLogout}>Logout</button>
         </nav>
       </aside>
     </>

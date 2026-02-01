@@ -1,14 +1,16 @@
 .dashboard-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;   /* 🔴 IMPORTANT */
   width: 100%;
+  overflow: hidden; /* prevent body scroll */
 }
 
 /* Area below topbar */
 .dashboard-body {
   display: flex;
-  flex: 1;        /* fills remaining height below topbar */
+  flex: 1;
+  overflow: hidden; /* 🔴 prevents sidebar scrolling */
 }
 
 
@@ -16,6 +18,7 @@
 .dashboard-content {
   flex: 1;
   padding: 24px 32px;
-  overflow-y: auto;
   background: #f5f7fb;
+  overflow-y: auto;  /* ✅ only this scrolls */
+  height: 100%;
 }
