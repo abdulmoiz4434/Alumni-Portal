@@ -21,7 +21,7 @@ export default function Chat() {
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
-        { text: "Kya begay boy dekhny mey ? .", sender: "bot" },
+        { text: "Kya bega y boy dekhny mey ? .", sender: "bot" },
       ]);
     }, 1000);
   };
