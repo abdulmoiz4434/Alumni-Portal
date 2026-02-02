@@ -1,8 +1,3 @@
-/* ========================================
-   ALUMNI PROFILE - PROFESSIONAL STYLING
-   ======================================== */
-
-/* Base Container */
 .alumni-profile {
   min-height: 100vh;
 }
@@ -11,10 +6,6 @@
   max-width: 960px;
   margin: 0 auto;
 }
-
-/* ========================================
-   HEADER SECTION
-   ======================================== */
 
 .alumni-profile-header {
   display: flex;
@@ -38,7 +29,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* Avatar */
 .alumni-profile-avatar-wrapper {
   width: 110px;
   height: 110px;
@@ -87,7 +77,6 @@
   transform: scale(1.1);
 }
 
-/* Header Info */
 .alumni-profile-header-info {
   flex: 1;
   min-width: 0;
@@ -123,7 +112,6 @@
   box-shadow: 0 2px 4px rgba(230, 187, 47, 0.2);
 }
 
-/* Metadata */
 .alumni-profile-metadata {
   display: flex;
   align-items: center;
@@ -156,10 +144,6 @@
   height: 32px;
   background: #dee2e6;
 }
-
-/* ========================================
-   CONTENT SECTIONS
-   ======================================== */
 
 .alumni-profile-content {
   display: flex;
@@ -198,10 +182,6 @@
   line-height: 1.7;
   color: #495057;
 }
-
-/* ========================================
-   FORM FIELDS
-   ======================================== */
 
 .alumni-profile-grid {
   display: grid;
@@ -245,7 +225,6 @@
   text-decoration: underline;
 }
 
-/* Input Fields */
 .alumni-profile-input,
 .alumni-profile-textarea {
   width: 85%;
@@ -278,10 +257,6 @@
   width: 93%;
   line-height: 1.6;
 }
-
-/* ========================================
-   ACTION BUTTONS
-   ======================================== */
 
 .alumni-profile-actions {
   display: flex;
@@ -327,10 +302,6 @@
   background: #1a1a1a;
   color: #ffffff;
 }
-
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
 
 @media (max-width: 768px) {
   .alumni-profile {
@@ -401,12 +372,6 @@
   }
 }
 
-/* ========================================
-   LOADING & EMPTY STATES
-   ======================================== */
-
-
-
 .alumni-profile-error {
   padding: 20px;
   background: #fff5f5;
@@ -416,13 +381,6 @@
   text-align: center;
 }
 
-/* ========================================
-   ACCESSIBILITY
-   ======================================== */
-
-
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .alumni-profile-header,
   .alumni-profile-section,
@@ -432,4 +390,27 @@
   .alumni-profile-textarea {
     transition: none;
   }
+}
+
+.profile-loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

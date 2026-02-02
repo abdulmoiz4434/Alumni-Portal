@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const jobSchema = new mongoose.Schema(
   {
-    posted_by: {
+    postedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
@@ -27,7 +27,7 @@ const jobSchema = new mongoose.Schema(
       required: [true, "Please provide job description"],
       trim: true
     },
-    job_type: {
+    jobType: {
       type: String,
       enum: ["full-time", "part-time", "internship"],
       required: [true, "Please provide job type"]

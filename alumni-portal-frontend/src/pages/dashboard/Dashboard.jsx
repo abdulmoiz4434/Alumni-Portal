@@ -1,7 +1,7 @@
 import "./Dashboard.css";
 
 export default function Dashboard() {
-  const userName = "Ghulam Ahmad"; // Replace with dynamic user data
+  const userName = "Ghulam Ahmad"; 
   const stats = [
     { title: "Unread Messages", count: 5 },
     { title: "Upcoming Events", count: 3 },
@@ -53,5 +53,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-

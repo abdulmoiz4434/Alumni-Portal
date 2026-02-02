@@ -8,23 +8,44 @@ const alumniSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
-    degree: {
+    regNo: {
       type: String,
-      required: [true, "Please provide degree"],
+      required: [true, "Please provide registration number"],
+      unique: true,
       trim: true
     },
-    graduation_year: {
+    about: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    department: {
+      type: String,
+      required: [true, "Please provide department"],
+      trim: true
+    },
+    contactNo: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    degree: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    graduationYear: {
       type: Number,
       required: [true, "Please provide graduation year"],
       min: 1950,
-      max: new Date().getFullYear()
+      max: new Date().getFullYear() + 5 
     },
     company: {
       type: String,
       trim: true,
       default: ""
     },
-    job_title: {
+    jobTitle: {
       type: String,
       trim: true,
       default: ""
@@ -40,7 +61,7 @@ const alumniSchema = new mongoose.Schema(
       default: ""
     },
     skills: [{ type: String, trim: true }],
-    mentorship_available: {
+    mentorshipAvailable: {
       type: Boolean,
       default: false
     }
@@ -48,6 +69,7 @@ const alumniSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-alumniSchema.index({ graduation_year: -1 });
+alumniSchema.index({ graduationYear: -1 });
+alumniSchema.index({ regNo: 1 });
 
 module.exports = mongoose.model("Alumni", alumniSchema);

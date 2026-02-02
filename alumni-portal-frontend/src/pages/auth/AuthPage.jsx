@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/auth";
+import API from "../../api/axios";
 import "./AuthPage.css";
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
 
   const [isStudent, setIsStudent] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
@@ -26,8 +35,7 @@ export default function AuthPage() {
   const [studentRegSemester, setStudentRegSemester] = useState("");
   const [studentRegEmail, setStudentRegEmail] = useState("");
   const [studentRegPassword, setStudentRegPassword] = useState("");
-  const [studentRegConfirmPassword, setStudentRegConfirmPassword] =
-    useState("");
+  const [studentRegConfirmPassword, setStudentRegConfirmPassword] = useState("");
 
   // Alumni Registration
   const [alumniRegFullName, setAlumniRegFullName] = useState("");
@@ -49,36 +57,81 @@ export default function AuthPage() {
     setShowRegistration(true);
   };
 
-  const handleStudentLogin = (e) => {
+  // --- CONNECTED HANDLERS ---
+
+  const handleStudentLogin = async (e) => {
     e.preventDefault();
     if (!studentEmail || !studentPassword) return alert("Missing fields");
-
-    navigate("/dashboard");
+    
+    try {
+      await loginUser(studentEmail, studentPassword);
+      navigate("/dashboard");
+    } catch (err) {
+      alert(err);
+    }
   };
 
-  const handleAlumniLogin = (e) => {
+  const handleAlumniLogin = async (e) => {
     e.preventDefault();
     if (!alumniEmail || !alumniPassword) return alert("Missing fields");
 
-    navigate("/dashboard");
+    try {
+      await loginUser(alumniEmail, alumniPassword);
+      navigate("/dashboard");
+    } catch (err) {
+      alert(err);
+    }
   };
 
-  const handleStudentRegistration = (e) => {
+  const handleStudentRegistration = async (e) => {
     e.preventDefault();
     if (studentRegPassword !== studentRegConfirmPassword) {
       return alert("Passwords do not match");
     }
 
-    navigate("/dashboard");
+    try {
+      const res = await API.post("/auth/register/student", {
+        fullName: studentRegFullName,
+        email: studentRegEmail,
+        password: studentRegPassword,
+        regNo: studentRegNo,
+        semester: studentRegSemester,
+        department: studentRegDepartment,
+        batch: studentRegBatchNo,
+      });
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.data.token);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
+    }
   };
 
-  const handleAlumniRegistration = (e) => {
+  const handleAlumniRegistration = async (e) => {
     e.preventDefault();
     if (alumniRegPassword !== alumniRegConfirmPassword) {
       return alert("Passwords do not match");
     }
 
-    navigate("/dashboard");
+    try {
+      const res = await API.post("/auth/register/alumni", {
+        fullName: alumniRegFullName,
+        email: alumniRegEmail,
+        password: alumniRegPassword,
+        graduationYear: alumniRegGradYear,
+        regNo: alumniRegNo,
+        department: alumniRegDepartment,
+        contactNo: alumniRegContactNo,
+        degree: "BSCS"
+      });
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.data.token);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
+    }
   };
 
   return (

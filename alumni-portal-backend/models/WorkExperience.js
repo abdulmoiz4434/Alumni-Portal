@@ -7,7 +7,7 @@ const workExperienceSchema = new mongoose.Schema(
       ref: "Alumni",
       required: true
     },
-    job_title: {
+    jobTitle: {
       type: String,
       required: [true, "Please provide job title"],
       trim: true
@@ -27,11 +27,11 @@ const workExperienceSchema = new mongoose.Schema(
       trim: true,
       default: ""
     },
-    start_date: {
+    startDate: {
       type: Date,
       required: [true, "Please provide start date"]
     },
-    end_date: {
+    endDate: {
       type: Date,
       default: null,
       validate: {
@@ -42,7 +42,7 @@ const workExperienceSchema = new mongoose.Schema(
         message: "End date must be after start date"
       }
     },
-    is_current: {
+    isCurrent: {
       type: Boolean,
       default: false
     },

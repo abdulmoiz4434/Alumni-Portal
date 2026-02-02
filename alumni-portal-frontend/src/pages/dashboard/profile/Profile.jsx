@@ -1,30 +1,98 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import API from "../../../api/axios";
 import "./Profile.css";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({
-    name: "Ghulam Ahmad",
-    role: "Alumni",
-    batch: "2022",
-    department: "Computer Science",
-    about:
-      "Passionate jews hater.",
-    company: "ABC Technologies",
-    jobTitle: "Frontend Developer",
-    skills: "React, JavaScript, CSS, UI/UX",
-    linkedin: "https://linkedin.com/in/ghulamahmad",
-    avatar: "/download.jpg",
+    name: "",
+    role: "",
+    batch: "",
+    department: "",
+    about: "",
+    company: "",
+    jobTitle: "",
+    skills: "",
+    linkedin: "",
+    avatar: "",
   });
+
+  // 1. Fetch data on load
+  useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const res = await API.get("/auth/me");
+      console.log("Profile Response Data:", res.data);
+      const payload = res.data.data;
+
+      if (!payload) {
+        throw new Error("No data received from server");
+      }
+
+      const { user, profile: roleData } = payload;
+
+      setProfile({
+        name: user?.fullName || "N/A",
+        role: user?.role || "N/A",
+        batch: user?.role === "student" 
+          ? (roleData?.batch || "N/A") 
+          : (roleData?.graduationYear || "N/A"),
+        department: roleData?.department || "N/A",
+        about: roleData?.about || "No bio added yet.",
+        company: roleData?.company || "",
+        jobTitle: roleData?.jobTitle || "",
+        skills: Array.isArray(roleData?.skills) ? roleData.skills.join(", ") : "", 
+        linkedin: roleData?.linkedin || "",
+        avatar: user?.profilePicture || "",
+      });
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+      const errorMsg = err.response?.data?.message || "Failed to load profile data.";
+      alert(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchProfile();
+}, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => setIsEditing(false);
+  // 2. Save logic to Backend
+  const handleSave = async () => {
+  try {
+    const payload = {
+      about: profile.about,
+      company: profile.company,
+      jobTitle: profile.jobTitle, // Changed from job_title
+      linkedin: profile.linkedin,
+      skills: profile.skills ? profile.skills.split(",").map(s => s.trim()) : []
+    };
+
+    const res = await API.put("/auth/update-profile", payload);
+
+    if (res.data.success) {
+      alert("Profile updated successfully!");
+      setIsEditing(false);
+    }
+  } catch (err) {
+    console.error("Update Error:", err);
+    alert("Update failed: " + (err.response?.data?.message || "Server error"));
+  }
+};
+
   const handleCancel = () => setIsEditing(false);
+
+  if (loading) return (
+  <div className="profile-loader-container">
+    <div className="spinner"></div>
+    <p>Fetching your profile...</p>
+  </div>
+);
 
   return (
     <div className="alumni-profile">
@@ -33,46 +101,14 @@ export default function Profile() {
         <div className="alumni-profile-header">
           <div className="alumni-profile-avatar-wrapper">
             {profile.avatar ? (
-              <img
-                src={profile.avatar}
-                alt={`${profile.name}`}
-                className="alumni-profile-avatar"
-              />
+              <img src={profile.avatar} alt={profile.name} className="alumni-profile-avatar" />
             ) : (
               <div className="alumni-profile-avatar-placeholder">
-                <svg
-                  width="50%"
-                  height="50%"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#6b7280"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                <svg width="50%" height="50%" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2">
                   <circle cx="12" cy="8" r="4" />
                   <path d="M16 20c0-4-8-4-8 0" />
                 </svg>
               </div>
-            )}
-            {isEditing && (
-              <button className="alumni-profile-avatar-upload">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M14 10v2.667A1.333 1.333 0 0112.667 14H3.333A1.333 1.333 0 012 12.667V10m9.333-5.333L8 1.333m0 0L4.667 4.667M8 1.333v9.334"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
             )}
           </div>
 
@@ -83,19 +119,13 @@ export default function Profile() {
             </div>
             <div className="alumni-profile-metadata">
               <div className="alumni-profile-metadata-item">
-                <span className="alumni-profile-metadata-label">Batch</span>
-                <span className="alumni-profile-metadata-value">
-                  {profile.batch}
-                </span>
+                <span className="alumni-profile-metadata-label">{profile.role === 'student' ? 'Batch' : 'Grad Year'}</span>
+                <span className="alumni-profile-metadata-value">{profile.batch}</span>
               </div>
               <div className="alumni-profile-metadata-divider" />
               <div className="alumni-profile-metadata-item">
-                <span className="alumni-profile-metadata-label">
-                  Department
-                </span>
-                <span className="alumni-profile-metadata-value">
-                  {profile.department}
-                </span>
+                <span className="alumni-profile-metadata-label">Department</span>
+                <span className="alumni-profile-metadata-value">{profile.department}</span>
               </div>
             </div>
           </div>
@@ -122,17 +152,13 @@ export default function Profile() {
           </section>
 
           <section className="alumni-profile-section">
-            <h2 className="alumni-profile-section-title">
-              Professional Information
-            </h2>
+            <h2 className="alumni-profile-section-title">Professional Information</h2>
             <div className="alumni-profile-section-content">
               <div className="alumni-profile-grid">
                 {["company", "jobTitle", "skills", "linkedin"].map((field) => (
                   <div className="alumni-profile-field" key={field}>
                     <label className="alumni-profile-label">
-                      {field === "jobTitle"
-                        ? "Job Title"
-                        : field.charAt(0).toUpperCase() + field.slice(1)}
+                      {field === "jobTitle" ? "Job Title" : field.charAt(0).toUpperCase() + field.slice(1)}
                     </label>
                     {isEditing ? (
                       <input
@@ -141,21 +167,13 @@ export default function Profile() {
                         value={profile[field]}
                         onChange={handleChange}
                         className="alumni-profile-input"
-                        placeholder={`Enter ${field}`}
                       />
                     ) : field === "linkedin" ? (
-                      <a
-                        href={profile[field]}
-                        className="alumni-profile-link"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {profile[field]}
+                      <a href={profile[field]} className="alumni-profile-link" target="_blank" rel="noreferrer">
+                        {profile[field] || "Add LinkedIn"}
                       </a>
                     ) : (
-                      <span className="alumni-profile-value">
-                        {profile[field]}
-                      </span>
+                      <span className="alumni-profile-value">{profile[field] || "N/A"}</span>
                     )}
                   </div>
                 ))}
@@ -163,30 +181,14 @@ export default function Profile() {
             </div>
           </section>
 
-          {/* Buttons */}
           <div className="alumni-profile-actions">
             {isEditing ? (
               <>
-                <button
-                  className="alumni-profile-buttons alumni-profile-buttons-secondary"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="alumni-profile-buttons alumni-profile-buttons-primary"
-                  onClick={handleSave}
-                >
-                  Save Changes
-                </button>
+                <button className="alumni-profile-buttons alumni-profile-buttons-secondary" onClick={handleCancel}>Cancel</button>
+                <button className="alumni-profile-buttons alumni-profile-buttons-primary" onClick={handleSave}>Save Changes</button>
               </>
             ) : (
-              <button
-                className="alumni-profile-buttons alumni-profile-buttons-primary"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </button>
+              <button className="alumni-profile-buttons alumni-profile-buttons-primary" onClick={() => setIsEditing(true)}>Edit Profile</button>
             )}
           </div>
         </div>

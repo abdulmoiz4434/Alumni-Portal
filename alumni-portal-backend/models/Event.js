@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const eventSchema = new mongoose.Schema(
   {
-    created_by: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
@@ -22,21 +22,21 @@ const eventSchema = new mongoose.Schema(
       required: [true, "Please provide event location"],
       trim: true
     },
-    event_date: {
+    eventDate: {
       type: Date,
       required: [true, "Please provide event date"]
     },
-    event_time: {
+    eventTime: {
       type: String,
       required: [true, "Please provide event time"],
       trim: true
     },
-    event_type: {
+    eventType: {
       type: String,
       enum: ["reunion", "webinar", "career-fair", "networking", "other"],
       required: [true, "Please provide event type"]
     },
-    image_url: {
+    imageUrl: {
       type: String,
       default: ""
     }

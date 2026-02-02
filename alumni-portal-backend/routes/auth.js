@@ -4,7 +4,8 @@ const {
   registerStudent,
   registerAlumni,
   login,
-  getMe
+  getMe,
+  updateProfile
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
@@ -17,5 +18,7 @@ router.post('/login', login);
 
 // Get current user (protected route)
 router.get('/me', protect, getMe);
+
+router.put('/update-profile', protect, updateProfile);
 
 module.exports = router;

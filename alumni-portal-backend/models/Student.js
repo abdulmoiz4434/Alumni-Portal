@@ -8,15 +8,20 @@ const studentSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
-    reg_no: {
+    regNo: {
       type: String,
       required: [true, "Please provide registration number"],
       unique: true,
       trim: true
     },
+    about: {
+      type: String,
+      trim: true,
+      default: ""
+    },
     degree: {
       type: String,
-      required: [true, "Please provide degree"],
+      required: false,
       trim: true
     },
     batch: {
@@ -37,7 +42,7 @@ const studentSchema = new mongoose.Schema(
     },
     skills: [{ type: String, trim: true }],
     interests: [{ type: String, trim: true }],
-    career_goals: {
+    careerGoals: {
       type: String,
       trim: true,
       default: ""

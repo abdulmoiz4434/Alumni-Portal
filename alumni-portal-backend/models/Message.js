@@ -17,7 +17,7 @@ const messageSchema = new mongoose.Schema(
       required: [true, "Message cannot be empty"],
       trim: true
     },
-    is_read: {
+    isRead: {
       type: Boolean,
       default: false
     }

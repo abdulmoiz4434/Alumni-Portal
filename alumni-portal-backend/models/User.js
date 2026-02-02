@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
-    full_name: {
+    fullName: {
       type: String,
       required: [true, "Please provide your full name"],
       trim: true
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "alumni", "admin"],
       required: true
     },
-    profile_picture: {
+    profilePicture: {
       type: String,
       default: ""
     }
@@ -38,21 +38,25 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
+// Encrypt password using bcrypt - Modern Async style (No 'next' needed)
+userSchema.pre("save", async function () {
+  // Only run this function if password was actually modified
+  if (!this.isModified("password")) {
+    return;
+  }
+
   try {
-    if (!this.isModified("password")) {
-      return next();
-    }
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
   } catch (error) {
-    next(error);
+    // This will be caught by the catch block in your controller
+    throw new Error(error);
   }
 });
 
-userSchema.methods.comparePassword = function (enteredPassword) {
-  return bcrypt.compare(enteredPassword, this.password);
+// Match user entered password to hashed password in database
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = mongoose.model("User", userSchema);

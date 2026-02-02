@@ -5,38 +5,27 @@ const Alumni = require('../models/Alumni');
 const jwt = require('jsonwebtoken');
 const { successResponse, errorResponse } = require('../utils/response');
 
-// Generate JWT Token
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || '30d'
   });
 };
 
-// @desc    Register Student
-// @route   POST /api/auth/register/student
-// @access  Public
-exports.registerStudent = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
+exports.registerStudent = async (req, res) => {
   try {
     const { 
       email, 
       password, 
-      full_name, 
-      reg_no, 
-      degree, 
+      fullName, 
+      regNo, 
       batch, 
       department,
-      cgpa,
-      skills,
       semester,
-      interests,
-      career_goals
+      degree
     } = req.body;
 
-    if (!email || !password || !full_name || !reg_no || !degree || !batch || !department) {
-      return errorResponse(res, 'Please provide all required fields');
+    if (!email || !password || !fullName || !regNo || !batch || !department) {
+      return errorResponse(res, 'Please provide all required fields (Email, Password, Name, Reg No, Batch, Dept)');
     }
 
     const userExists = await User.findOne({ email });
@@ -44,78 +33,66 @@ exports.registerStudent = async (req, res, next) => {
       return errorResponse(res, 'User already exists with this email');
     }
 
-    const regNoExists = await Student.findOne({ reg_no });
+    const regNoExists = await Student.findOne({ regNo });
     if (regNoExists) {
       return errorResponse(res, 'Registration number already exists');
     }
 
-    const user = await User.create([{
+    const user = await User.create({
       email,
       password,
-      full_name,
+      fullName,
       role: 'student'
-    }], { session });
+    });
 
-    const student = await Student.create([{
-      user: user[0]._id,
-      reg_no,
-      degree,
+    const student = await Student.create({
+      user: user._id,
+      regNo,
+      degree: degree || "BSCS",
       batch,
       department,
-      cgpa: cgpa || null,
-      skills: skills || [],
-      semester,
-      interests: interests || [],
-      career_goals: career_goals || ''
-    }], { session });
+      semester: semester || 1,
+      cgpa: req.body.cgpa || null,
+      skills: req.body.skills || [],
+      interests: req.body.interests || [],
+      careerGoals: req.body.careerGoals || ''
+    });
 
-    await session.commitTransaction();
-
-    const token = generateToken(user[0]._id, user[0].role);
+    const token = generateToken(user._id, user.role);
 
     return successResponse(res, {
       token,
       user: {
-        id: user[0]._id,
-        email: user[0].email,
-        full_name: user[0].full_name,
-        role: user[0].role,
-        profile: student[0]
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        profile: student
       }
     }, 201, 'Student registered successfully');
+
   } catch (error) {
-    await session.rollbackTransaction();
     console.error('Register Student Error:', error);
-    next(error);
-  } finally {
-    session.endSession();
+    return errorResponse(res, error.message || 'Server Error during registration', 500);
   }
 };
 
-// @desc    Register Alumni
-// @route   POST /api/auth/register/alumni
-// @access  Public
-exports.registerAlumni = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
+exports.registerAlumni = async (req, res) => {
   try {
     const { 
       email, 
       password, 
-      full_name, 
-      degree, 
-      graduation_year,
-      company,
-      job_title,
-      location,
-      industry,
-      skills,
-      mentorship_available
+      fullName, 
+      graduationYear,
+      regNo,
+      department,
+      contactNo,
+      degree
     } = req.body;
 
-    if (!email || !password || !full_name || !degree || !graduation_year) {
-      return errorResponse(res, 'Please provide all required fields');
+    // Updated validation to include new required university fields
+    if (!email || !password || !fullName || !graduationYear || !regNo || !department) {
+      return errorResponse(res, 'Please provide all required fields (Email, Password, Name, Reg No, Grad Year, Dept)');
     }
 
     const userExists = await User.findOne({ email });
@@ -123,52 +100,53 @@ exports.registerAlumni = async (req, res, next) => {
       return errorResponse(res, 'User already exists with this email');
     }
 
-    const user = await User.create([{
+    const alumniExists = await Alumni.findOne({ regNo });
+    if (alumniExists) {
+      return errorResponse(res, 'Registration number already exists for an alumni');
+    }
+
+    const user = await User.create({
       email,
       password,
-      full_name,
+      fullName,
       role: 'alumni'
-    }], { session });
+    });
 
-    const alumni = await Alumni.create([{
-      user: user[0]._id,
-      degree,
-      graduation_year,
-      company: company || '',
-      job_title: job_title || '',
-      location: location || '',
-      industry: industry || '',
-      skills: skills || [],
-      mentorship_available: mentorship_available || false
-    }], { session });
+    const alumni = await Alumni.create({
+      user: user._id,
+      regNo,
+      department,
+      contactNo,
+      degree: degree || "BSCS", 
+      graduationYear,
+      company: req.body.company || '',
+      jobTitle: req.body.job_title || '',
+      location: req.body.location || '',
+      industry: req.body.industry || '',
+      skills: req.body.skills || [],
+      mentorshipAvailable: req.body.mentorshipAvailable || false
+    });
 
-    await session.commitTransaction();
-
-    const token = generateToken(user[0]._id, user[0].role);
+    const token = generateToken(user._id, user.role);
 
     return successResponse(res, {
       token,
       user: {
-        id: user[0]._id,
-        email: user[0].email,
-        full_name: user[0].full_name,
-        role: user[0].role,
-        profile: alumni[0]
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        profile: alumni
       }
     }, 201, 'Alumni registered successfully');
+
   } catch (error) {
-    await session.rollbackTransaction();
     console.error('Register Alumni Error:', error);
-    next(error);
-  } finally {
-    session.endSession();
+    return errorResponse(res, error.message || 'Server Error during registration', 500);
   }
 };
 
-// @desc    Login User
-// @route   POST /api/auth/login
-// @access  Public
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -200,29 +178,26 @@ exports.login = async (req, res, next) => {
       user: {
         id: user._id,
         email: user.email,
-        full_name: user.full_name,
+        fullName: user.fullName,
         role: user.role,
-        profile_picture: user.profile_picture,
+        profilePicture: user.profilePicture,
         profile
       }
     }, 200, 'Login successful');
   } catch (error) {
     console.error('Login Error:', error);
-    next(error);
+    return errorResponse(res, 'Server Error during login', 500);
   }
 };
 
-// @desc    Get Current User Profile
-// @route   GET /api/auth/me
-// @access  Private
-exports.getMe = async (req, res, next) => {
+exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select("-password");
     if (!user) {
       return errorResponse(res, 'User not found', 404);
     }
 
-    let profile;
+    let profile = null;
     if (user.role === 'student') {
       profile = await Student.findOne({ user: user._id });
     } else if (user.role === 'alumni') {
@@ -233,14 +208,63 @@ exports.getMe = async (req, res, next) => {
       user: {
         id: user._id,
         email: user.email,
-        full_name: user.full_name,
+        fullName: user.fullName,
         role: user.role,
-        profile_picture: user.profile_picture,
-        profile
-      }
+        profilePicture: user.profilePicture
+      },
+      profile: profile
     });
   } catch (error) {
     console.error('Get Me Error:', error);
-    next(error);
+    return errorResponse(res, 'Server Error fetching profile', 500);
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const role = req.user.role;
+    
+    // Fields coming from your Profile.jsx handleSave function
+    const { about, company, jobTitle, skills, linkedin } = req.body;
+
+    let updatedProfile;
+
+    // Convert skills string to array if necessary
+    const skillsArray = typeof skills === 'string' 
+      ? skills.split(',').map(s => s.trim()) 
+      : skills;
+
+    if (role === 'student') {
+      updatedProfile = await Student.findOneAndUpdate(
+        { user: userId },
+        { 
+          $set: { 
+            about, 
+            skills: skillsArray 
+          } 
+        },
+        { new: true }
+      );
+    } else if (role === 'alumni') {
+      updatedProfile = await Alumni.findOneAndUpdate(
+        { user: userId },
+        { 
+          $set: { 
+            about, 
+            company, 
+            jobTitle, 
+            linkedin, 
+            skills: skillsArray 
+          } 
+        },
+        { new: true }
+      );
+    }
+
+    return successResponse(res, updatedProfile, 200, 'Profile updated successfully');
+  } catch (error) {
+    console.error('Update Profile Error:', error);
+    return errorResponse(res, 'Server Error updating profile', 500);
   }
 };
