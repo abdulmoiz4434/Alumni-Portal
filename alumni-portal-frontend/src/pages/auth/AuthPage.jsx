@@ -474,150 +474,150 @@ export default function AuthPage() {
               />
             </div>
 
-<div className="form-row">
-  <div className="form-field-wrapper">
-    <div className="password-input-wrapper">
-      <input
-        className={`auth-input ${studentPasswordMismatch ? "input-error" : ""}`}
-        type={showStudentRegPassword ? "text" : "password"}
-        required
-        placeholder="Password"
-        value={studentRegPassword}
-        onChange={(e) => {
-          setStudentRegPassword(e.target.value);
-          setStudentPasswordMismatch(false);
-        }}
-      />
-      <button
-        type="button"
-        className="password-toggle-btn"
-        onClick={() =>
-          setShowStudentRegPassword(!showStudentRegPassword)
-        }
-        aria-label="Toggle password visibility"
-      >
-        {showStudentRegPassword ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-            <line x1="1" y1="1" x2="23" y2="23"></line>
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-        )}
-      </button>
-    </div>
-  </div>
+            <div className="form-row">
+              <div className="form-field-wrapper">
+                <div className="password-input-wrapper">
+                  <input
+                    className={`auth-input ${studentPasswordMismatch ? "input-error" : ""}`}
+                    type={showStudentRegPassword ? "text" : "password"}
+                    required
+                    placeholder="Password"
+                    value={studentRegPassword}
+                    onChange={(e) => {
+                      setStudentRegPassword(e.target.value);
+                      setStudentPasswordMismatch(false);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() =>
+                      setShowStudentRegPassword(!showStudentRegPassword)
+                    }
+                    aria-label="Toggle password visibility"
+                  >
+                    {showStudentRegPassword ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
 
-  <div className="form-field-wrapper">
-    <input
-      className="auth-input"
-      type="tel"
-      required
-      placeholder="Batch No"
-      value={studentRegBatchNo}
-      onChange={(e) => setStudentRegBatchNo(e.target.value)}
-    />
-  </div>
-</div>
+              <div className="form-field-wrapper">
+                <input
+                  className="auth-input"
+                  type="tel"
+                  required
+                  placeholder="Batch No"
+                  value={studentRegBatchNo}
+                  onChange={(e) => setStudentRegBatchNo(e.target.value)}
+                />
+              </div>
+            </div>
 
-<div className="form-row">
-  <div className="form-field-wrapper">
-    <div className="password-field-container">
-      <div className="password-input-wrapper">
-        <input
-          className={`auth-input ${studentPasswordMismatch ? "input-error" : ""}`}
-          type={showStudentRegConfirmPassword ? "text" : "password"}
-          required
-          placeholder="Confirm Password"
-          value={studentRegConfirmPassword}
-          onChange={(e) => {
-            setStudentRegConfirmPassword(e.target.value);
-            setStudentPasswordMismatch(false);
-          }}
-        />
-        <button
-          type="button"
-          className="password-toggle-btn"
-          onClick={() =>
-            setShowStudentRegConfirmPassword(
-              !showStudentRegConfirmPassword,
-            )
-          }
-          aria-label="Toggle password visibility"
-        >
-          {showStudentRegConfirmPassword ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-              <line x1="1" y1="1" x2="23" y2="23"></line>
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          )}
-        </button>
-      </div>
-      {studentPasswordMismatch && (
-        <p className="error-message">Passwords do not match</p>
-      )}
-    </div>
-  </div>
+            <div className="form-row">
+              <div className="form-field-wrapper">
+                <div className="password-field-container">
+                  <div className="password-input-wrapper">
+                    <input
+                      className={`auth-input ${studentPasswordMismatch ? "input-error" : ""}`}
+                      type={showStudentRegConfirmPassword ? "text" : "password"}
+                      required
+                      placeholder="Confirm Password"
+                      value={studentRegConfirmPassword}
+                      onChange={(e) => {
+                        setStudentRegConfirmPassword(e.target.value);
+                        setStudentPasswordMismatch(false);
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() =>
+                        setShowStudentRegConfirmPassword(
+                          !showStudentRegConfirmPassword,
+                        )
+                      }
+                      aria-label="Toggle password visibility"
+                    >
+                      {showStudentRegConfirmPassword ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                          <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  {studentPasswordMismatch && (
+                    <p className="error-message">Passwords do not match</p>
+                  )}
+                </div>
+              </div>
 
-  <div className="form-field-wrapper">
-    <input
-      className="auth-input"
-      type="number"
-      required
-      placeholder="Semester"
-      value={studentRegSemester}
-      onChange={(e) => setStudentRegSemester(e.target.value)}
-    />
-  </div>
-</div>
+              <div className="form-field-wrapper">
+                <input
+                  className="auth-input"
+                  type="number"
+                  required
+                  placeholder="Semester"
+                  value={studentRegSemester}
+                  onChange={(e) => setStudentRegSemester(e.target.value)}
+                />
+              </div>
+            </div>
 
             <button type="submit" className="auth-button registration-button">
               Register
@@ -690,150 +690,150 @@ export default function AuthPage() {
               />
             </div>
 
-           <div className="form-row">
-  <div className="form-field-wrapper">
-    <div className="password-input-wrapper">
-      <input
-        className={`auth-input ${alumniPasswordMismatch ? "input-error" : ""}`}
-        type={showAlumniRegPassword ? "text" : "password"}
-        required
-        placeholder="Password"
-        value={alumniRegPassword}
-        onChange={(e) => {
-          setAlumniRegPassword(e.target.value);
-          setAlumniPasswordMismatch(false);
-        }}
-      />
-      <button
-        type="button"
-        className="password-toggle-btn"
-        onClick={() =>
-          setShowAlumniRegPassword(!showAlumniRegPassword)
-        }
-        aria-label="Toggle password visibility"
-      >
-        {showAlumniRegPassword ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-            <line x1="1" y1="1" x2="23" y2="23"></line>
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-        )}
-      </button>
-    </div>
-  </div>
+            <div className="form-row">
+              <div className="form-field-wrapper">
+                <div className="password-input-wrapper">
+                  <input
+                    className={`auth-input ${alumniPasswordMismatch ? "input-error" : ""}`}
+                    type={showAlumniRegPassword ? "text" : "password"}
+                    required
+                    placeholder="Password"
+                    value={alumniRegPassword}
+                    onChange={(e) => {
+                      setAlumniRegPassword(e.target.value);
+                      setAlumniPasswordMismatch(false);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() =>
+                      setShowAlumniRegPassword(!showAlumniRegPassword)
+                    }
+                    aria-label="Toggle password visibility"
+                  >
+                    {showAlumniRegPassword ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
 
-  <div className="form-field-wrapper">
-    <input
-      className="auth-input"
-      type="text"
-      required
-      placeholder="Department"
-      value={alumniRegDepartment}
-      onChange={(e) => setAlumniRegDepartment(e.target.value)}
-    />
-  </div>
-</div>
+              <div className="form-field-wrapper">
+                <input
+                  className="auth-input"
+                  type="text"
+                  required
+                  placeholder="Department"
+                  value={alumniRegDepartment}
+                  onChange={(e) => setAlumniRegDepartment(e.target.value)}
+                />
+              </div>
+            </div>
 
-<div className="form-row">
-  <div className="form-field-wrapper">
-    <div className="password-field-container">
-      <div className="password-input-wrapper">
-        <input
-          className={`auth-input ${alumniPasswordMismatch ? "input-error" : ""}`}
-          type={showAlumniRegConfirmPassword ? "text" : "password"}
-          required
-          placeholder="Confirm Password"
-          value={alumniRegConfirmPassword}
-          onChange={(e) => {
-            setAlumniRegConfirmPassword(e.target.value);
-            setAlumniPasswordMismatch(false);
-          }}
-        />
-        <button
-          type="button"
-          className="password-toggle-btn"
-          onClick={() =>
-            setShowAlumniRegConfirmPassword(
-              !showAlumniRegConfirmPassword,
-            )
-          }
-          aria-label="Toggle password visibility"
-        >
-          {showAlumniRegConfirmPassword ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-              <line x1="1" y1="1" x2="23" y2="23"></line>
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          )}
-        </button>
-      </div>
-      {alumniPasswordMismatch && (
-        <p className="error-message">Passwords do not match</p>
-      )}
-    </div>
-  </div>
+            <div className="form-row">
+              <div className="form-field-wrapper">
+                <div className="password-field-container">
+                  <div className="password-input-wrapper">
+                    <input
+                      className={`auth-input ${alumniPasswordMismatch ? "input-error" : ""}`}
+                      type={showAlumniRegConfirmPassword ? "text" : "password"}
+                      required
+                      placeholder="Confirm Password"
+                      value={alumniRegConfirmPassword}
+                      onChange={(e) => {
+                        setAlumniRegConfirmPassword(e.target.value);
+                        setAlumniPasswordMismatch(false);
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() =>
+                        setShowAlumniRegConfirmPassword(
+                          !showAlumniRegConfirmPassword,
+                        )
+                      }
+                      aria-label="Toggle password visibility"
+                    >
+                      {showAlumniRegConfirmPassword ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                          <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  {alumniPasswordMismatch && (
+                    <p className="error-message">Passwords do not match</p>
+                  )}
+                </div>
+              </div>
 
-  <div className="form-field-wrapper">
-    <input
-      className="auth-input"
-      type="tel"
-      required
-      placeholder="Contact Number"
-      value={alumniRegContactNo}
-      onChange={(e) => setAlumniRegContactNo(e.target.value)}
-    />
-  </div>
-</div>
+              <div className="form-field-wrapper">
+                <input
+                  className="auth-input"
+                  type="tel"
+                  required
+                  placeholder="Contact Number"
+                  value={alumniRegContactNo}
+                  onChange={(e) => setAlumniRegContactNo(e.target.value)}
+                />
+              </div>
+            </div>
 
             <button type="submit" className="auth-button registration-button">
               Register

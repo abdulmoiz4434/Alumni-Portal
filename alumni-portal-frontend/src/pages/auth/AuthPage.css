@@ -325,6 +325,7 @@ body {
 .form-row {
   display: flex;
   gap: 3rem;
+  align-items: flex-start;
 }
 
 .form-row .auth-input {
@@ -363,7 +364,6 @@ body {
   font-weight: 700;
   font-size: 1rem;
   border-radius: 0.6rem;
-  margin-top: 1rem;
 }
 
 .registration-button:hover {
