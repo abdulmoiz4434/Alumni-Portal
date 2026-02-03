@@ -83,14 +83,14 @@ exports.registerAlumni = async (req, res) => {
       email, 
       password, 
       fullName, 
-      graduationYear,
+      graduationYear, // Changed from graduation_year
       regNo,
       department,
       contactNo,
       degree
     } = req.body;
 
-    // Updated validation to include new required university fields
+    // 1. Validation check
     if (!email || !password || !fullName || !graduationYear || !regNo || !department) {
       return errorResponse(res, 'Please provide all required fields (Email, Password, Name, Reg No, Grad Year, Dept)');
     }
@@ -105,6 +105,7 @@ exports.registerAlumni = async (req, res) => {
       return errorResponse(res, 'Registration number already exists for an alumni');
     }
 
+    // 2. Create User
     const user = await User.create({
       email,
       password,
@@ -112,19 +113,20 @@ exports.registerAlumni = async (req, res) => {
       role: 'alumni'
     });
 
+    // 3. Create Alumni Profile
     const alumni = await Alumni.create({
       user: user._id,
       regNo,
       department,
       contactNo,
       degree: degree || "BSCS", 
-      graduationYear,
+      graduationYear, // Ensure this matches the variable name at the top
       company: req.body.company || '',
-      jobTitle: req.body.job_title || '',
+      jobTitle: req.body.jobTitle || '', // Fixed: Changed from job_title to camelCase
       location: req.body.location || '',
       industry: req.body.industry || '',
       skills: req.body.skills || [],
-      mentorshipAvailable: req.body.mentorshipAvailable || false
+      mentorshipAvailable: req.body.mentorshipAvailable || false // Fixed: Changed from snake_case
     });
 
     const token = generateToken(user._id, user.role);

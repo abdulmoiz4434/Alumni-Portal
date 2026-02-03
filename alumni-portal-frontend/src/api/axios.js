@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const instance = axios.create({
-    baseURL: 'https://alumni-portal-backend-two.vercel.app/api', // Deployed backend URL
+const instance = axios.create({ 
+    baseURL: 'http://localhost:5000/api', 
 });
 
 // This interceptor automatically attaches the Token to every request
