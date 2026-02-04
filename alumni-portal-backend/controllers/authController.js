@@ -150,7 +150,7 @@ exports.registerAlumni = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     if (!email || !password) {
       return errorResponse(res, 'Please provide email and password');
@@ -159,6 +159,10 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return errorResponse(res, 'Invalid credentials', 401);
+    }
+
+    if (role && user.role !== role) {
+      return errorResponse(res, `This account is registered as an ${user.role}. Please use the correct login form.`, 401);
     }
 
     const isMatch = await user.comparePassword(password);

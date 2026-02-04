@@ -65,13 +65,27 @@ export default function Profile() {
   // 2. Save logic to Backend
   const handleSave = async () => {
   try {
-    const payload = {
+    let payload = {
       about: profile.about,
-      company: profile.company,
-      jobTitle: profile.jobTitle, // Changed from job_title
-      linkedin: profile.linkedin,
+      degree: profile.degree,
       skills: profile.skills ? profile.skills.split(",").map(s => s.trim()) : []
     };
+
+    if (profile.role === 'alumni') {
+      payload = { ...payload, 
+        linkedin: profile.linkedin, 
+        company: profile.company, 
+        jobTitle: profile.jobTitle,
+        location: profile.location
+      };
+    } else {
+      payload = { ...payload, 
+        semester: profile.semester, 
+        cgpa: profile.cgpa, 
+        careerGoals: profile.careerGoals,
+        interests: profile.interests
+      };
+    }
 
     const res = await API.put("/auth/update-profile", payload);
 
@@ -133,6 +147,7 @@ export default function Profile() {
 
         {/* Content */}
         <div className="alumni-profile-content">
+
           <section className="alumni-profile-section">
             <h2 className="alumni-profile-section-title">About</h2>
             <div className="alumni-profile-section-content">
@@ -152,24 +167,42 @@ export default function Profile() {
           </section>
 
           <section className="alumni-profile-section">
-            <h2 className="alumni-profile-section-title">Professional Information</h2>
+            <h2 className="alumni-profile-section-title">
+              {profile.role === 'student' ? 'Academic Information' : 'Professional Information'}
+            </h2>
             <div className="alumni-profile-section-content">
               <div className="alumni-profile-grid">
-                {["company", "jobTitle", "skills", "linkedin"].map((field) => (
+                {/* 1. Define fields based on role */}
+                {(profile.role === 'alumni' 
+                  ? ["degree", "company", "jobTitle", "linkedin", "skills", "location"] 
+                  : ["degree", "semester", "cgpa", "careerGoals", "skills", "interests"]
+                ).map((field) => (
                   <div className="alumni-profile-field" key={field}>
                     <label className="alumni-profile-label">
-                      {field === "jobTitle" ? "Job Title" : field.charAt(0).toUpperCase() + field.slice(1)}
+                      {/* Helper to format camelCase to Title Case */}
+                      {field === "jobTitle" ? "Job Title" : 
+                      field === "careerGoals" ? "Career Goals" : 
+                      field === "cgpa" ? "CGPA" : 
+                      field.charAt(0).toUpperCase() + field.slice(1)}
                     </label>
+
                     {isEditing ? (
                       <input
-                        type={field === "linkedin" ? "url" : "text"}
+                        type={field === "linkedin" ? "url" : field === "cgpa" ? "number" : "text"}
                         name={field}
+                        step={field === "cgpa" ? "0.01" : "1"}
                         value={profile[field]}
                         onChange={handleChange}
                         className="alumni-profile-input"
+                        placeholder={`Enter your ${field}...`}
                       />
                     ) : field === "linkedin" ? (
-                      <a href={profile[field]} className="alumni-profile-link" target="_blank" rel="noreferrer">
+                      <a 
+                        href={profile[field]?.startsWith('http') ? profile[field] : `https://${profile[field]}`} 
+                        className="alumni-profile-link" 
+                        target="_blank" 
+                        rel="noreferrer"
+                      >
                         {profile[field] || "Add LinkedIn"}
                       </a>
                     ) : (

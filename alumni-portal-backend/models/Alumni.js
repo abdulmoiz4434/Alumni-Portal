@@ -64,7 +64,10 @@ const alumniSchema = new mongoose.Schema(
     mentorshipAvailable: {
       type: Boolean,
       default: false
-    }
+    },
+    linkedin: { 
+      type: String, 
+      default: "" }
   },
   { timestamps: true }
 );

@@ -86,7 +86,7 @@ export default function AuthPage() {
 
     try {
       setStudentLoginError(false);
-      await loginUser(studentEmail, studentPassword);
+      await loginUser(studentEmail, studentPassword, 'student');
       navigate("/dashboard");
     } catch (err) {
       setStudentLoginError(true);
@@ -99,7 +99,7 @@ export default function AuthPage() {
 
     try {
       setAlumniLoginError(false);
-      await loginUser(alumniEmail, alumniPassword);
+      await loginUser(alumniEmail, alumniPassword, 'alumni');
       navigate("/dashboard");
     } catch (err) {
       setAlumniLoginError(true);
@@ -363,10 +363,10 @@ export default function AuthPage() {
                     </svg>
                   )}
                 </button>
-                {alumniLoginError && (
+              </div>
+              {alumniLoginError && (
                   <p className="error-message">Invalid email or password</p>
                 )}
-              </div>
             </div>
 
             <div className="remember-forgot-container">
