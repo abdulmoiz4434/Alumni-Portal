@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { User, Calendar, X, Search, UserPlus, PlusCircle } from "lucide-react";
 import "./Mentorship.css";
 
 export default function Mentorship() {
@@ -240,17 +241,7 @@ export default function Mentorship() {
                     />
                   ) : (
                     <div className="mentor-avatar-placeholder">
-                      <svg
-                        width="40"
-                        height="40"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <circle cx="12" cy="8" r="4" />
-                        <path d="M16 20c0-4-8-4-8 0" />
-                      </svg>
+                      <User size={40} />
                     </div>
                   )}
                 </div>
@@ -271,19 +262,7 @@ export default function Mentorship() {
                 </p>
                 <div className="mentorship-meta">
                   <div className="meta-item">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
+                    <Calendar size={16} />
                     <span>{mentorship.duration}</span>
                   </div>
                 </div>
@@ -331,17 +310,7 @@ export default function Mentorship() {
                 className="modal-close"
                 onClick={() => setShowConnectModal(false)}
               >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
+                <X size={22} />
               </button>
             </div>
             <div className="modal-body">
@@ -356,6 +325,7 @@ export default function Mentorship() {
                   placeholder="Enter your full name"
                   required
                 />
+       
               </div>
               <div className="form-row">
                 <div className="form-group">
@@ -428,148 +398,148 @@ export default function Mentorship() {
       )}
 
       {/* Offer Mentorship Modal */}
-     {showOfferModal && (
-  <div className="modal-overlay" onClick={() => setShowOfferModal(false)}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-header">
-        <h2 className="modal-title">Offer Mentorship</h2>
-        <button
-          className="modal-close"
-          onClick={() => setShowOfferModal(false)}
-        >
-          ✕
-        </button>
-      </div>
+      {showOfferModal && (
+        <div className="modal-overlay" onClick={() => setShowOfferModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">Offer Mentorship</h2>
+              <button
+                className="modal-close"
+                onClick={() => setShowOfferModal(false)}
+              >
+                ✕
+              </button>
+            </div>
 
-      <div className="modal-body">
-        <div className="form-group">
-          <label className="form-label">Mentorship Title</label>
-          <input
-            type="text"
-            name="title"
-            placeholder="e.g. React & Frontend Career Guidance"
-            value={newMentorshipForm.title}
-            onChange={handleNewFormChange}
-            className="form-input"
-          />
-        </div>
+            <div className="modal-body">
+              <div className="form-group">
+                <label className="form-label">Mentorship Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="e.g. React & Frontend Career Guidance"
+                  value={newMentorshipForm.title}
+                  onChange={handleNewFormChange}
+                  className="form-input"
+                />
+              </div>
 
-        <div className="form-group">
-          <label className="form-label">Your Name</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="e.g. Ahmed Khan"
-            value={newMentorshipForm.name}
-            onChange={handleNewFormChange}
-            className="form-input"
-          />
-        </div>
+              <div className="form-group">
+                <label className="form-label">Your Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="e.g. Ahmed Khan"
+                  value={newMentorshipForm.name}
+                  onChange={handleNewFormChange}
+                  className="form-input"
+                />
+              </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="form-label">Role</label>
-            <input
-              type="text"
-              name="role"
-              placeholder="e.g. Senior Frontend Engineer"
-              value={newMentorshipForm.role}
-              onChange={handleNewFormChange}
-              className="form-input"
-            />
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Role</label>
+                  <input
+                    type="text"
+                    name="role"
+                    placeholder="e.g. Senior Frontend Engineer"
+                    value={newMentorshipForm.role}
+                    onChange={handleNewFormChange}
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Company</label>
+                  <input
+                    type="text"
+                    name="company"
+                    placeholder="e.g. Google"
+                    value={newMentorshipForm.company}
+                    onChange={handleNewFormChange}
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Batch Year</label>
+                <input
+                  type="text"
+                  name="batch"
+                  placeholder="e.g. 2018"
+                  value={newMentorshipForm.batch}
+                  onChange={handleNewFormChange}
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Field</label>
+                <input
+                  type="text"
+                  name="field"
+                  placeholder="e.g. Frontend Development"
+                  value={newMentorshipForm.field}
+                  onChange={handleNewFormChange}
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Duration</label>
+                <input
+                  type="text"
+                  name="duration"
+                  placeholder="e.g. 3 months"
+                  value={newMentorshipForm.duration}
+                  onChange={handleNewFormChange}
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea
+                  name="description"
+                  placeholder="Briefly describe what mentees will learn and how you will guide them"
+                  value={newMentorshipForm.description}
+                  onChange={handleNewFormChange}
+                  className="form-textarea"
+                  rows="3"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Skills (comma separated)</label>
+                <input
+                  type="text"
+                  name="skills"
+                  placeholder="e.g. React, JavaScript, UI/UX, Career Planning"
+                  value={newMentorshipForm.skills}
+                  onChange={handleNewFormChange}
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="modal-button modal-button-cancel"
+                onClick={() => setShowOfferModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="modal-button modal-button-submit"
+                onClick={handleOfferSubmit}
+              >
+                Add Mentorship
+              </button>
+            </div>
           </div>
-
-          <div className="form-group">
-            <label className="form-label">Company</label>
-            <input
-              type="text"
-              name="company"
-              placeholder="e.g. Google"
-              value={newMentorshipForm.company}
-              onChange={handleNewFormChange}
-              className="form-input"
-            />
-          </div>
         </div>
-
-        <div className="form-group">
-          <label className="form-label">Batch Year</label>
-          <input
-            type="text"
-            name="batch"
-            placeholder="e.g. 2018"
-            value={newMentorshipForm.batch}
-            onChange={handleNewFormChange}
-            className="form-input"
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Field</label>
-          <input
-            type="text"
-            name="field"
-            placeholder="e.g. Frontend Development"
-            value={newMentorshipForm.field}
-            onChange={handleNewFormChange}
-            className="form-input"
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Duration</label>
-          <input
-            type="text"
-            name="duration"
-            placeholder="e.g. 3 months"
-            value={newMentorshipForm.duration}
-            onChange={handleNewFormChange}
-            className="form-input"
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Description</label>
-          <textarea
-            name="description"
-            placeholder="Briefly describe what mentees will learn and how you will guide them"
-            value={newMentorshipForm.description}
-            onChange={handleNewFormChange}
-            className="form-textarea"
-            rows="3"
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Skills (comma separated)</label>
-          <input
-            type="text"
-            name="skills"
-            placeholder="e.g. React, JavaScript, UI/UX, Career Planning"
-            value={newMentorshipForm.skills}
-            onChange={handleNewFormChange}
-            className="form-input"
-          />
-        </div>
-      </div>
-
-      <div className="modal-footer">
-        <button
-          className="modal-button modal-button-cancel"
-          onClick={() => setShowOfferModal(false)}
-        >
-          Cancel
-        </button>
-        <button
-          className="modal-button modal-button-submit"
-          onClick={handleOfferSubmit}
-        >
-          Add Mentorship
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      )}
     </div>
   );
 }

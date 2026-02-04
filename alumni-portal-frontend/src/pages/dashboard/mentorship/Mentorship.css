@@ -6,7 +6,7 @@
   min-height: 100vh;
   background: #f9fafb;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  padding: 0;
+  padding-bottom: 20px;
   margin: 0;
   box-sizing: border-box;
 }
@@ -123,7 +123,7 @@
   padding: 20px; /* adjusted like Success Stories */
   display: flex;
   flex-direction: column;
-  gap: 16px; /* same as Success Stories */
+  gap: 12px; /* same as Success Stories */
   transition: all 0.2s ease;
 }
 
@@ -138,7 +138,6 @@
   display: flex;
   align-items: center;
   gap: 12px; /* adjusted like Success Stories */
-  padding-bottom: 12px;
   border-bottom: 1px solid #f3f4f6;
 }
 
@@ -165,6 +164,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: #111827;
+  margin: 0;
 }
 
 .mentorship-description {
@@ -172,8 +172,6 @@
   line-height: 1.5;
   color: #374151;
   display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
@@ -232,6 +230,7 @@ margin-bottom: 15px;}
  
 
 /* MODAL */
+/* MODAL */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -246,12 +245,15 @@ margin-bottom: 15px;}
 .modal-content {
   background: #ffffff;
   border-radius: 16px;
-  max-width: 600px;
+  max-width: 700px; /* slightly wider for 2-column layout */
   width: 100%;
   padding: 24px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   max-height: 90vh;
-  overflow-y: auto;
+  overflow-y: hidden; /* remove scroll */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* MODAL HEADER */
@@ -283,6 +285,7 @@ margin-bottom: 15px;}
 /* FORM */
 .form-group {
   margin-bottom: 16px;
+  flex: 1 1 auto;
 }
 
 .form-label {
@@ -295,7 +298,7 @@ margin-bottom: 15px;}
 
 .form-input,
 .form-textarea {
-  width: 95%;
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid #1a1a1a;
   border-radius: 10px;
@@ -314,10 +317,32 @@ margin-bottom: 15px;}
   box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.15);
 }
 
+/* Two-column layout for certain rows */
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 45%; /* ensures two fields per line */
+}
+
+/* Reduce textarea height slightly */
+.form-textarea {
+  resize: vertical;
+  min-height: 50px;
+  max-height: 80px;
+}
+
+/* MODAL FOOTER */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  margin-top: 8px;
+  flex-shrink: 0;
 }
 
 /* MODAL BUTTONS */
@@ -349,6 +374,20 @@ margin-bottom: 15px;}
 .modal-button-submit:hover {
   background: #d4aa28;
   transition: 0.4s ease;
+}
+
+/* Make modal responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 95%;
+    padding: 16px;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+  .form-row .form-group {
+    min-width: 100%;
+  }
 }
 
 /* RESPONSIVE */
