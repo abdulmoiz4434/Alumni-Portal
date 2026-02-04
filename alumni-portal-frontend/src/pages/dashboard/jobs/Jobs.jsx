@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  Search,
+  Building2,
+  Clock,
+  MapPin,
+  Info,
+  Briefcase, 
+} from "lucide-react";
 import "./Jobs.css";
 
 export default function Jobs() {
@@ -246,21 +254,7 @@ export default function Jobs() {
           {/* Search and Filter Section */}
           <div className="search-filter-section">
             <div className="search-box">
-              <svg
-                className="search-icon"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Search size={22} className="search-icon" />
               <input
                 type="text"
                 placeholder="Search by title, company, or keyword..."
@@ -331,15 +325,7 @@ export default function Jobs() {
                   </div>
                   <h2 className="job-title">{item.title}</h2>
                   <p className="company-name">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                    >
-                      <path d="M3 3h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm0-1a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2H3z" />
-                      <path d="M5 5h6v1H5V5zm0 2h6v1H5V7z" />
-                    </svg>
+                 <Building2 size={20} />
                     {item.company}
                   </p>
                 </div>
@@ -347,39 +333,20 @@ export default function Jobs() {
                 <div className="card-body">
                   <div className="info-row">
                     <span className="info-item">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="currentColor"
-                      >
-                        <path d="M7 0a7 7 0 100 14A7 7 0 007 0zm0 13A6 6 0 117 1a6 6 0 010 12z" />
-                        <path d="M7 3v4l3 2-.6.8-3.4-2.3V3H7z" />
-                      </svg>
+                     <Clock size={20} />
+
                       {item.category === "job"
                         ? item.experience
                         : item.duration}
                     </span>
                     <span className="info-item">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="currentColor"
-                      >
-                        <path d="M7 0C4.24 0 2 2.24 2 5c0 3.5 5 9 5 9s5-5.5 5-9c0-2.76-2.24-5-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z" />
-                      </svg>
+                     <MapPin size={20} />
+
                       {item.location}
                     </span>
                     <span className="info-item">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="currentColor"
-                      >
-                        <path d="M7 0a7 7 0 100 14A7 7 0 007 0zm1 10H6V6h2v4zm0-5H6V3h2v2z" />
-                      </svg>
+                     <Briefcase size={20} />
+
                       {item.type}
                     </span>
                   </div>
@@ -399,14 +366,8 @@ export default function Jobs() {
 
                   <div className="card-footer">
                     <div className="salary-info">
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                      >
-                        <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm1 12H7V7h2v5zm0-6H7V4h2v2z" />
-                      </svg>
+                     <Info size={20} />
+
                       <span>
                         {item.category === "job" ? item.salary : item.stipend}
                       </span>
