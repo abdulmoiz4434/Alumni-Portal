@@ -316,19 +316,26 @@ export default function Jobs() {
                 key={item.id}
                 className={`opportunity-card ${item.category}`}
               >
-                <div className="card-header">
-                  <div className="card-top">
-                    <span className={`badge ${item.category}`}>
-                      {item.category === "job" ? "Job" : "Internship"}
-                    </span>
-                    <span className="posted-date">{item.postedDate}</span>
-                  </div>
-                  <h2 className="job-title">{item.title}</h2>
-                  <p className="company-name">
-                 <Building2 size={20} />
-                    {item.company}
-                  </p>
-                </div>
+<div className="card-header">
+  <div className="card-meta">
+    <span className={`badge ${item.category}`}>
+      {item.category === "job" ? "Job" : "Internship"}
+    </span>
+
+    <span className="posted-date">
+      {item.postedDate}
+    </span>
+  </div>
+
+  <h2 className="job-title">{item.title}</h2>
+
+  <p className="company-name">
+    <Building2 size={18} />
+    {item.company}
+  </p>
+</div>
+
+
 
                 <div className="card-body">
                   <div className="info-row">
