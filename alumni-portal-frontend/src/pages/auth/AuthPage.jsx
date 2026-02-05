@@ -81,16 +81,19 @@ export default function AuthPage() {
 
   // --- CONNECTED HANDLERS ---
 
+  const handleStudentLogin = async (e) => {
+    e.preventDefault();
+    if (!studentEmail || !studentPassword) return alert("Missing fields");
 
-const handleStudentLogin = (e) => {
-  e.preventDefault();
+    try {
+      setStudentLoginError(false);
+      await loginUser(studentEmail, studentPassword, "student");
+      navigate("/dashboard");
+    } catch (err) {
+      setStudentLoginError(true);
+    }
+  };
 
-  if (!studentEmail || !studentPassword) return alert("Missing fields");
-
-  // Navigate immediately on form submit
-  navigate("/dashboard");
-
-};
   const handleAlumniLogin = async (e) => {
     e.preventDefault();
     if (!alumniEmail || !alumniPassword) return alert("Missing fields");
