@@ -1,4 +1,4 @@
-/* Topbar container */
+/* ===== Existing styles (unchanged) ===== */
 .topbar {
   position: relative;
   height: 40px;
@@ -12,35 +12,32 @@
   overflow: hidden;
 }
 
-/* Left side: logo + portal title */
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: 12px; /* space between logo and title */
+  gap: 12px; 
 }
 
-/* Logo image */
 .topbar-logo-img {
-  height: 56px;    /* adjusted from old 70px */
-  width: 56px;     
+  height: 56px;
+  width: 56px;
   object-fit: contain;
-  border-radius: 4px; /* optional */
+  border-radius: 4px; 
 }
 
-/* Portal title next to logo */
 .topbar-logo {
   font-size: 22px;
   font-weight: 600;
   color: #dbdee5;
   margin: 0;
 }
-/* Sliding welcome text */
+
 .topbar-welcome {
   position: absolute;
-  left: 470px;                /* distance from Alumni Portal heading */
+  left: 470px; 
   white-space: nowrap;
-  color: #d0cfcb;             /* yellow */
-  font-size: 20px;            /* perfect for 40px height */
+  color: #d0cfcb; 
+  font-size: 20px; 
   font-weight: 500;
   letter-spacing: 0.3px;
 
@@ -49,7 +46,6 @@
   opacity: 0;
 }
 
-/* Slide from right to fixed position */
 @keyframes slideInWelcome {
   0% {
     transform: translateX(100%);
@@ -61,7 +57,6 @@
   }
 }
 
-/* Right side: notifications, social icons, logout */
 .topbar-right {
   display: flex;
   align-items: center;
@@ -89,4 +84,52 @@
 .topbar-social img:hover {
   transform: scale(1.15);
   opacity: 0.8;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 1024px) {
+  .topbar-logo-img {
+    height: 48px;
+    width: 48px;
+  }
+  .topbar-logo {
+    font-size: 18px;
+  }
+
+  .topbar-social {
+    gap: 18px;
+    padding-right: 20px;
+  }
+  .topbar-social img {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 10px 12px;
+  }
+  .topbar-left {
+    margin-left: 50px; /* Push it right, away from menu icon */
+    gap: 8px;
+  }
+  .topbar-logo-img {
+    height: 40px;
+    width: 40px;
+  }
+  .topbar-logo {
+    font-size: 16px;
+  }
+  .topbar-welcome {
+    display: none; /* hide for small screens */
+  }
+  .topbar-social {
+    gap: 12px;
+    padding-right: 12px;
+  }
+  .topbar-social img {
+    width: 18px;
+    height: 18px;
+  }
 }

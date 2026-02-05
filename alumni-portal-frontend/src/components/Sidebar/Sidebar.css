@@ -1,4 +1,3 @@
-/* Sidebar container */
 .sidebar {
   width: 230px;
   background: #191a1b;
@@ -6,9 +5,13 @@
   padding: 20px 16px;
   box-sizing: border-box;
   flex-shrink: 0;
-  height: 100%;        
-  overflow: hidden;    
+  height: 100%;
+  overflow: hidden;
+
+  /* mobile animation */
+  transition: transform 0.3s ease;
 }
+
 
 /* Navigation wrapper */
 .sidebar-nav {
@@ -71,4 +74,62 @@
   color: #dbde06;                 /* accent color (green) */
 }
 
+.menu-btn {
+  display: none;
+  position: fixed;
+  top: 9px;
+  left: 10px;
+  z-index: 1100;
 
+  background: #191a1b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 999;
+}
+
+/* Sidebar container (mobile) */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 230px;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: 66px 16px 20px 16px; /* add top padding to leave space for X */
+    box-sizing: border-box;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Close button top-right inside sidebar */
+
+
+  /* Menu button (hamburger) stays fixed on left */
+  .menu-btn {
+    display: block;
+    position: fixed;
+    top: 9px;
+    left: 10px;
+    z-index: 1101; 
+    background: #191a1b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+  }
+}
