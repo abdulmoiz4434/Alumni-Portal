@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import { format, parseISO, isPast, isFuture, isToday } from "date-fns";
-import { 
-  FaCalendarAlt, 
-  FaClock, 
-  FaMapMarkerAlt, 
-  FaUsers, 
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaMapMarkerAlt,
+  FaUsers,
   FaFilter,
   FaSearch,
   FaUserGraduate,
   FaUserTie,
   FaGlobe,
   FaCheckCircle,
-  FaTimesCircle
+  FaTimesCircle,
 } from "react-icons/fa";
 import API from "../../../api/axios";
 import "./Events.css";
@@ -22,7 +22,7 @@ export default function Events() {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
-  
+
   // Filters
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedAudience, setSelectedAudience] = useState("all");
@@ -39,7 +39,7 @@ export default function Events() {
     "Sports",
     "Cultural",
     "Academic",
-    "Other"
+    "Other",
   ];
 
   // Fetch events
@@ -66,10 +66,10 @@ export default function Events() {
         params: {
           status: selectedStatus,
           category: selectedCategory !== "all" ? selectedCategory : undefined,
-          search: searchQuery || undefined
-        }
+          search: searchQuery || undefined,
+        },
       });
-      
+
       setEvents(res.data.data);
       setFilteredEvents(res.data.data);
     } catch (err) {
@@ -87,23 +87,27 @@ export default function Events() {
     // Category filter
     if (selectedCategory !== "all") {
       filtered = filtered.filter(
-        event => event.category.toLowerCase() === selectedCategory.toLowerCase()
+        (event) =>
+          event.category.toLowerCase() === selectedCategory.toLowerCase(),
       );
     }
 
     // Audience filter
     if (selectedAudience !== "all") {
       filtered = filtered.filter(
-        event => event.targetAudience === selectedAudience || event.targetAudience === "all"
+        (event) =>
+          event.targetAudience === selectedAudience ||
+          event.targetAudience === "all",
       );
     }
 
     // Search filter
     if (searchQuery) {
-      filtered = filtered.filter(event =>
-        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.venue.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (event) =>
+          event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          event.venue.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -136,32 +140,36 @@ export default function Events() {
   };
 
   const isRegistered = (event) => {
-    return event.registeredUsers?.some(user => 
-      (user._id || user) === userId
-    );
+    return event.registeredUsers?.some((user) => (user._id || user) === userId);
   };
 
   const getAudienceIcon = (audience) => {
-    switch(audience) {
-      case 'students': return <FaUserGraduate />;
-      case 'alumni': return <FaUserTie />;
-      default: return <FaGlobe />;
+    switch (audience) {
+      case "students":
+        return <FaUserGraduate />;
+      case "alumni":
+        return <FaUserTie />;
+      default:
+        return <FaGlobe />;
     }
   };
 
   const getAudienceLabel = (audience) => {
-    switch(audience) {
-      case 'students': return 'Students Only';
-      case 'alumni': return 'Alumni Only';
-      default: return 'Open to All';
+    switch (audience) {
+      case "students":
+        return "Students Only";
+      case "alumni":
+        return "Alumni Only";
+      default:
+        return "Open to All";
     }
   };
 
   const getStatusColor = (eventDate) => {
     const date = parseISO(eventDate);
-    if (isPast(date)) return 'status-past';
-    if (isToday(date)) return 'status-today';
-    return 'status-upcoming';
+    if (isPast(date)) return "status-past";
+    if (isToday(date)) return "status-today";
+    return "status-upcoming";
   };
 
   if (loading) {
@@ -174,24 +182,23 @@ export default function Events() {
   }
 
   return (
-    <div className="events-page">
-      <div className="events-container">
-        
-        {/* Header */}
-        <div className="events-header">
-          <div className="events-header-content">
-            <h1 className="events-title">University Events</h1>
-            <p className="events-subtitle">
-              Discover and join upcoming events, workshops, and networking opportunities
-            </p>
-          </div>
+    <div className="events">
+      {/* Header */}
+      <div className="events-hero">
+        <div className="events-hero-content">
+          <h1 className="events-title">University Events</h1>
+          <p className="events-subtitle">
+            Discover and join upcoming events, workshops, and networking
+            opportunities
+          </p>
         </div>
+      </div>
 
-        {/* Filters Section */}
+      {/* Filters Section */}
+      <div className="events-container">
         <div className="events-filters-section">
-          
           {/* Search Bar */}
-          <div className="events-search-container">
+          <div className="events-search-box">
             <FaSearch className="events-search-icon" />
             <input
               type="text"
@@ -204,7 +211,6 @@ export default function Events() {
 
           {/* Filter Tabs */}
           <div className="events-filters">
-            
             {/* Status Filter */}
             <div className="filter-group">
               <label className="filter-label">
@@ -233,7 +239,7 @@ export default function Events() {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="filter-select"
               >
-                {categories.map(cat => (
+                {categories.map((cat) => (
                   <option key={cat} value={cat.toLowerCase()}>
                     {cat}
                   </option>
@@ -254,7 +260,6 @@ export default function Events() {
                 <option value="alumni">Alumni Only</option>
               </select>
             </div>
-
           </div>
         </div>
 
@@ -264,20 +269,22 @@ export default function Events() {
             <div className="events-empty-state">
               <div className="empty-state-icon">📅</div>
               <h3>No Events Found</h3>
-              <p>Try adjusting your filters or check back later for new events</p>
+              <p>
+                Try adjusting your filters or check back later for new events
+              </p>
             </div>
           ) : (
-            filteredEvents.map(event => (
+            filteredEvents.map((event) => (
               <div key={event._id} className="event-card">
-                
                 {/* Event Image */}
                 <div className="event-image-container">
                   {event.image ? (
-                    <img 
-                      src={event.image.startsWith('http') 
-                        ? event.image 
-                        : `http://localhost:5000${event.image}`
-                      } 
+                    <img
+                      src={
+                        event.image.startsWith("http")
+                          ? event.image
+                          : `http://localhost:5000${event.image}`
+                      }
                       alt={event.title}
                       className="event-image"
                     />
@@ -286,20 +293,24 @@ export default function Events() {
                       <FaCalendarAlt size={48} />
                     </div>
                   )}
-                  
+
                   {/* Category Badge */}
                   <div className="event-category-badge">{event.category}</div>
-                  
+
                   {/* Status Badge */}
-                  <div className={`event-status-badge ${getStatusColor(event.date)}`}>
-                    {isPast(parseISO(event.date)) ? 'Completed' : 
-                     isToday(parseISO(event.date)) ? 'Today' : 'Upcoming'}
+                  <div
+                    className={`event-status-badge ${getStatusColor(event.date)}`}
+                  >
+                    {isPast(parseISO(event.date))
+                      ? "Completed"
+                      : isToday(parseISO(event.date))
+                        ? "Today"
+                        : "Upcoming"}
                   </div>
                 </div>
 
                 {/* Event Content */}
                 <div className="event-content">
-                  
                   {/* Title */}
                   <h3 className="event-title">{event.title}</h3>
 
@@ -311,8 +322,8 @@ export default function Events() {
 
                   {/* Description */}
                   <p className="event-description">
-                    {event.description.length > 120 
-                      ? `${event.description.substring(0, 120)}...` 
+                    {event.description.length > 120
+                      ? `${event.description.substring(0, 120)}...`
                       : event.description}
                   </p>
 
@@ -320,7 +331,9 @@ export default function Events() {
                   <div className="event-details">
                     <div className="event-detail-item">
                       <FaCalendarAlt className="event-icon" />
-                      <span>{format(parseISO(event.date), 'MMM dd, yyyy')}</span>
+                      <span>
+                        {format(parseISO(event.date), "MMM dd, yyyy")}
+                      </span>
                     </div>
                     <div className="event-detail-item">
                       <FaClock className="event-icon" />
@@ -334,14 +347,15 @@ export default function Events() {
                       <FaUsers className="event-icon" />
                       <span>
                         {event.registeredUsers?.length || 0}
-                        {event.capacity ? `/${event.capacity}` : ''} registered
+                        {event.capacity ? `/${event.capacity}` : ""} registered
                       </span>
                     </div>
                   </div>
 
                   {/* Registration Button */}
                   <div className="event-actions">
-                    {isFuture(parseISO(event.date)) || isToday(parseISO(event.date)) ? (
+                    {isFuture(parseISO(event.date)) ||
+                    isToday(parseISO(event.date)) ? (
                       <>
                         {isRegistered(event) ? (
                           <button
@@ -354,15 +368,19 @@ export default function Events() {
                           <button
                             onClick={() => handleRegister(event._id)}
                             className="event-btn event-btn-register"
-                            disabled={!event.isRegistrationOpen || 
-                              (event.capacity && event.registeredUsers?.length >= event.capacity)}
+                            disabled={
+                              !event.isRegistrationOpen ||
+                              (event.capacity &&
+                                event.registeredUsers?.length >= event.capacity)
+                            }
                           >
                             <FaCheckCircle />
-                            {event.capacity && event.registeredUsers?.length >= event.capacity
-                              ? 'Event Full'
+                            {event.capacity &&
+                            event.registeredUsers?.length >= event.capacity
+                              ? "Event Full"
                               : !event.isRegistrationOpen
-                              ? 'Registration Closed'
-                              : 'Register Now'}
+                                ? "Registration Closed"
+                                : "Register Now"}
                           </button>
                         )}
                       </>
@@ -377,13 +395,11 @@ export default function Events() {
                   <div className="event-organizer">
                     <small>Organized by: {event.organizer}</small>
                   </div>
-
                 </div>
               </div>
             ))
           )}
         </div>
-
       </div>
     </div>
   );
