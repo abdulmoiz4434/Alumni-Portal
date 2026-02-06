@@ -11,13 +11,11 @@ export default function AuthPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Verify token is valid before redirecting
       API.get("/auth/verify")
         .then(() => {
           navigate("/dashboard");
         })
         .catch(() => {
-          // Token is invalid, remove it
           localStorage.removeItem("token");
         });
     }
@@ -81,15 +79,19 @@ export default function AuthPage() {
 
   // --- CONNECTED HANDLERS ---
 
-  const handleStudentLogin = async (e) => {
+ const handleStudentLogin = async (e) => {
     e.preventDefault();
     if (!studentEmail || !studentPassword) return alert("Missing fields");
 
     try {
       setStudentLoginError(false);
-      await loginUser(studentEmail, studentPassword, "student");
-      navigate("/dashboard");
+      const res = await loginUser(studentEmail, studentPassword, "student");
+      const { token, user } = res.data.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/dashboard", { replace: true });
     } catch (err) {
+      console.error("Login Error:", err);
       setStudentLoginError(true);
     }
   };
@@ -100,9 +102,13 @@ export default function AuthPage() {
 
     try {
       setAlumniLoginError(false);
-      await loginUser(alumniEmail, alumniPassword, "alumni");
-      navigate("/dashboard");
+      const res = await loginUser(alumniEmail, alumniPassword, "alumni");
+      const { token, user } = res.data.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      window.location.href = "/dashboard";
     } catch (err) {
+      console.error("Login Error:", err);
       setAlumniLoginError(true);
     }
   };
@@ -127,7 +133,8 @@ export default function AuthPage() {
       });
       if (res.data.success) {
         localStorage.setItem("token", res.data.data.token);
-        navigate("/dashboard");
+        localStorage.setItem("user", JSON.stringify(res.data.data.user));
+        window.location.href = "/dashboard";
       }
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
@@ -155,7 +162,8 @@ export default function AuthPage() {
       });
       if (res.data.success) {
         localStorage.setItem("token", res.data.data.token);
-        navigate("/dashboard");
+        localStorage.setItem("user", JSON.stringify(res.data.data.user));
+        window.location.href = "/dashboard";
       }
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");

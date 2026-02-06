@@ -5,20 +5,22 @@ const {
   registerAlumni,
   login,
   getMe,
-  updateProfile
+  updateProfile,
+  getAllUsers
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
-// Register routes
 router.post('/register/student', registerStudent);
 router.post('/register/alumni', registerAlumni);
 
-// Login route
 router.post('/login', login);
 
-// Get current user (protected route)
 router.get('/me', protect, getMe);
 
 router.put('/update-profile', protect, updateProfile);
+
+router.get('/all-users', protect, getAllUsers);
+
+router.get('/verify', protect, getMe);
 
 module.exports = router;

@@ -23,12 +23,13 @@ exports.registerStudent = async (req, res) => {
       semester,
       degree
     } = req.body;
+    const normalizedEmail = email.toLowerCase();
 
     if (!email || !password || !fullName || !regNo || !batch || !department) {
       return errorResponse(res, 'Please provide all required fields (Email, Password, Name, Reg No, Batch, Dept)');
     }
 
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email: normalizedEmail });
     if (userExists) {
       return errorResponse(res, 'User already exists with this email');
     }
@@ -39,7 +40,7 @@ exports.registerStudent = async (req, res) => {
     }
 
     const user = await User.create({
-      email,
+      email: normalizedEmail,
       password,
       fullName,
       role: 'student'
@@ -83,19 +84,18 @@ exports.registerAlumni = async (req, res) => {
       email, 
       password, 
       fullName, 
-      graduationYear, // Changed from graduation_year
+      graduationYear,
       regNo,
       department,
       contactNo,
       degree
     } = req.body;
-
-    // 1. Validation check
+    const normalizedEmail = email.toLowerCase();
     if (!email || !password || !fullName || !graduationYear || !regNo || !department) {
       return errorResponse(res, 'Please provide all required fields (Email, Password, Name, Reg No, Grad Year, Dept)');
     }
 
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email: normalizedEmail });
     if (userExists) {
       return errorResponse(res, 'User already exists with this email');
     }
@@ -107,7 +107,7 @@ exports.registerAlumni = async (req, res) => {
 
     // 2. Create User
     const user = await User.create({
-      email,
+      email: normalizedEmail,
       password,
       fullName,
       role: 'alumni'
@@ -151,12 +151,13 @@ exports.registerAlumni = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
+    const normalizedEmail = email.toLowerCase();
 
     if (!email || !password) {
       return errorResponse(res, 'Please provide email and password');
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: normalizedEmail }).select('+password');
     if (!user) {
       return errorResponse(res, 'Invalid credentials', 401);
     }
@@ -272,5 +273,36 @@ exports.updateProfile = async (req, res) => {
   } catch (error) {
     console.error('Update Profile Error:', error);
     return errorResponse(res, 'Server Error updating profile', 500);
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    // Get all users with basic info
+    const users = await User.find({ _id: { $ne: req.user.id } })
+      .select("fullName email role profilePicture")
+      .lean();
+    const detailedUsers = await Promise.all(
+      users.map(async (user) => {
+        let extra = {};
+        if (user.role === "alumni") {
+          const alumni = await Alumni.findOne({ user: user._id })
+            .select("department graduationYear batch company jobTitle skills")
+            .lean();
+          extra = alumni || {};
+        } else if (user.role === "student") {
+          const student = await Student.findOne({ user: user._id })
+            .select("department batch semester degree skills")
+            .lean();
+          extra = student || {};
+        }
+        return { ...user, ...extra };
+      })
+    );
+
+    return successResponse(res, detailedUsers, 200, "Users fetched successfully");
+  } catch (error) {
+    console.error("Get All Users Error:", error);
+    return errorResponse(res, "Failed to fetch users", 500);
   }
 };

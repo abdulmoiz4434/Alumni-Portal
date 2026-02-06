@@ -38,9 +38,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Encrypt password using bcrypt - Modern Async style (No 'next' needed)
 userSchema.pre("save", async function () {
-  // Only run this function if password was actually modified
   if (!this.isModified("password")) {
     return;
   }
@@ -49,12 +47,10 @@ userSchema.pre("save", async function () {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   } catch (error) {
-    // This will be caught by the catch block in your controller
     throw new Error(error);
   }
 });
 
-// Match user entered password to hashed password in database
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

@@ -9,6 +9,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setIsOpen(false);
     navigate("/", { replace: true });
   };
@@ -17,18 +18,20 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button - Partner's addition */}
       <button className="menu-btn" onClick={() => setIsOpen(true)}>
         <Menu size={26} />
       </button>
 
-      {/* Overlay */}
+      {/* Overlay - Partner's addition */}
       {isOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 
-      {/* Sidebar */}
-  <aside className={`sidebar ${isOpen ? "open" : ""}`}>
-  {/* Close button (mobile only) */}
-
+      {/* Sidebar - Merged logic */}
+      <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+        {/* Close button for mobile */}
+        <button className="close-sidebar-btn" onClick={closeSidebar}>
+           <X size={26} />
+        </button>
 
         <nav className="sidebar-nav">
           <NavLink to="/dashboard" end onClick={closeSidebar}>
@@ -55,11 +58,18 @@ export default function Sidebar() {
             Networking
           </NavLink>
 
+          {/* Your Messaging Link - Keep this! */}
+          <NavLink to="/dashboard/messaging" onClick={closeSidebar}>
+            Messages
+          </NavLink>
+
           <NavLink to="/dashboard/stories" onClick={closeSidebar}>
             Success Stories
           </NavLink>
 
-          <button onClick={handleLogout}>Logout</button>
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
         </nav>
       </aside>
     </>

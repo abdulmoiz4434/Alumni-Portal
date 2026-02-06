@@ -115,10 +115,6 @@
     transform: translateX(0);
   }
 
-  /* Close button top-right inside sidebar */
-
-
-  /* Menu button (hamburger) stays fixed on left */
   .menu-btn {
     display: block;
     position: fixed;
