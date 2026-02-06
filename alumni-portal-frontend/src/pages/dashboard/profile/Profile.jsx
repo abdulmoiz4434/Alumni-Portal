@@ -1,10 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import API from "../../../api/axios";
+import {
+  Upload, 
+} from "lucide-react";
 import "./Profile.css";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef(null);
   const [profile, setProfile] = useState({
     name: "",
     role: "",
@@ -20,93 +25,165 @@ export default function Profile() {
 
   // 1. Fetch data on load
   useEffect(() => {
-  const fetchProfile = async () => {
-    try {
-      const res = await API.get("/auth/me");
-      console.log("Profile Response Data:", res.data);
-      const payload = res.data.data;
+    const fetchProfile = async () => {
+      try {
+        const res = await API.get("/auth/me");
+        console.log("Profile Response Data:", res.data);
+        const payload = res.data.data;
 
-      if (!payload) {
-        throw new Error("No data received from server");
+        if (!payload) {
+          throw new Error("No data received from server");
+        }
+
+        const { user, profile: roleData } = payload;
+
+        setProfile({
+          name: user?.fullName || "N/A",
+          role: user?.role || "N/A",
+          batch:
+            user?.role === "student"
+              ? roleData?.batch || "N/A"
+              : roleData?.graduationYear || "N/A",
+          department: roleData?.department || "N/A",
+          about: roleData?.about || "No bio added yet.",
+          company: roleData?.company || "",
+          jobTitle: roleData?.jobTitle || "",
+          skills: Array.isArray(roleData?.skills)
+            ? roleData.skills.join(", ")
+            : "",
+          linkedin: roleData?.linkedin || "",
+          avatar: user?.profilePicture || "",
+        });
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        const errorMsg =
+          err.response?.data?.message || "Failed to load profile data.";
+        alert(errorMsg);
+      } finally {
+        setLoading(false);
       }
-
-      const { user, profile: roleData } = payload;
-
-      setProfile({
-        name: user?.fullName || "N/A",
-        role: user?.role || "N/A",
-        batch: user?.role === "student" 
-          ? (roleData?.batch || "N/A") 
-          : (roleData?.graduationYear || "N/A"),
-        department: roleData?.department || "N/A",
-        about: roleData?.about || "No bio added yet.",
-        company: roleData?.company || "",
-        jobTitle: roleData?.jobTitle || "",
-        skills: Array.isArray(roleData?.skills) ? roleData.skills.join(", ") : "", 
-        linkedin: roleData?.linkedin || "",
-        avatar: user?.profilePicture || "",
-      });
-    } catch (err) {
-      console.error("Error fetching profile:", err);
-      const errorMsg = err.response?.data?.message || "Failed to load profile data.";
-      alert(errorMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchProfile();
-}, []);
+    };
+    fetchProfile();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 2. Save logic to Backend
+  // 2. Handle profile picture upload
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Please upload a valid image file (JPG, PNG, GIF, or WEBP)");
+      return;
+    }
+
+    // Validate file size (5MB max)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      alert("Image size should not exceed 5MB");
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("profilePicture", file);
+
+      const res = await API.post("/auth/upload-profile-picture", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.data.success) {
+        setProfile((prev) => ({
+          ...prev,
+          avatar: res.data.data.profilePicture,
+        }));
+        alert("Profile picture updated successfully!");
+      }
+    } catch (err) {
+      console.error("Upload Error:", err);
+      alert(
+        "Failed to upload image: " +
+          (err.response?.data?.message || "Server error"),
+      );
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  // 3. Trigger file input click
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // 4. Save logic to Backend
   const handleSave = async () => {
-  try {
-    let payload = {
-      about: profile.about,
-      degree: profile.degree,
-      skills: profile.skills ? profile.skills.split(",").map(s => s.trim()) : []
-    };
-
-    if (profile.role === 'alumni') {
-      payload = { ...payload, 
-        linkedin: profile.linkedin, 
-        company: profile.company, 
-        jobTitle: profile.jobTitle,
-        location: profile.location
+    try {
+      let payload = {
+        about: profile.about,
+        degree: profile.degree,
+        skills: profile.skills
+          ? profile.skills.split(",").map((s) => s.trim())
+          : [],
       };
-    } else {
-      payload = { ...payload, 
-        semester: profile.semester, 
-        cgpa: profile.cgpa, 
-        careerGoals: profile.careerGoals,
-        interests: profile.interests
-      };
-    }
 
-    const res = await API.put("/auth/update-profile", payload);
+      if (profile.role === "alumni") {
+        payload = {
+          ...payload,
+          linkedin: profile.linkedin,
+          company: profile.company,
+          jobTitle: profile.jobTitle,
+          location: profile.location,
+        };
+      } else {
+        payload = {
+          ...payload,
+          semester: profile.semester,
+          cgpa: profile.cgpa,
+          careerGoals: profile.careerGoals,
+          interests: profile.interests,
+        };
+      }
 
-    if (res.data.success) {
-      alert("Profile updated successfully!");
-      setIsEditing(false);
+      const res = await API.put("/auth/update-profile", payload);
+
+      if (res.data.success) {
+        alert("Profile updated successfully!");
+        setIsEditing(false);
+      }
+    } catch (err) {
+      console.error("Update Error:", err);
+      alert(
+        "Update failed: " + (err.response?.data?.message || "Server error"),
+      );
     }
-  } catch (err) {
-    console.error("Update Error:", err);
-    alert("Update failed: " + (err.response?.data?.message || "Server error"));
-  }
-};
+  };
 
   const handleCancel = () => setIsEditing(false);
 
-  if (loading) return (
-  <div className="profile-loader-container">
-    <div className="spinner"></div>
-    <p>Fetching your profile...</p>
-  </div>
-);
+  if (loading)
+    return (
+      <div className="profile-loader-container">
+        <div className="spinner"></div>
+        <p>Fetching your profile...</p>
+      </div>
+    );
 
   return (
     <div className="alumni-profile">
@@ -115,15 +192,51 @@ export default function Profile() {
         <div className="alumni-profile-header">
           <div className="alumni-profile-avatar-wrapper">
             {profile.avatar ? (
-              <img src={profile.avatar} alt={profile.name} className="alumni-profile-avatar" />
+              <img
+                src={profile.avatar}
+                alt={profile.name}
+                className="alumni-profile-avatar"
+              />
             ) : (
               <div className="alumni-profile-avatar-placeholder">
-                <svg width="50%" height="50%" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2">
+                <svg
+                  width="50%"
+                  height="50%"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#6b7280"
+                  strokeWidth="2"
+                >
                   <circle cx="12" cy="8" r="4" />
                   <path d="M16 20c0-4-8-4-8 0" />
                 </svg>
               </div>
             )}
+
+            {/* Upload Button - Only show when editing */}
+            {isEditing && (
+              <button
+                className="alumni-profile-avatar-upload"
+                onClick={handleAvatarClick}
+                disabled={uploadingImage}
+                title="Upload profile picture"
+              >
+                {uploadingImage ? (
+                  <div className="upload-spinner"></div>
+                ) : (
+<Upload size={18} />
+                )}
+              </button>
+            )}
+
+            {/* Hidden File Input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+              onChange={handleImageUpload}
+              style={{ display: "none" }}
+            />
           </div>
 
           <div className="alumni-profile-header-info">
@@ -133,13 +246,21 @@ export default function Profile() {
             </div>
             <div className="alumni-profile-metadata">
               <div className="alumni-profile-metadata-item">
-                <span className="alumni-profile-metadata-label">{profile.role === 'student' ? 'Batch' : 'Grad Year'}</span>
-                <span className="alumni-profile-metadata-value">{profile.batch}</span>
+                <span className="alumni-profile-metadata-label">
+                  {profile.role === "student" ? "Batch" : "Grad Year"}
+                </span>
+                <span className="alumni-profile-metadata-value">
+                  {profile.batch}
+                </span>
               </div>
               <div className="alumni-profile-metadata-divider" />
               <div className="alumni-profile-metadata-item">
-                <span className="alumni-profile-metadata-label">Department</span>
-                <span className="alumni-profile-metadata-value">{profile.department}</span>
+                <span className="alumni-profile-metadata-label">
+                  Department
+                </span>
+                <span className="alumni-profile-metadata-value">
+                  {profile.department}
+                </span>
               </div>
             </div>
           </div>
@@ -147,7 +268,6 @@ export default function Profile() {
 
         {/* Content */}
         <div className="alumni-profile-content">
-
           <section className="alumni-profile-section">
             <h2 className="alumni-profile-section-title">About</h2>
             <div className="alumni-profile-section-content">
@@ -168,27 +288,52 @@ export default function Profile() {
 
           <section className="alumni-profile-section">
             <h2 className="alumni-profile-section-title">
-              {profile.role === 'student' ? 'Academic Information' : 'Professional Information'}
+              {profile.role === "student"
+                ? "Academic Information"
+                : "Professional Information"}
             </h2>
             <div className="alumni-profile-section-content">
               <div className="alumni-profile-grid">
                 {/* 1. Define fields based on role */}
-                {(profile.role === 'alumni' 
-                  ? ["degree", "company", "jobTitle", "linkedin", "skills", "location"] 
-                  : ["degree", "semester", "cgpa", "careerGoals", "skills", "interests"]
+                {(profile.role === "alumni"
+                  ? [
+                      "degree",
+                      "company",
+                      "jobTitle",
+                      "linkedin",
+                      "skills",
+                      "location",
+                    ]
+                  : [
+                      "degree",
+                      "semester",
+                      "cgpa",
+                      "careerGoals",
+                      "skills",
+                      "interests",
+                    ]
                 ).map((field) => (
                   <div className="alumni-profile-field" key={field}>
                     <label className="alumni-profile-label">
                       {/* Helper to format camelCase to Title Case */}
-                      {field === "jobTitle" ? "Job Title" : 
-                      field === "careerGoals" ? "Career Goals" : 
-                      field === "cgpa" ? "CGPA" : 
-                      field.charAt(0).toUpperCase() + field.slice(1)}
+                      {field === "jobTitle"
+                        ? "Job Title"
+                        : field === "careerGoals"
+                          ? "Career Goals"
+                          : field === "cgpa"
+                            ? "CGPA"
+                            : field.charAt(0).toUpperCase() + field.slice(1)}
                     </label>
 
                     {isEditing ? (
                       <input
-                        type={field === "linkedin" ? "url" : field === "cgpa" ? "number" : "text"}
+                        type={
+                          field === "linkedin"
+                            ? "url"
+                            : field === "cgpa"
+                              ? "number"
+                              : "text"
+                        }
                         name={field}
                         step={field === "cgpa" ? "0.01" : "1"}
                         value={profile[field]}
@@ -197,16 +342,22 @@ export default function Profile() {
                         placeholder={`Enter your ${field}...`}
                       />
                     ) : field === "linkedin" ? (
-                      <a 
-                        href={profile[field]?.startsWith('http') ? profile[field] : `https://${profile[field]}`} 
-                        className="alumni-profile-link" 
-                        target="_blank" 
+                      <a
+                        href={
+                          profile[field]?.startsWith("http")
+                            ? profile[field]
+                            : `https://${profile[field]}`
+                        }
+                        className="alumni-profile-link"
+                        target="_blank"
                         rel="noreferrer"
                       >
                         {profile[field] || "Add LinkedIn"}
                       </a>
                     ) : (
-                      <span className="alumni-profile-value">{profile[field] || "N/A"}</span>
+                      <span className="alumni-profile-value">
+                        {profile[field] || "N/A"}
+                      </span>
                     )}
                   </div>
                 ))}
@@ -217,11 +368,26 @@ export default function Profile() {
           <div className="alumni-profile-actions">
             {isEditing ? (
               <>
-                <button className="alumni-profile-buttons alumni-profile-buttons-secondary" onClick={handleCancel}>Cancel</button>
-                <button className="alumni-profile-buttons alumni-profile-buttons-primary" onClick={handleSave}>Save Changes</button>
+                <button
+                  className="alumni-profile-buttons alumni-profile-buttons-secondary"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="alumni-profile-buttons alumni-profile-buttons-primary"
+                  onClick={handleSave}
+                >
+                  Save Changes
+                </button>
               </>
             ) : (
-              <button className="alumni-profile-buttons alumni-profile-buttons-primary" onClick={() => setIsEditing(true)}>Edit Profile</button>
+              <button
+                className="alumni-profile-buttons alumni-profile-buttons-primary"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Profile
+              </button>
             )}
           </div>
         </div>
