@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Main authentication middleware (protect)
 exports.protect = async (req, res, next) => {
   let token;
 
@@ -39,6 +40,7 @@ exports.protect = async (req, res, next) => {
   }
 };
 
+// Role-based authorization middleware (existing)
 exports.authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -50,3 +52,17 @@ exports.authorize = (...roles) => {
     next();
   };
 };
+
+// Admin-only middleware (new - simplified version)
+exports.isAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied. Admin privileges required.'
+    });
+  }
+  next();
+};
+
+// Alias for consistency (you can use either name)
+exports.authenticateToken = exports.protect;

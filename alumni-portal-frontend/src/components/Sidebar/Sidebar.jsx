@@ -28,11 +28,6 @@ export default function Sidebar() {
 
       {/* Sidebar - Merged logic */}
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
-        {/* Close button for mobile */}
-        <button className="close-sidebar-btn" onClick={closeSidebar}>
-           <X size={26} />
-        </button>
-
         <nav className="sidebar-nav">
           <NavLink to="/dashboard" end onClick={closeSidebar}>
             Dashboard

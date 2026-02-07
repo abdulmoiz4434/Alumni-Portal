@@ -198,7 +198,7 @@ export default function Mentorship() {
   };
 
   return (
-    <div className="mentorship-page">
+    <div className="mentorship">
       <div className="mentorship-hero">
         <div className="mentorship-hero-content">
           <h1 className="mentorship-title">Mentorship Program</h1>
