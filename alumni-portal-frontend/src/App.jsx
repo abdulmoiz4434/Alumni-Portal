@@ -10,7 +10,7 @@ import Mentorship from "./pages/dashboard/mentorship/Mentorship";
 import SuccessStories from "./pages/dashboard/stories/SuccessStories";
 import Networking from "./pages/dashboard/networking/Networking";
 import Messaging from "./pages/dashboard/messaging/Messaging";
-
+import AdminAuth from "./pages/admin/AdminAuth";
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id || user?.id; 
@@ -20,6 +20,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<AuthPage />} />
+          <Route path="/admin" element={<AdminAuth />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />

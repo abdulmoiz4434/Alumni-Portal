@@ -1,0 +1,318 @@
+/* Admin Auth Main Container */
+.admin-auth-main {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: url("/Cover-Alumni.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Admin Auth Container */
+.admin-auth-container {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  background: rgba(87, 87, 65, 0.25);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* Admin Panel */
+.admin-auth-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+/* Logo Container */
+
+
+.admin-logo {
+  max-width: 170px;
+  max-height: 170px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Panel Title */
+.admin-panel-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.admin-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+/* Admin Form */
+.admin-auth-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+/* Admin Input */
+.admin-input {
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+  color: white;
+  background-color: rgba(114, 107, 107, 0.5);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.admin-input::placeholder {
+  color: rgba(238, 228, 228);
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.admin-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #9ca3af;
+  background-color: rgba(114, 107, 107, 0.5);
+}
+
+.admin-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Password Field */
+.admin-password-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-password-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.admin-password-wrapper .admin-input {
+  padding-right: 2.75rem;
+}
+
+.admin-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(238, 228, 228, 0.7);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  z-index: 2;
+}
+
+.admin-password-toggle:hover:not(:disabled) {
+  color: rgba(238, 228, 228, 1);
+}
+
+.admin-password-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-password-toggle svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+/* Remember Me Container */
+.admin-remember-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.admin-remember-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: white;
+  font-size: 0.875rem;
+  user-select: none;
+}
+
+.admin-remember-checkbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: #e6bb2f;
+}
+
+.admin-remember-checkbox:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-remember-label span {
+  font-weight: 500;
+}
+
+.admin-remember-label:hover span {
+  color: #c5cacd;
+}
+
+/* Admin Button */
+.admin-button {
+  width: 100%;
+  font-size: 16px;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.5rem;
+  background: #e6bb2f;
+  color: #1a1a1a;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+  letter-spacing: 0.3px;
+}
+
+.admin-button:hover {
+  background: #ae9139;
+}
+
+
+
+/* Error Message */
+.admin-error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin: 0;
+  padding-left: 0.25rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Error State for Input */
+.admin-input.input-error {
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.admin-input.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Footer */
+
+
+/* Mobile Responsive */
+@media (min-width: 320px) and (max-width: 768px) {
+  .admin-auth-main {
+    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .admin-auth-container {
+    max-width: 90%;
+    margin: 0 1rem;
+  }
+
+  .admin-auth-panel {
+    padding: 2rem 1.5rem;
+  }
+
+  .admin-logo {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .admin-panel-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .admin-auth-form {
+    gap: 1.25rem;
+  }
+
+  .admin-input {
+    padding: 0.75rem 1rem;
+    font-size: 14px;
+  }
+
+  .admin-input::placeholder {
+    font-size: 13px;
+  }
+
+  .admin-button {
+    font-size: 14px;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .admin-remember-label {
+    font-size: 0.8rem;
+  }
+
+  .admin-remember-checkbox {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .back-to-home {
+    font-size: 0.8rem;
+  }
+
+  .admin-password-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 380px) {
+  .admin-auth-container {
+    max-width: 95%;
+  }
+
+  .admin-auth-panel {
+    padding: 1.5rem 1rem;
+  }
+
+  .admin-panel-title {
+    font-size: 1.35rem;
+  }
+}
