@@ -10,10 +10,9 @@ const conversationSchema = new mongoose.Schema(
       }
     ],
 
-    // Lightweight metadata only
     lastMessage: {
-      type: String,
-      default: ""
+      content: { type: String, default: "" },
+      sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
     },
 
     lastMessageAt: {
@@ -23,6 +22,7 @@ const conversationSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 conversationSchema.index({ participants: 1 });
 
 module.exports = mongoose.model("Conversation", conversationSchema);

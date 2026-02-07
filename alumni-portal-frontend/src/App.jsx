@@ -16,7 +16,7 @@ function App() {
   const userId = user?._id || user?.id; 
 
   return (
-    <SocketProvider> {}
+    <SocketProvider userId={userId}>
       <Router>
         <Routes>
           <Route path="/" element={<AuthPage />} />

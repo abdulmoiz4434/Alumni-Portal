@@ -1,6 +1,6 @@
 .chat-layout {
   display: flex;
-  flex: 1;                 /* fill parent flex container */
+  flex: 1;
   background: var(--page-bg, #f7f9fc);
   overflow: hidden;
 }
@@ -186,4 +186,50 @@
 .empty-state-icon {
   font-size: 36px;
   margin-bottom: 12px;
+}
+
+.chat-header {
+  padding: 15px 25px;
+  background: #fff;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-avatar {
+  width: 45px;
+  height: 45px;
+  background: #4f46e5;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-text h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+.header-text p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-transform: capitalize;
 }

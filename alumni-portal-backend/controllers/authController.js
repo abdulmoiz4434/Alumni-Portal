@@ -278,21 +278,24 @@ exports.updateProfile = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    // Get all users with basic info
-    const users = await User.find({ _id: { $ne: req.user.id } })
+    // FIX 1: Use req.user._id instead of req.user.id
+    const users = await User.find({ _id: { $ne: req.user._id } })
       .select("fullName email role profilePicture")
       .lean();
+    
     const detailedUsers = await Promise.all(
       users.map(async (user) => {
         let extra = {};
         if (user.role === "alumni") {
           const alumni = await Alumni.findOne({ user: user._id })
-            .select("department graduationYear batch company jobTitle skills")
+            // FIX 2: Exclude _id from the select to prevent it from overwriting user._id
+            .select("department graduationYear batch company jobTitle skills -_id")
             .lean();
           extra = alumni || {};
         } else if (user.role === "student") {
           const student = await Student.findOne({ user: user._id })
-            .select("department batch semester degree skills")
+            // FIX 2: Exclude _id from the select to prevent it from overwriting user._id
+            .select("department batch semester degree skills -_id")
             .lean();
           extra = student || {};
         }

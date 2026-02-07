@@ -70,28 +70,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send_message', async (data) => {
-    try {
-      const { conversationId, content } = data;
-      const conversation = await Conversation.findById(conversationId);
-      if (!conversation || !conversation.participants.includes(socket.userId)) {
-        return socket.emit('error', 'Unauthorized');
-      }
-      const message = await Message.create({
-        conversationId,
-        sender: socket.userId,
-        content
-      });
-      conversation.lastMessage = content;
-      conversation.lastMessageAt = new Date();
-      await conversation.save();
-      const populatedMessage = await Message.findById(message._id)
-        .populate('sender', 'fullName profilePicture role');
-
-      io.to(conversationId).emit('receive_message', populatedMessage);
-    } catch (err) {
-      console.error(err);
+  try {
+    const { conversationId } = data;
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation || !conversation.participants.some(p => p.toString() === socket.userId.toString())) {
+      return socket.emit('error', 'Unauthorized');
     }
-  });
+    io.to(conversationId).emit('receive_message', data);
+    
+    console.log(`Message broadcasted to room ${conversationId}`);
+  } catch (err) {
+    console.error('Socket send_message error:', err);
+  }
+});
 
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.userId);
