@@ -183,7 +183,7 @@ export default function Jobs() {
         "Learn SEO, social media marketing, and content creation strategies.",
       requirements: [
         "Social Media",
-        "Content Writing",
+        "Contdent Writing",
         "Basic SEO",
         "Analytics",
       ],
