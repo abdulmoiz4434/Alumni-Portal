@@ -12,18 +12,19 @@ export default function Networking() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await API.get("/auth/all-users");
-        setUsers(res.data.data);
-      } catch (err) {
-        console.error("Error fetching users:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
+  const fetchUsers = async () => {
+    try {
+      const res = await API.get("/auth/all-users");
+      setUsers(Array.isArray(res.data?.data) ? res.data.data : []);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchUsers();
+}, []);
 
   const handleStartChat = async (receiverId) => {
   try {
@@ -40,7 +41,7 @@ export default function Networking() {
     alert("Something went wrong. Please try again.");
   }
 };
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = (users ?? []).filter((user) => {
   const matchesFilter = filter === "all" || user.role === filter;
   const search = searchTerm.toLowerCase();
   const matchesSearch =
