@@ -6,9 +6,11 @@
   min-height: 100vh;
   background: #f9fafb;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  padding-bottom: 20px;
+  padding: 24px 32px;
   margin: 0;
   box-sizing: border-box;
+    animation: fadeInUp 0.6s ease-out;
+
 }
 
 /* HERO SECTION */
@@ -18,11 +20,13 @@
   text-align: center;
   color: #d4aa28;
   border-radius: 15px;
+
 }
 
 .mentorship-hero-content {
   max-width: 800px;
   margin: 0 auto;
+
 }
 
 .mentorship-title {
@@ -70,6 +74,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px 24px ;
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+
 }
 
 .mentorship-filters {
@@ -113,6 +119,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px; /* same as Success Stories */
+    animation: fadeInUp 1s ease-out;
+
 }
 
 /* CARD */

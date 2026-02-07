@@ -186,19 +186,19 @@ export default function Profile() {
     );
 
   return (
-    <div className="alumni-profile">
-      <div className="alumni-profile-container">
+    <div className="profile">
+      <div className="profile-container">
         {/* Header */}
-        <div className="alumni-profile-header">
-          <div className="alumni-profile-avatar-wrapper">
+        <div className="profile-header">
+          <div className="profile-avatar-wrapper">
             {profile.avatar ? (
               <img
                 src={profile.avatar}
                 alt={profile.name}
-                className="alumni-profile-avatar"
+                className="profile-avatar"
               />
             ) : (
-              <div className="alumni-profile-avatar-placeholder">
+              <div className="profile-avatar-placeholder">
                 <svg
                   width="50%"
                   height="50%"
@@ -216,7 +216,7 @@ export default function Profile() {
             {/* Upload Button - Only show when editing */}
             {isEditing && (
               <button
-                className="alumni-profile-avatar-upload"
+                className="profile-avatar-upload"
                 onClick={handleAvatarClick}
                 disabled={uploadingImage}
                 title="Upload profile picture"
@@ -239,26 +239,26 @@ export default function Profile() {
             />
           </div>
 
-          <div className="alumni-profile-header-info">
-            <div className="alumni-profile-title-row">
-              <h1 className="alumni-profile-name">{profile.name}</h1>
-              <span className="alumni-profile-badge">{profile.role}</span>
+          <div className="profile-header-info">
+            <div className="profile-title-row">
+              <h1 className="profile-name">{profile.name}</h1>
+              <span className="profile-badge">{profile.role}</span>
             </div>
-            <div className="alumni-profile-metadata">
-              <div className="alumni-profile-metadata-item">
-                <span className="alumni-profile-metadata-label">
+            <div className="profile-metadata">
+              <div className="profile-metadata-item">
+                <span className="profile-metadata-label">
                   {profile.role === "student" ? "Batch" : "Grad Year"}
                 </span>
-                <span className="alumni-profile-metadata-value">
+                <span className="profile-metadata-value">
                   {profile.batch}
                 </span>
               </div>
-              <div className="alumni-profile-metadata-divider" />
-              <div className="alumni-profile-metadata-item">
-                <span className="alumni-profile-metadata-label">
+              <div className="profile-metadata-divider" />
+              <div className="profile-metadata-item">
+                <span className="profile-metadata-label">
                   Department
                 </span>
-                <span className="alumni-profile-metadata-value">
+                <span className="profile-metadata-value">
                   {profile.department}
                 </span>
               </div>
@@ -267,33 +267,33 @@ export default function Profile() {
         </div>
 
         {/* Content */}
-        <div className="alumni-profile-content">
-          <section className="alumni-profile-section">
-            <h2 className="alumni-profile-section-title">About</h2>
-            <div className="alumni-profile-section-content">
+        <div className="profile-content">
+          <section className="profile-section">
+            <h2 className="profile-section-title">About</h2>
+            <div className="profile-section-content">
               {isEditing ? (
                 <textarea
                   name="about"
                   value={profile.about}
                   onChange={handleChange}
-                  className="alumni-profile-textarea"
+                  className="profile-textarea"
                   rows="4"
                   placeholder="Tell us about yourself..."
                 />
               ) : (
-                <p className="alumni-profile-text">{profile.about}</p>
+                <p className="profile-text">{profile.about}</p>
               )}
             </div>
           </section>
 
-          <section className="alumni-profile-section">
-            <h2 className="alumni-profile-section-title">
+          <section className="profile-section">
+            <h2 className="profile-section-title">
               {profile.role === "student"
                 ? "Academic Information"
                 : "Professional Information"}
             </h2>
-            <div className="alumni-profile-section-content">
-              <div className="alumni-profile-grid">
+            <div className="profile-section-content">
+              <div className="profile-grid">
                 {/* 1. Define fields based on role */}
                 {(profile.role === "alumni"
                   ? [
@@ -313,8 +313,8 @@ export default function Profile() {
                       "interests",
                     ]
                 ).map((field) => (
-                  <div className="alumni-profile-field" key={field}>
-                    <label className="alumni-profile-label">
+                  <div className="profile-field" key={field}>
+                    <label className="profile-label">
                       {/* Helper to format camelCase to Title Case */}
                       {field === "jobTitle"
                         ? "Job Title"
@@ -338,7 +338,7 @@ export default function Profile() {
                         step={field === "cgpa" ? "0.01" : "1"}
                         value={profile[field]}
                         onChange={handleChange}
-                        className="alumni-profile-input"
+                        className="profile-input"
                         placeholder={`Enter your ${field}...`}
                       />
                     ) : field === "linkedin" ? (
@@ -348,14 +348,14 @@ export default function Profile() {
                             ? profile[field]
                             : `https://${profile[field]}`
                         }
-                        className="alumni-profile-link"
+                        className="profile-link"
                         target="_blank"
                         rel="noreferrer"
                       >
                         {profile[field] || "Add LinkedIn"}
                       </a>
                     ) : (
-                      <span className="alumni-profile-value">
+                      <span className="-profile-value">
                         {profile[field] || "N/A"}
                       </span>
                     )}
@@ -365,17 +365,17 @@ export default function Profile() {
             </div>
           </section>
 
-          <div className="alumni-profile-actions">
+          <div className="profile-actions">
             {isEditing ? (
               <>
                 <button
-                  className="alumni-profile-buttons alumni-profile-buttons-secondary"
+                  className="profile-buttons profile-buttons-secondary"
                   onClick={handleCancel}
                 >
                   Cancel
                 </button>
                 <button
-                  className="alumni-profile-buttons alumni-profile-buttons-primary"
+                  className="profile-buttons profile-buttons-primary"
                   onClick={handleSave}
                 >
                   Save Changes
@@ -383,7 +383,7 @@ export default function Profile() {
               </>
             ) : (
               <button
-                className="alumni-profile-buttons alumni-profile-buttons-primary"
+                className="profile-buttons profile-buttons-primary"
                 onClick={() => setIsEditing(true)}
               >
                 Edit Profile

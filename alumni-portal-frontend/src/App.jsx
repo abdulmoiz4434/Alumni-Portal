@@ -8,7 +8,7 @@ import Events from "./pages/dashboard/events/Events";
 import Jobs from "./pages/dashboard/jobs/Jobs";
 import Mentorship from "./pages/dashboard/mentorship/Mentorship";
 import SuccessStories from "./pages/dashboard/stories/SuccessStories";
-import Networking from "./pages/dashboard/networking/Networking";
+import Directory from "./pages/dashboard/directory/Directory";
 import Messaging from "./pages/dashboard/messaging/Messaging";
 import AdminAuth from "./pages/admin/Adminauth";
 function App() {
@@ -28,7 +28,7 @@ function App() {
             <Route path="jobs" element={<Jobs />} />
             <Route path="mentorship" element={<Mentorship />} />
             <Route path="stories" element={<SuccessStories />} />
-            <Route path="networking" element={<Networking />} />
+            <Route path="directory" element={<Directory/>} />
             <Route path="messaging/:conversationId?" element={<Messaging />} />
           </Route>
         </Routes>

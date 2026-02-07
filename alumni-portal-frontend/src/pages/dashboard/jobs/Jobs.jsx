@@ -238,7 +238,7 @@ export default function Jobs() {
   });
 
   return (
-    <div className="jobs-page">
+    <div className="jobs">
       <div className="jobs-hero">
         <div className="jobs-hero-content">
           <h1 className="main-title">Career Opportunities</h1>

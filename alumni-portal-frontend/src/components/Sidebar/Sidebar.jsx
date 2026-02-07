@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -49,8 +49,8 @@ export default function Sidebar() {
             Mentorship
           </NavLink>
 
-          <NavLink to="/dashboard/networking" onClick={closeSidebar}>
-            Networking
+          <NavLink to="/dashboard/directory" onClick={closeSidebar}>
+            Directory
           </NavLink>
 
           {/* Your Messaging Link - Keep this! */}

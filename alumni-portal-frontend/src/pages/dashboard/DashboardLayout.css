@@ -21,7 +21,5 @@
   display: flex;           /* needed for Messaging page layout */
   flex-direction: column;
   overflow: auto;        /* prevents content from pushing input */
-  padding: 24px 32px;
-  background: #f5f7fb;
   min-height: 0;           /* critical for flex children scrolling */
 }
