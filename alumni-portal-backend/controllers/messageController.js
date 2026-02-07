@@ -5,20 +5,33 @@ const { successResponse, errorResponse } = require("../utils/response");
 exports.getOrCreateConversation = async (req, res) => {
   try {
     const { receiverId } = req.body;
-    const senderId = req.user._id; // Use _id to be safe
+    const senderId = req.user._id;
 
-    // Find a conversation where these two are the ONLY participants
+    console.log("=== START getOrCreateConversation ===");
+    console.log("Sender ID:", senderId);
+    console.log("Receiver ID:", receiverId);
+    console.log("Receiver ID type:", typeof receiverId);
+
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, receiverId], $size: 2 },
     }).populate("participants", "fullName email profilePicture role");
 
+    console.log("Found existing conversation:", conversation ? "YES" : "NO");
+
     if (!conversation) {
+      console.log("Creating new conversation with participants:", [senderId, receiverId]);
       conversation = await Conversation.create({
         participants: [senderId, receiverId],
       });
-      // Populate after creation for the frontend
+      console.log("Created conversation:", conversation);
+      console.log("Participants count:", conversation.participants.length);
+      
       await conversation.populate("participants", "fullName email profilePicture role");
+      console.log("After populate:", conversation);
     }
+
+    console.log("Final conversation participants:", conversation.participants);
+    console.log("=== END getOrCreateConversation ===");
 
     return successResponse(res, conversation, 200, "Conversation retrieved");
   } catch (error) {
@@ -29,15 +42,21 @@ exports.getOrCreateConversation = async (req, res) => {
 
 exports.sendMessage = async (req, res) => {
   try {
-    const { conversationId, content } = req.body;
+    const { conversationId, content, receiverId } = req.body;
     const senderId = req.user._id;
 
-    // Check if conversation exists
-    const conversation = await Conversation.findById(conversationId);
-    if (!conversation) return errorResponse(res, "Conversation not found", 404);
+    if (!content || !conversationId) {
+      return errorResponse(res, "Missing content or conversation ID", 400);
+    }
 
-    // FIX: Proper ID comparison
-    const isParticipant = conversation.participants.some(p => p.toString() === senderId.toString());
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return errorResponse(res, "Conversation not found", 404);
+    }
+
+    const isParticipant = conversation.participants.some(
+      (p) => p.toString() === senderId.toString()
+    );
     if (!isParticipant) {
       return errorResponse(res, "Unauthorized to post in this chat", 403);
     }
@@ -48,15 +67,22 @@ exports.sendMessage = async (req, res) => {
       content,
     });
 
-    // Update metadata
     await Conversation.findByIdAndUpdate(conversationId, {
-      lastMessage: content,
+      lastMessage: {
+        content: content,
+        sender: senderId
+      },
       lastMessageAt: new Date(),
     });
 
-    return successResponse(res, newMessage, 201, "Message sent");
+    const populatedMessage = await Message.findById(newMessage._id).populate(
+      "sender",
+      "fullName profilePicture role"
+    );
+
+    return successResponse(res, populatedMessage, 201, "Message sent");
   } catch (error) {
-    console.error("sendMessage Error:", error);
+    console.error("sendMessage Error Details:", error);
     return errorResponse(res, "Message delivery failed", 500);
   }
 };
@@ -66,20 +92,38 @@ exports.getMessages = async (req, res) => {
     const { conversationId } = req.params;
     const userId = req.user._id;
 
-    const conversation = await Conversation.findById(conversationId);
-    if (!conversation) return errorResponse(res, "Conversation not found", 404);
+    // FIXED: Only find existing conversations, don't create new ones
+    let conversation;
 
-    // FIX: Proper ID comparison
-    const isParticipant = conversation.participants.some(p => p.toString() === userId.toString());
+    // Try to find by Conversation ID with populated participants
+    if (conversationId.match(/^[0-9a-fA-F]{24}$/)) {
+      conversation = await Conversation.findById(conversationId)
+        .populate("participants", "fullName email profilePicture role department graduationYear batch");
+    }
+
+    // If not found, return error - don't create it here
+    if (!conversation) {
+      return errorResponse(res, "Conversation not found", 404);
+    }
+
+    // Verify user is a participant
+    const isParticipant = conversation.participants.some(
+      p => p._id.toString() === userId.toString()
+    );
+    
     if (!isParticipant) {
       return errorResponse(res, "Unauthorized", 403);
     }
 
-    const messages = await Message.find({ conversationId })
+    // Get all messages for this conversation
+    const messages = await Message.find({ conversationId: conversation._id })
       .populate("sender", "fullName profilePicture role")
       .sort({ createdAt: 1 });
 
-    return successResponse(res, messages, 200, "Messages retrieved");
+    return successResponse(res, {
+      conversation,
+      messages
+    }, 200, "Messages retrieved");
   } catch (error) {
     console.error("getMessages Error:", error);
     return errorResponse(res, "Could not fetch messages", 500);
@@ -89,12 +133,15 @@ exports.getMessages = async (req, res) => {
 exports.getConversations = async (req, res) => {
   try {
     const userId = req.user._id;
-    
     const conversations = await Conversation.find({
       participants: { $in: [userId] },
     })
-      .populate("participants", "fullName email profilePicture role")
-      .sort({ lastMessageAt: -1 });
+    .populate({
+      path: "participants",
+      select: "fullName email profilePicture role department graduationYear batch"
+    })
+    .sort({ lastMessageAt: -1 })
+    .exec();
 
     return successResponse(res, conversations, 200, "Conversations retrieved");
   } catch (error) {
