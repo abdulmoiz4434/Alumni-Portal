@@ -52,7 +52,6 @@ export default function AdminAuth() {
 
       const { token, user } = res.data.data;
 
-      // Verify the user is actually an admin
       if (user.role !== "admin") {
         setLoginError(true);
         setIsLoading(false);

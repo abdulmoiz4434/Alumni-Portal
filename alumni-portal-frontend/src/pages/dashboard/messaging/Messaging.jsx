@@ -47,12 +47,6 @@ export default function Messaging() {
         const res = await API.get(`/messages/${conversationId}`);
         const { conversation, messages: chatMessages } = res.data.data;
 
-        console.log("=== DEBUG: Conversation Data ===");
-        console.log("Full conversation:", conversation);
-        console.log("Participants array:", conversation.participants);
-        console.log("Current user ID:", currentUserId);
-        console.log("Current user ID type:", typeof currentUserId);
-
         // Safety check to ensure the URL matches the current conversation
         if (conversation._id !== conversationId) {
           navigate(`/dashboard/messaging/${conversation._id}`, { replace: true });
@@ -61,14 +55,7 @@ export default function Messaging() {
 
         setMessages(chatMessages || []);
 
-        // DEBUGGED: Find the other participant with detailed logging
-        console.log("=== Looking for other participant ===");
         conversation.participants.forEach((p, index) => {
-          console.log(`Participant ${index}:`, p);
-          console.log(`  - Type: ${typeof p}`);
-          console.log(`  - Has _id?: ${!!p._id}`);
-          console.log(`  - _id value:`, p._id);
-          console.log(`  - _id type:`, typeof p._id);
           
           const participantId = (p._id || p).toString();
           const myId = currentUserId?.toString();

@@ -1,9 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({ 
-    baseURL: import.meta.env.VITE_API_URL 
-        ? `${import.meta.env.VITE_API_URL}/api`
-        : 'http://localhost:5000/api',
+    baseURL: 'http://localhost:5000/api', 
 });
 
 // This interceptor automatically attaches the Token to every request
