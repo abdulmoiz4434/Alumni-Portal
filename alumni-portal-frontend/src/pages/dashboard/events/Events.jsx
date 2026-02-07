@@ -212,10 +212,8 @@ export default function Events() {
           {/* Filter Tabs */}
           <div className="events-filters">
             {/* Status Filter */}
-            <div className="filter-group">
-              <label className="filter-label">
-                <FaFilter /> Status
-              </label>
+            <div className="">
+      
               <select
                 value={selectedStatus}
                 onChange={(e) => {
@@ -232,8 +230,7 @@ export default function Events() {
             </div>
 
             {/* Category Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Category</label>
+            <div className="">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -248,8 +245,7 @@ export default function Events() {
             </div>
 
             {/* Audience Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Audience</label>
+            <div className="">
               <select
                 value={selectedAudience}
                 onChange={(e) => setSelectedAudience(e.target.value)}
