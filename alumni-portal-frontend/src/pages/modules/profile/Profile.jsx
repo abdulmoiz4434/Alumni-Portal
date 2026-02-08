@@ -1,15 +1,248 @@
 import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import API from "../../../api/axios";
 import {
-  Upload, 
+  Upload,
+  User,
+  Pencil,
+  X,
+  Save,
+  Briefcase,
+  GraduationCap,
 } from "lucide-react";
 import "./Profile.css";
 
+// Animation variants
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
+
+// Skeleton Component
+function ProfileSkeleton() {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="profile"
+    >
+      <div className="profile-container">
+        <div className="profile-card profile-header-card">
+          <div className="profile-header-content">
+            <div className="skeleton skeleton-avatar" />
+            <div className="profile-header-info">
+              <div className="profile-title-row">
+                <div className="skeleton skeleton-name" />
+                <div className="skeleton skeleton-badge" />
+              </div>
+              <div className="profile-metadata">
+                <div className="skeleton skeleton-meta" />
+                <div className="skeleton skeleton-meta" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="profile-card">
+          <div className="skeleton skeleton-title" />
+          <div className="skeleton skeleton-text" />
+          <div className="skeleton skeleton-text-short" />
+        </div>
+        <div className="profile-card">
+          <div className="skeleton skeleton-title" />
+          <div className="profile-grid">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="profile-field">
+                <div className="skeleton skeleton-label" />
+                <div className="skeleton skeleton-value" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// Avatar Component
+function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading }) {
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const validateAndUpload = async (file) => {
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Please upload a valid image file (JPG, PNG, GIF, or WEBP)");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image size should not exceed 5MB");
+      return;
+    }
+    await onImageUpload(file);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    if (!isEditing) return;
+    const file = e.dataTransfer.files[0];
+    if (file) validateAndUpload(file);
+  };
+
+  return (
+    <div
+      className="profile-avatar-container"
+      onDragOver={(e) => {
+        e.preventDefault();
+        if (isEditing) setDragOver(true);
+      }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={handleDrop}
+    >
+      <motion.div
+        whileHover={isEditing ? { scale: 1.05 } : {}}
+        className={`profile-avatar-wrapper ${isEditing ? "editable" : ""} ${
+          dragOver ? "drag-over" : ""
+        }`}
+        onClick={() => isEditing && fileInputRef.current?.click()}
+      >
+        {avatar ? (
+          <img src={avatar} alt={name} className="profile-avatar" />
+        ) : (
+          <div className="profile-avatar-placeholder">
+            <User size={48} />
+          </div>
+        )}
+        <AnimatePresence>
+          {isEditing && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="profile-avatar-overlay"
+            >
+              {uploading ? (
+                <div className="upload-spinner" />
+              ) : (
+                <Upload size={24} />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+      <AnimatePresence>
+        {isEditing && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
+            className="profile-avatar-upload-btn"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+          >
+            {uploading ? (
+              <div className="upload-spinner-small" />
+            ) : (
+              <Upload size={14} />
+            )}
+          </motion.button>
+        )}
+      </AnimatePresence>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) validateAndUpload(file);
+        }}
+        style={{ display: "none" }}
+      />
+    </div>
+  );
+}
+
+// Field Component
+function ProfileField({
+  label,
+  field,
+  value,
+  isEditing,
+  onChange,
+  type = "text",
+  step,
+  isLink,
+}) {
+  return (
+    <div className="profile-field">
+      <span className="profile-label">{label}</span>
+      <AnimatePresence mode="wait">
+        {isEditing ? (
+          <motion.div
+            key="edit"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+          >
+            <input
+              type={type}
+              name={field}
+              step={step}
+              value={value || ""}
+              onChange={(e) => onChange(e)}
+              className="profile-input"
+              placeholder={`Enter your ${label.toLowerCase()}...`}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="view"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+          >
+            {isLink ? (
+              <a
+                href={
+                  value?.startsWith("http") ? value : `https://${value}`
+                }
+                className="profile-link"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {value || "Add LinkedIn"}
+              </a>
+            ) : (
+              <span className="profile-value">{value || "N/A"}</span>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// Main Profile Component
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploadingImage, setUploadingImage] = useState(false);
-  const fileInputRef = useRef(null);
   const [profile, setProfile] = useState({
     name: "",
     role: "",
@@ -21,9 +254,16 @@ export default function Profile() {
     skills: "",
     linkedin: "",
     avatar: "",
+    degree: "",
+    semester: "",
+    cgpa: "",
+    careerGoals: "",
+    interests: "",
+    location: "",
   });
+  const [originalProfile, setOriginalProfile] = useState({});
 
-  // 1. Fetch data on load
+  // Fetch profile data from backend
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -37,7 +277,7 @@ export default function Profile() {
 
         const { user, profile: roleData } = payload;
 
-        setProfile({
+        const profileData = {
           name: user?.fullName || "N/A",
           role: user?.role || "N/A",
           batch:
@@ -53,7 +293,16 @@ export default function Profile() {
             : "",
           linkedin: roleData?.linkedin || "",
           avatar: user?.profilePicture || "",
-        });
+          degree: roleData?.degree || "",
+          semester: roleData?.semester || "",
+          cgpa: roleData?.cgpa || "",
+          careerGoals: roleData?.careerGoals || "",
+          interests: roleData?.interests || "",
+          location: roleData?.location || "",
+        };
+
+        setProfile(profileData);
+        setOriginalProfile(profileData);
       } catch (err) {
         console.error("Error fetching profile:", err);
         const errorMsg =
@@ -71,32 +320,8 @@ export default function Profile() {
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 2. Handle profile picture upload
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/gif",
-      "image/webp",
-    ];
-    if (!allowedTypes.includes(file.type)) {
-      alert("Please upload a valid image file (JPG, PNG, GIF, or WEBP)");
-      return;
-    }
-
-    // Validate file size (5MB max)
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-    if (file.size > maxSize) {
-      alert("Image size should not exceed 5MB");
-      return;
-    }
-
+  // Handle profile picture upload
+  const handleImageUpload = async (file) => {
     setUploadingImage(true);
 
     try {
@@ -120,19 +345,14 @@ export default function Profile() {
       console.error("Upload Error:", err);
       alert(
         "Failed to upload image: " +
-          (err.response?.data?.message || "Server error"),
+          (err.response?.data?.message || "Server error")
       );
     } finally {
       setUploadingImage(false);
     }
   };
 
-  // 3. Trigger file input click
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  // 4. Save logic to Backend
+  // Save profile changes
   const handleSave = async () => {
     try {
       let payload = {
@@ -165,232 +385,234 @@ export default function Profile() {
 
       if (res.data.success) {
         alert("Profile updated successfully!");
+        setOriginalProfile(profile);
         setIsEditing(false);
       }
     } catch (err) {
       console.error("Update Error:", err);
       alert(
-        "Update failed: " + (err.response?.data?.message || "Server error"),
+        "Update failed: " + (err.response?.data?.message || "Server error")
       );
     }
   };
 
-  const handleCancel = () => setIsEditing(false);
+  const handleCancel = () => {
+    setProfile(originalProfile);
+    setIsEditing(false);
+  };
 
-  if (loading)
-    return (
-      <div className="profile-loader-container">
-        <div className="spinner"></div>
-        <p>Fetching your profile...</p>
-      </div>
-    );
+  // Define role-based fields
+  const roleFields =
+    profile.role === "alumni"
+      ? [
+          { field: "degree", label: "Degree" },
+          { field: "company", label: "Company" },
+          { field: "jobTitle", label: "Job Title" },
+          { field: "linkedin", label: "LinkedIn", isLink: true },
+          { field: "skills", label: "Skills" },
+          { field: "location", label: "Location" },
+        ]
+      : [
+          { field: "degree", label: "Degree" },
+          { field: "semester", label: "Semester" },
+          { field: "cgpa", label: "CGPA", type: "number", step: "0.01" },
+          { field: "careerGoals", label: "Career Goals" },
+          { field: "skills", label: "Skills" },
+          { field: "interests", label: "Interests" },
+        ];
+
+  if (loading) return <ProfileSkeleton />;
 
   return (
     <div className="profile">
       <div className="profile-container">
-        {/* Header */}
-        <div className="profile-header">
-          <div className="profile-avatar-wrapper">
-            {profile.avatar ? (
-              <img
-                src={profile.avatar}
-                alt={profile.name}
-                className="profile-avatar"
+        <motion.div variants={container} initial="hidden" animate="show">
+          {/* Header Card */}
+          <motion.div
+            variants={item}
+            className="profile-card profile-header-card"
+          >
+            <div className="profile-header-content">
+              <ProfileAvatar
+                avatar={profile.avatar}
+                name={profile.name}
+                isEditing={isEditing}
+                onImageUpload={handleImageUpload}
+                uploading={uploadingImage}
               />
-            ) : (
-              <div className="profile-avatar-placeholder">
-                <svg
-                  width="50%"
-                  height="50%"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#6b7280"
-                  strokeWidth="2"
-                >
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M16 20c0-4-8-4-8 0" />
-                </svg>
+              <div className="profile-header-info">
+                <div className="profile-title-row">
+                  <h1 className="profile-name">{profile.name}</h1>
+                  <span className="profile-badge">
+                    {profile.role === "alumni" ? (
+                      <Briefcase size={12} />
+                    ) : (
+                      <GraduationCap size={12} />
+                    )}
+                    {profile.role.charAt(0).toUpperCase() +
+                      profile.role.slice(1)}
+                  </span>
+                </div>
+                <div className="profile-metadata">
+                  <div className="profile-metadata-item">
+                    <span className="profile-metadata-label">
+                      {profile.role === "student" ? "Batch" : "Grad Year"}
+                    </span>
+                    <span className="profile-metadata-value">
+                      {profile.batch}
+                    </span>
+                  </div>
+                  <div className="profile-metadata-divider" />
+                  <div className="profile-metadata-item">
+                    <span className="profile-metadata-label">Department</span>
+                    <span className="profile-metadata-value">
+                      {profile.department}
+                    </span>
+                  </div>
+                </div>
               </div>
-            )}
-
-            {/* Upload Button - Only show when editing */}
-            {isEditing && (
-              <button
-                className="profile-avatar-upload"
-                onClick={handleAvatarClick}
-                disabled={uploadingImage}
-                title="Upload profile picture"
-              >
-                {uploadingImage ? (
-                  <div className="upload-spinner"></div>
-                ) : (
-<Upload size={18} />
-                )}
-              </button>
-            )}
-
-            {/* Hidden File Input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
-            />
-          </div>
-
-          <div className="profile-header-info">
-            <div className="profile-title-row">
-              <h1 className="profile-name">{profile.name}</h1>
-              <span className="profile-badge">{profile.role}</span>
+              {/* Desktop Edit Button */}
+              <div className="profile-header-actions">
+                <AnimatePresence mode="wait">
+                  {!isEditing ? (
+                    <motion.button
+                      key="edit-btn"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="profile-btn profile-btn-outline"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      <Pencil size={14} />
+                      Edit Profile
+                    </motion.button>
+                  ) : (
+                    <motion.div
+                      key="save-btns"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="profile-btn-group"
+                    >
+                      <button
+                        className="profile-btn profile-btn-outline"
+                        onClick={handleCancel}
+                      >
+                        <X size={14} />
+                        Cancel
+                      </button>
+                      <button
+                        className="profile-btn profile-btn-primary"
+                        onClick={handleSave}
+                      >
+                        <Save size={14} />
+                        Save
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
-            <div className="profile-metadata">
-              <div className="profile-metadata-item">
-                <span className="profile-metadata-label">
-                  {profile.role === "student" ? "Batch" : "Grad Year"}
-                </span>
-                <span className="profile-metadata-value">
-                  {profile.batch}
-                </span>
-              </div>
-              <div className="profile-metadata-divider" />
-              <div className="profile-metadata-item">
-                <span className="profile-metadata-label">
-                  Department
-                </span>
-                <span className="profile-metadata-value">
-                  {profile.department}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+          </motion.div>
 
-        {/* Content */}
-        <div className="profile-content">
-          <section className="profile-section">
+          {/* About Section */}
+          <motion.div variants={item} className="profile-card">
             <h2 className="profile-section-title">About</h2>
-            <div className="profile-section-content">
+            <AnimatePresence mode="wait">
               {isEditing ? (
-                <textarea
-                  name="about"
-                  value={profile.about}
-                  onChange={handleChange}
-                  className="profile-textarea"
-                  rows="4"
-                  placeholder="Tell us about yourself..."
-                />
+                <motion.div
+                  key="edit"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <textarea
+                    name="about"
+                    value={profile.about}
+                    onChange={handleChange}
+                    rows={4}
+                    className="profile-textarea"
+                    placeholder="Tell us about yourself..."
+                  />
+                </motion.div>
               ) : (
-                <p className="profile-text">{profile.about}</p>
+                <motion.p
+                  key="view"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="profile-text"
+                >
+                  {profile.about}
+                </motion.p>
               )}
-            </div>
-          </section>
+            </AnimatePresence>
+          </motion.div>
 
-          <section className="profile-section">
+          {/* Info Section */}
+          <motion.div variants={item} className="profile-card">
             <h2 className="profile-section-title">
               {profile.role === "student"
                 ? "Academic Information"
                 : "Professional Information"}
             </h2>
-            <div className="profile-section-content">
-              <div className="profile-grid">
-                {/* 1. Define fields based on role */}
-                {(profile.role === "alumni"
-                  ? [
-                      "degree",
-                      "company",
-                      "jobTitle",
-                      "linkedin",
-                      "skills",
-                      "location",
-                    ]
-                  : [
-                      "degree",
-                      "semester",
-                      "cgpa",
-                      "careerGoals",
-                      "skills",
-                      "interests",
-                    ]
-                ).map((field) => (
-                  <div className="profile-field" key={field}>
-                    <label className="profile-label">
-                      {/* Helper to format camelCase to Title Case */}
-                      {field === "jobTitle"
-                        ? "Job Title"
-                        : field === "careerGoals"
-                          ? "Career Goals"
-                          : field === "cgpa"
-                            ? "CGPA"
-                            : field.charAt(0).toUpperCase() + field.slice(1)}
-                    </label>
-
-                    {isEditing ? (
-                      <input
-                        type={
-                          field === "linkedin"
-                            ? "url"
-                            : field === "cgpa"
-                              ? "number"
-                              : "text"
-                        }
-                        name={field}
-                        step={field === "cgpa" ? "0.01" : "1"}
-                        value={profile[field]}
-                        onChange={handleChange}
-                        className="profile-input"
-                        placeholder={`Enter your ${field}...`}
-                      />
-                    ) : field === "linkedin" ? (
-                      <a
-                        href={
-                          profile[field]?.startsWith("http")
-                            ? profile[field]
-                            : `https://${profile[field]}`
-                        }
-                        className="profile-link"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {profile[field] || "Add LinkedIn"}
-                      </a>
-                    ) : (
-                      <span className="-profile-value">
-                        {profile[field] || "N/A"}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
+            <div className="profile-grid">
+              {roleFields.map(({ field, label, isLink, type, step }) => (
+                <ProfileField
+                  key={field}
+                  field={field}
+                  label={label}
+                  value={profile[field]}
+                  isEditing={isEditing}
+                  onChange={handleChange}
+                  isLink={isLink}
+                  type={type}
+                  step={step}
+                />
+              ))}
             </div>
-          </section>
+          </motion.div>
 
-          <div className="profile-actions">
-            {isEditing ? (
-              <>
-                <button
-                  className="profile-buttons profile-buttons-secondary"
-                  onClick={handleCancel}
+          {/* Mobile Actions */}
+          <motion.div variants={item} className="profile-mobile-actions">
+            <AnimatePresence mode="wait">
+              {isEditing ? (
+                <motion.div
+                  key="btns"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="profile-mobile-btn-group"
                 >
-                  Cancel
-                </button>
-                <button
-                  className="profile-buttons profile-buttons-primary"
-                  onClick={handleSave}
+                  <button
+                    className="profile-btn profile-btn-outline profile-btn-full"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="profile-btn profile-btn-primary profile-btn-full"
+                    onClick={handleSave}
+                  >
+                    Save Changes
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.button
+                  key="edit"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="profile-btn profile-btn-outline profile-btn-full"
+                  onClick={() => setIsEditing(true)}
                 >
-                  Save Changes
-                </button>
-              </>
-            ) : (
-              <button
-                className="profile-buttons profile-buttons-primary"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </button>
-            )}
-          </div>
-        </div>
+                  <Pencil size={14} />
+                  Edit Profile
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );
