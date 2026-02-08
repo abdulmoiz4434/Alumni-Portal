@@ -7,8 +7,6 @@ const jobSchema = new mongoose.Schema(
       ref: "User",
       required: true
     },
-    // Adding this so you can display "Posted by: Admin" or the person's name 
-    // without doing a heavy database 'populate' every time.
     postedByName: {
       type: String,
       default: "Admin"
@@ -54,6 +52,16 @@ const jobSchema = new mongoose.Schema(
     deadline: {
       type: Date,
       required: [true, "Please provide application deadline"]
+    },
+    contactEmail: {
+      type: String,
+      required: [true, "Please provide contact email"],
+      trim: true,
+      lowercase: true,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please provide a valid email address"
+      ]
     },
     status: {
       type: String,

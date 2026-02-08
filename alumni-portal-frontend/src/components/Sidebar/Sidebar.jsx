@@ -63,6 +63,10 @@ export default function Sidebar() {
             Messages
           </NavLink>
 
+          <NavLink to="/dashboard/careerInsights" onClick={closeSidebar}>
+            Career Insights
+          </NavLink>
+
           <NavLink to="/dashboard/stories" onClick={closeSidebar}>
             Success Stories
           </NavLink>

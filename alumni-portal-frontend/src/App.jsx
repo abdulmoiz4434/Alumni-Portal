@@ -11,6 +11,8 @@ import SuccessStories from "./pages/dashboard/stories/SuccessStories";
 import Directory from "./pages/dashboard/directory/Directory";
 import Messaging from "./pages/dashboard/messaging/Messaging";
 import AdminAuth from "./pages/admin/Adminauth";
+import CareerInsights from "./pages/dashboard/careerInsights/CareerInsights"; 
+
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id || user?.id; 
@@ -29,6 +31,7 @@ function App() {
             <Route path="mentorship" element={<Mentorship />} />
             <Route path="stories" element={<SuccessStories />} />
             <Route path="directory" element={<Directory/>} />
+            <Route path="careerInsights" element={<CareerInsights />} /> 
             <Route path="messaging/:conversationId?" element={<Messaging />} />
           </Route>
         </Routes>
@@ -36,4 +39,5 @@ function App() {
     </SocketProvider>
   );
 }
+
 export default App;

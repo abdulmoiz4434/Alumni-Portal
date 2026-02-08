@@ -1,53 +1,347 @@
-/* ========================================
-   MENTORSHIP - SIMPLE DESIGN (UPDATED)
-   ======================================== */
-
-.mentorship{
+.mentorship {
   min-height: 100vh;
   background: #f9fafb;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   padding: 24px 32px;
   margin: 0;
   box-sizing: border-box;
-    animation: fadeInUp 0.6s ease-out;
-
+  animation: fadeInUp 0.6s ease-out;
 }
 
-/* HERO SECTION */
+/* Header Section */
 .mentorship-hero {
   background: #1a1a1a;
-  padding: 30px ;
+  padding: 40px;
   text-align: center;
   color: #d4aa28;
   border-radius: 15px;
-
 }
 
 .mentorship-hero-content {
   max-width: 800px;
   margin: 0 auto;
-
 }
 
-.mentorship-title {
+.main-title {
   font-family: Georgia, serif;
-  font-size: 3rem; /* Adjusted like Success Stories */
+  font-size: 3rem;
   font-weight: bold;
   margin-bottom: 20px;
   line-height: 1.1;
   animation: fadeInUp 0.6s ease-out;
 }
 
-.mentorship-subtitle {
-  font-size: 1.15rem; /* Adjusted like Success Stories */
+.subtitle {
+  font-size: 1.15rem;
   font-weight: normal;
   line-height: 1.6;
   color: #e0e0e0;
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
-/* Offer Mentorship Button */
-.offer-btn {
+.mentorship-container {
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+  max-width: 1200px;
+  padding: 24px 24px;
+}
+
+/* Search and Filter Section */
+.search-filter-section {
+  background-color: #c8ccb1;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #121314;
+}
+
+.search-input {
+  width: 90%;
+  padding: 1rem 1rem 0.875rem 3rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #e6bb2f;
+  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.15);
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 0.875rem 2.5rem 0.875rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  appearance: none;
+}
+
+.filter-select:hover {
+  border-color: #cbd5e1;
+}
+
+.filter-select:focus {
+  border-color: #e6bb2f;
+  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.15);
+}
+
+/* Opportunities Grid */
+.opportunities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Opportunity Card */
+.opportunity-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  display: flex;
+  position: relative;
+}
+
+.opportunity-card:hover {
+  transform: translateY(-4px);
+  border-color: #e6bb2f;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Header */
+.card-header {
+  padding: 1rem 1rem 0.75rem;
+  display: flex;
+  align-items: stretch;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.posted-date {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.badge {
+  background: #e6bb2f;
+  color: #090808;
+}
+
+.job-title {
+  width: 100%;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 2.35;
+  text-align: left;
+  margin: 0 0 0.6rem;
+}
+
+.company-name {
+  display: flex;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+  text-align: left;
+  margin: 2px;
+}
+
+.company-name svg {
+  color: #94a3b8;
+}
+
+/* Card Body */
+.card-body {
+  padding: 0 1rem 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.info-item svg {
+  color: #94a3b8;
+}
+
+.description {
+  color: #475569;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+/* Skills Container */
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.skill-tag {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
+}
+
+.skill-tag:hover {
+  background: #e2e8f0;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  margin-top: auto;
+}
+
+.mentorship-type {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #10b981;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.posted-by {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  background: #f8fafc;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-primary {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #e6bb2f;
+  color: rgb(8, 8, 8);
+}
+
+.btn-primary:hover {
+  background: #d4aa28;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* No Results */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+}
+
+.no-results svg {
+  margin-bottom: 1.5rem;
+}
+
+.no-results h3 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.no-results p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* --- HERO BUTTON (Offer Mentorship) --- */
+.create-mentorship-btn-hero {
   margin-top: 24px;
   padding: 12px 24px;
   background: #e6bb2f;
@@ -58,378 +352,291 @@
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.offer-btn:hover {
-  background: #d4aa28;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* CONTAINER & FILTERS */
-.mentorship-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 24px ;
-  animation: fadeInUp 0.6s ease-out 0.5s both;
-
-}
-
-.mentorship-filters {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #c8ccb1;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 15px;
-}
-
-.filter-btn {
-  padding: 10px 20px;
-  border: 2px solid #e5e7eb;
-  background: #ffffff;
-  color: #6b7280;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 24px;
-  cursor: pointer;
-  margin: 10px;
-  transition: all 0.3s ease;
-}
-
-.filter-btn:hover {
-  border-color: #e6bb2f;
-  color: #111827;
-}
-
-.filter-btn-active {
-  background: #e6bb2f;
-  color: #1a1a1a;
-  border-color: #e6bb2f;
-}
-.filter-label{
-    font-weight: 600;
-
-}
-/* GRID */
-.mentorship-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px; /* same as Success Stories */
-    animation: fadeInUp 1s ease-out;
-
-}
-
-/* CARD */
-.mentorship-card {
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  padding: 20px; /* adjusted like Success Stories */
-  display: flex;
-  flex-direction: column;
-  gap: 12px; /* same as Success Stories */
-  transition: all 0.2s ease;
-}
-
-.mentorship-card:hover {
-  transform: translateY(-4px);
-  border-color: #e6bb2f;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-/* Mentor Header */
-.mentor-header {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px; /* adjusted like Success Stories */
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.mentor-avatar-wrapper {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-
-.mentor-avatar {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Program Title & Description */
-.mentorship-program-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 0;
-}
-
-.mentorship-description {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: #374151;
-  display: -webkit-box;
-  overflow: hidden;
-}
-
-/* Meta Info */
-.mentorship-meta {
-  display: flex;
-  gap: 16px;
-  font-size: 0.8rem;
-  color: #6b7280;
-margin-bottom: 15px;}
-
-.meta-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Skills */
-.skills-list {
-  display: flex;
-  flex-wrap: wrap;
   gap: 8px;
+  animation: fadeInUp 0.6s ease-out 0.4s both;
 }
 
-.skill-tag {
-  padding: 6px 12px;
-  background: #f3f4f6;
-  color: #111827;
-  font-size: 0.85rem;
-  border-radius: 6px;
-}
-
-.mentorship-card:hover .skill-tag {
-  background: #fef9e7;
-  color: #92400e;
-}
-
-/* CONNECT BUTTON */
-.connect-button {
-  width: 100%;
-  padding: 12px 24px;
-  background: #e6bb2f;
-  color: #1a1a1a;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.connect-button:hover {
+.create-mentorship-btn-hero:hover {
   background: #d4aa28;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 170, 40, 0.3);
 }
- 
 
-/* MODAL */
-/* MODAL */
+/* --- MODAL OVERLAY & STRUCTURE --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  z-index: 1000;
+  z-index: 9999;
 }
 
-.modal-content {
+.event-modal {
   background: #ffffff;
   border-radius: 16px;
-  max-width: 700px; /* slightly wider for 2-column layout */
+  max-width: 800px;
   width: 100%;
-  padding: 24px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   max-height: 90vh;
-  overflow-y: hidden; /* remove scroll */
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  overflow-y: auto;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* MODAL HEADER */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 15px;
 }
 
-.modal-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #111827;
-}
-
-.modal-close {
-  background: #f3f3f3;
+.close-modal-btn {
+  background: none;
   border: none;
-  border-radius: 6px;
-  padding: 6px;
+  font-size: 24px;
   cursor: pointer;
+  color: #6c757d;
 }
 
-.modal-close:hover {
-  background: #e5e5e5;
+/* --- FORM GRID & GROUPS --- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-/* FORM */
 .form-group {
-  margin-bottom: 16px;
-  flex: 1 1 auto;
-}
-
-.form-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 500;
-  margin-bottom: 4px;
-  color: #111827;
-}
-
-.form-input,
-.form-textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #1a1a1a;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-family: inherit;
-  color: #1a1a1a;
-  background: #ffffff;
-  transition: all 0.4s ease;
-  outline: none;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  border-color: #e6bb2f;
-  background: #fffef8;
-  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.15);
-}
-
-/* Two-column layout for certain rows */
-.form-row {
   display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.form-row .form-group {
-  flex: 1;
-  min-width: 45%; /* ensures two fields per line */
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
 }
 
-/* Reduce textarea height slightly */
-.form-textarea {
-  resize: vertical;
-  min-height: 50px;
-  max-height: 80px;
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
 }
 
-/* MODAL FOOTER */
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #e6bb2f;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.1);
+}
+
+/* --- MODAL FOOTER & BUTTONS --- */
 .modal-footer {
+  margin-top: 30px;
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 8px;
-  flex-shrink: 0;
+  gap: 15px;
 }
 
-/* MODAL BUTTONS */
-.modal-button {
-  padding: 10px 20px;
+.event-btn-cancel {
+  padding: 12px 24px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  font-weight: 700;
   cursor: pointer;
-  border: none;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
-.modal-button-cancel {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  color: #111827;
+.event-btn-cancel:hover {
+  background: #e9ecef;
 }
 
-.modal-button-cancel:hover {
-  background: #1b1a1a;
-  color: #d6d8dc;
-  transition: 0.4s ease;
-}
-
-.modal-button-submit {
+.event-btn-submit {
+  padding: 12px 24px;
   background: #e6bb2f;
   color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
 }
 
-.modal-button-submit:hover {
+.event-btn-submit:hover {
   background: #d4aa28;
-  transition: 0.4s ease;
+  transform: translateY(-1px);
 }
 
-/* Make modal responsive */
+/* Delete Button */
+.mentorship-delete-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.opportunity-card:hover .mentorship-delete-btn {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mentorship-delete-btn:hover {
+  background: #dc3545;
+  transform: scale(1.1);
+}
+
+/* Loader */
+.events-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f4f6;
+  border-top-color: #e6bb2f;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.events-loader-container p {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* --- KEYFRAMES --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .opportunities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
-  .modal-content {
-    max-width: 95%;
+  .mentorship {
     padding: 16px;
   }
-  .form-row {
-    flex-direction: column;
-  }
-  .form-row .form-group {
-    min-width: 100%;
-  }
-}
 
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  .mentorship-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .mentorship-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  .mentorship-container {
+    padding: 1rem;
   }
 
-  .mentorship-card {
-    padding: 16px;
-  }
-
-  .mentorship-title {
+  .main-title {
     font-size: 2rem;
   }
 
-  .mentorship-subtitle {
-    font-size: 1.15rem;
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .search-filter-section {
+    flex-direction: column;
+  }
+
+  .search-box {
+    min-width: 100%;
+  }
+
+  .filters {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+
+  .opportunities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-modal {
+    padding: 20px;
+    width: 95%;
   }
 }
 
 @media (max-width: 480px) {
-  .mentorship-title {
-    font-size: 1.5rem;
+  .main-title {
+    font-size: 1.75rem;
   }
 
-  .mentorship-subtitle {
-    font-size: 1rem;
+  .job-title {
+    font-size: 1.25rem;
+  }
+
+  .create-mentorship-btn-hero {
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 }

@@ -178,7 +178,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* ========== CARD HEADER ========== */
 .directory-card-header {
   display: flex;
   align-items: center;
@@ -320,7 +319,6 @@
   padding: 60px 20px;
   background: #ffffff;
   border-radius: 12px;
-  border: 2px dashed #e5e7eb;
 }
 
 .no-results-icon {

@@ -12,6 +12,11 @@ export default function Directory() {
   const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
 
+  // Get current user info for RBAC checks
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  const currentUserRole = currentUser?.role;
+  const currentUserId = currentUser?._id || currentUser?.id;
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -26,12 +31,16 @@ export default function Directory() {
     fetchUsers();
   }, []);
 
-  const handleStartChat = async (receiverId) => {
+  const handleStartChat = async (targetUser) => {
+    if (targetUser.role === "admin" && currentUserRole !== "admin") {
+      alert("Unauthorized: You cannot message the administrative account.");
+      return;
+    }
+
     try {
-      const res = await startConversation(receiverId);
+      const res = await startConversation(targetUser._id);
 
       if (res.data.success && res.data.data) {
-        const conversationId = res.data.data._id;
         navigate(`/dashboard/messaging/${res.data.data._id}`);
       } else {
         alert("Could not start conversation");
@@ -43,11 +52,16 @@ export default function Directory() {
   };
 
   const filteredUsers = users.filter((user) => {
+    const isSelf = user._id === currentUserId;
+    const isAdminVisible = currentUserRole === "admin" || user.role !== "admin";
+    
+    if (isSelf || !isAdminVisible) return false;
     const matchesFilter = filter === "all" || user.role === filter;
     const search = searchTerm.toLowerCase();
     const matchesSearch =
       user.fullName.toLowerCase().includes(search) ||
       (user.department && user.department.toLowerCase().includes(search));
+
     return matchesFilter && matchesSearch;
   });
 
@@ -56,23 +70,18 @@ export default function Directory() {
 
   return (
     <div className="directory">
-      {/* Hero Section */}
       <div className="directory-hero">
         <div className="directory-hero-content">
           <h1 className="directory-title">Directory Listing</h1>
           <p className="directory-subtitle">
-            Connect with alumni and students to grow your directory for future
-            success.{" "}
+            Connect with alumni and students to grow your network for future success.
           </p>
         </div>
       </div>
 
-      {/* Main Container */}
       <div className="directory-container">
-        {/* Search & Filter Section */}
         <div className="directory-controls">
           <div className="search-filter-section">
-            {/* Search Box */}
             <div className="search-box">
               <Search size={22} className="search-icon" />
               <input
@@ -84,7 +93,6 @@ export default function Directory() {
               />
             </div>
 
-            {/* Filters */}
             <div className="filters">
               <button
                 className={`filter-btn ${filter === "all" ? "active" : ""}`}
@@ -92,25 +100,31 @@ export default function Directory() {
               >
                 All Members
               </button>
-
               <button
                 className={`filter-btn ${filter === "alumni" ? "active" : ""}`}
                 onClick={() => setFilter("alumni")}
               >
                 Alumni
               </button>
-
               <button
                 className={`filter-btn ${filter === "student" ? "active" : ""}`}
                 onClick={() => setFilter("student")}
               >
                 Students
               </button>
+              {/* Only show Admin filter to other Admins */}
+              {currentUserRole === "admin" && (
+                <button
+                  className={`filter-btn ${filter === "admin" ? "active" : ""}`}
+                  onClick={() => setFilter("admin")}
+                >
+                  Admins
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Results Count */}
         <div className="results-info">
           <p>
             {filteredUsers.length}{" "}
@@ -118,7 +132,6 @@ export default function Directory() {
           </p>
         </div>
 
-        {/* User Grid */}
         <div className="directory-grid">
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
@@ -149,35 +162,22 @@ export default function Directory() {
                   </p>
 
                   {user.role === "alumni" && user.graduationYear && (
-                    <p className="directory-meta">
-                      Class of {user.graduationYear}
-                    </p>
+                    <p className="directory-meta">Class of {user.graduationYear}</p>
                   )}
                   {user.role === "student" && (user.batch || user.semester) && (
-                    <p className="directory-meta">
-                      Batch {user.batch || user.semester}
-                    </p>
+                    <p className="directory-meta">Batch {user.batch || user.semester}</p>
                   )}
                 </div>
 
                 <div className="directory-card-footer">
                   <button
-                    onClick={() => handleStartChat(user._id)}
+                    onClick={() => handleStartChat(user)}
                     className="directory-message-btn"
                   >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                     </svg>
-                    Start Chat
+                    Connect
                   </button>
                 </div>
               </article>
