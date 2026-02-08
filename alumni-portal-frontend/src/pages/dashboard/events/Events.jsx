@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import { format, parseISO, isPast, isFuture, isToday } from "date-fns";
+import { format, parseISO, isPast, isToday } from "date-fns";
 import {
   FaCalendarAlt,
   FaClock,
   FaMapMarkerAlt,
   FaUsers,
-  FaFilter,
   FaSearch,
   FaUserGraduate,
   FaUserTie,
   FaGlobe,
-  FaCheckCircle,
+  FaTrashAlt,
   FaTimesCircle,
+  FaPlus,
 } from "react-icons/fa";
 import API from "../../../api/axios";
 import "./Events.css";
@@ -21,7 +21,22 @@ export default function Events() {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState("");
-  const [userId, setUserId] = useState("");
+
+  // Create Event States
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    description: "",
+    category: "Workshop",
+    date: "",
+    time: "",
+    venue: "",
+    targetAudience: "all",
+    capacity: "",
+    organizer: "",
+    contactEmail: "",
+  });
 
   // Filters
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -42,18 +57,16 @@ export default function Events() {
     "Other",
   ];
 
-  // Fetch events
   useEffect(() => {
     fetchEvents();
     fetchUserProfile();
-  }, []);
+  }, [selectedStatus]);
 
   const fetchUserProfile = async () => {
     try {
       const res = await API.get("/auth/me");
       const { user } = res.data.data;
       setUserRole(user.role);
-      setUserId(user._id || user.id);
     } catch (err) {
       console.error("Error fetching user profile:", err);
     }
@@ -64,104 +77,103 @@ export default function Events() {
       setLoading(true);
       const res = await API.get("/events", {
         params: {
-          status: selectedStatus,
+          status: selectedStatus || undefined,
           category: selectedCategory !== "all" ? selectedCategory : undefined,
           search: searchQuery || undefined,
         },
       });
-
       setEvents(res.data.data);
       setFilteredEvents(res.data.data);
     } catch (err) {
       console.error("Error fetching events:", err);
-      alert("Failed to load events");
     } finally {
       setLoading(false);
     }
   };
 
-  // Filter events
+  // Filter events client-side
   useEffect(() => {
     let filtered = [...events];
-
-    // Category filter
     if (selectedCategory !== "all") {
       filtered = filtered.filter(
-        (event) =>
-          event.category.toLowerCase() === selectedCategory.toLowerCase(),
+        (event) => event.category.toLowerCase() === selectedCategory.toLowerCase()
       );
     }
-
-    // Audience filter
     if (selectedAudience !== "all") {
       filtered = filtered.filter(
-        (event) =>
-          event.targetAudience === selectedAudience ||
-          event.targetAudience === "all",
+        (event) => event.targetAudience === selectedAudience || event.targetAudience === "all"
       );
     }
-
-    // Search filter
     if (searchQuery) {
       filtered = filtered.filter(
         (event) =>
           event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          event.venue.toLowerCase().includes(searchQuery.toLowerCase()),
+          event.venue.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
     setFilteredEvents(filtered);
   }, [selectedCategory, selectedAudience, searchQuery, events]);
 
-  // Handle event registration
-  const handleRegister = async (eventId) => {
-    try {
-      const res = await API.post(`/events/${eventId}/register`);
-      if (res.data.success) {
-        alert("Successfully registered for the event!");
-        fetchEvents(); // Refresh events
-      }
-    } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+  const handleCreateEvent = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    
+    Object.keys(newEvent).forEach((key) => {
+      data.append(key, newEvent[key]);
+    });
+    
+    if (imageFile) {
+      data.append("image", imageFile);
     }
-  };
 
-  const handleUnregister = async (eventId) => {
     try {
-      const res = await API.post(`/events/${eventId}/unregister`);
+      const res = await API.post("/events", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       if (res.data.success) {
-        alert("Successfully unregistered from the event");
+        alert("Event created successfully!");
+        setShowCreateModal(false);
+        setNewEvent({
+          title: "", description: "", category: "Workshop", date: "", 
+          time: "", venue: "", targetAudience: "all", capacity: "", 
+          organizer: "", contactEmail: ""
+        });
+        setImageFile(null);
         fetchEvents();
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Unregistration failed");
+      alert(err.response?.data?.message || "Failed to create event");
     }
   };
 
-  const isRegistered = (event) => {
-    return event.registeredUsers?.some((user) => (user._id || user) === userId);
+  const handleDeleteEvent = async (eventId) => {
+    if (window.confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
+      try {
+        const res = await API.delete(`/events/${eventId}`);
+        if (res.data.success) {
+          alert("Event deleted successfully!");
+          fetchEvents();
+        }
+      } catch (err) {
+        alert(err.response?.data?.message || "Failed to delete event");
+      }
+    }
   };
 
   const getAudienceIcon = (audience) => {
     switch (audience) {
-      case "students":
-        return <FaUserGraduate />;
-      case "alumni":
-        return <FaUserTie />;
-      default:
-        return <FaGlobe />;
+      case "students": return <FaUserGraduate />;
+      case "alumni": return <FaUserTie />;
+      default: return <FaGlobe />;
     }
   };
 
   const getAudienceLabel = (audience) => {
     switch (audience) {
-      case "students":
-        return "Students Only";
-      case "alumni":
-        return "Alumni Only";
-      default:
-        return "Open to All";
+      case "students": return "Students Only";
+      case "alumni": return "Alumni Only";
+      default: return "Open to All";
     }
   };
 
@@ -183,104 +195,81 @@ export default function Events() {
 
   return (
     <div className="events">
-      {/* Header */}
       <div className="events-hero">
         <div className="events-hero-content">
           <h1 className="events-title">University Events</h1>
           <p className="events-subtitle">
-            Discover and join upcoming events, workshops, and networking
-            opportunities
+            Discover upcoming events, workshops, and networking opportunities
           </p>
+          {userRole === "admin" && (
+            <button className="create-event-btn-hero" onClick={() => setShowCreateModal(true)}>
+              <FaPlus /> Create New Event
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Filters Section */}
       <div className="events-container">
         <div className="events-filters-section">
-          {/* Search Bar */}
           <div className="events-search-box">
             <FaSearch className="events-search-icon" />
             <input
               type="text"
-              placeholder="Search events by title, description, or venue..."
+              placeholder="Search events..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="events-search-input"
             />
           </div>
 
-          {/* Filter Tabs */}
           <div className="events-filters">
-            {/* Status Filter */}
-            <div className="">
-      
-              <select
-                value={selectedStatus}
-                onChange={(e) => {
-                  setSelectedStatus(e.target.value);
-                  fetchEvents();
-                }}
-                className="filter-select"
-              >
-                <option value="upcoming">Upcoming</option>
-                <option value="ongoing">Ongoing</option>
-                <option value="completed">Completed</option>
-                <option value="">All Status</option>
-              </select>
-            </div>
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="filter-select"
+            >
+              <option value="upcoming">Upcoming</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="completed">Completed</option>
+              <option value="">All Status</option>
+            </select>
 
-            {/* Category Filter */}
-            <div className="">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="filter-select"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat.toLowerCase()}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="filter-select"
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat.toLowerCase()}>{cat}</option>
+              ))}
+            </select>
 
-            {/* Audience Filter */}
-            <div className="">
-              <select
-                value={selectedAudience}
-                onChange={(e) => setSelectedAudience(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">All Audiences</option>
-                <option value="students">Students Only</option>
-                <option value="alumni">Alumni Only</option>
-              </select>
-            </div>
+            <select
+              value={selectedAudience}
+              onChange={(e) => setSelectedAudience(e.target.value)}
+              className="filter-select"
+            >
+              <option value="all">All Audiences</option>
+              <option value="students">Students Only</option>
+              <option value="alumni">Alumni Only</option>
+            </select>
           </div>
         </div>
 
-        {/* Events Grid */}
         <div className="events-grid">
           {filteredEvents.length === 0 ? (
             <div className="events-empty-state">
               <div className="empty-state-icon">📅</div>
               <h3>No Events Found</h3>
-              <p>
-                Try adjusting your filters or check back later for new events
-              </p>
+              <p>Try adjusting your filters or check back later.</p>
             </div>
           ) : (
             filteredEvents.map((event) => (
               <div key={event._id} className="event-card">
-                {/* Event Image */}
                 <div className="event-image-container">
                   {event.image ? (
                     <img
-                      src={
-                        event.image.startsWith("http")
-                          ? event.image
-                          : `http://localhost:5000${event.image}`
-                      }
+                      src={event.image.startsWith("http") ? event.image : `http://localhost:5000${event.image}`}
                       alt={event.title}
                       className="event-image"
                     />
@@ -289,47 +278,37 @@ export default function Events() {
                       <FaCalendarAlt size={48} />
                     </div>
                   )}
-
-                  {/* Category Badge */}
                   <div className="event-category-badge">{event.category}</div>
+                  
+                  {userRole === "admin" && (
+                    <button 
+                      className="event-delete-btn" 
+                      onClick={() => handleDeleteEvent(event._id)}
+                      title="Delete Event"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  )}
 
-                  {/* Status Badge */}
-                  <div
-                    className={`event-status-badge ${getStatusColor(event.date)}`}
-                  >
-                    {isPast(parseISO(event.date))
-                      ? "Completed"
-                      : isToday(parseISO(event.date))
-                        ? "Today"
-                        : "Upcoming"}
+                  <div className={`event-status-badge ${getStatusColor(event.date)}`}>
+                    {isPast(parseISO(event.date)) ? "Completed" : isToday(parseISO(event.date)) ? "Today" : "Upcoming"}
                   </div>
                 </div>
 
-                {/* Event Content */}
                 <div className="event-content">
-                  {/* Title */}
                   <h3 className="event-title">{event.title}</h3>
-
-                  {/* Audience Badge */}
                   <div className="event-audience-badge">
                     {getAudienceIcon(event.targetAudience)}
                     <span>{getAudienceLabel(event.targetAudience)}</span>
                   </div>
-
-                  {/* Description */}
                   <p className="event-description">
-                    {event.description.length > 120
-                      ? `${event.description.substring(0, 120)}...`
-                      : event.description}
+                    {event.description.length > 120 ? `${event.description.substring(0, 120)}...` : event.description}
                   </p>
 
-                  {/* Event Details */}
                   <div className="event-details">
                     <div className="event-detail-item">
                       <FaCalendarAlt className="event-icon" />
-                      <span>
-                        {format(parseISO(event.date), "MMM dd, yyyy")}
-                      </span>
+                      <span>{format(parseISO(event.date), "MMM dd, yyyy")}</span>
                     </div>
                     <div className="event-detail-item">
                       <FaClock className="event-icon" />
@@ -341,53 +320,10 @@ export default function Events() {
                     </div>
                     <div className="event-detail-item">
                       <FaUsers className="event-icon" />
-                      <span>
-                        {event.registeredUsers?.length || 0}
-                        {event.capacity ? `/${event.capacity}` : ""} registered
-                      </span>
+                      <span>Capacity: {event.capacity || "Unlimited"}</span>
                     </div>
                   </div>
 
-                  {/* Registration Button */}
-                  <div className="event-actions">
-                    {isFuture(parseISO(event.date)) ||
-                    isToday(parseISO(event.date)) ? (
-                      <>
-                        {isRegistered(event) ? (
-                          <button
-                            onClick={() => handleUnregister(event._id)}
-                            className="event-btn event-btn-unregister"
-                          >
-                            <FaTimesCircle /> Unregister
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleRegister(event._id)}
-                            className="event-btn event-btn-register"
-                            disabled={
-                              !event.isRegistrationOpen ||
-                              (event.capacity &&
-                                event.registeredUsers?.length >= event.capacity)
-                            }
-                          >
-                            <FaCheckCircle />
-                            {event.capacity &&
-                            event.registeredUsers?.length >= event.capacity
-                              ? "Event Full"
-                              : !event.isRegistrationOpen
-                                ? "Registration Closed"
-                                : "Register Now"}
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <button className="event-btn event-btn-disabled" disabled>
-                        Event Ended
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Organizer Info */}
                   <div className="event-organizer">
                     <small>Organized by: {event.organizer}</small>
                   </div>
@@ -397,6 +333,77 @@ export default function Events() {
           )}
         </div>
       </div>
+
+      {showCreateModal && (
+        <div className="modal-overlay">
+          <div className="event-modal">
+            <div className="modal-header">
+              <h2>Create New Event</h2>
+              <button className="close-modal-btn" onClick={() => setShowCreateModal(false)}><FaTimesCircle /></button>
+            </div>
+            <form onSubmit={handleCreateEvent} className="event-form-content">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Event Title</label>
+                  <input type="text" required value={newEvent.title} onChange={(e) => setNewEvent({...newEvent, title: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Category</label>
+                  <select value={newEvent.category} onChange={(e) => setNewEvent({...newEvent, category: e.target.value})}>
+                    {categories.filter(c => c !== "All").map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Date</label>
+                  <input type="date" required value={newEvent.date} onChange={(e) => setNewEvent({...newEvent, date: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Time</label>
+                  <input type="text" placeholder="e.g. 10:00 AM" required value={newEvent.time} onChange={(e) => setNewEvent({...newEvent, time: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Venue</label>
+                  <input type="text" required value={newEvent.venue} onChange={(e) => setNewEvent({...newEvent, venue: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Target Audience</label>
+                  <select value={newEvent.targetAudience} onChange={(e) => setNewEvent({...newEvent, targetAudience: e.target.value})}>
+                    <option value="all">All Audiences</option>
+                    <option value="students">Students Only</option>
+                    <option value="alumni">Alumni Only</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Capacity</label>
+                  <input type="number" placeholder="Unlimited if empty" value={newEvent.capacity} onChange={(e) => setNewEvent({...newEvent, capacity: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Organizer</label>
+                  <input type="text" required value={newEvent.organizer} onChange={(e) => setNewEvent({...newEvent, organizer: e.target.value})} />
+                </div>
+                <div className="form-group" style={{ gridColumn: "span 2" }}>
+                  <label>Contact Email</label>
+                  <input type="email" required value={newEvent.contactEmail} onChange={(e) => setNewEvent({...newEvent, contactEmail: e.target.value})} />
+                </div>
+                <div className="form-group" style={{ gridColumn: "span 2" }}>
+                  <label>Event Image</label>
+                  <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} />
+                </div>
+                <div className="form-group" style={{ gridColumn: "span 2" }}>
+                  <label>Description</label>
+                  <textarea required rows="4" value={newEvent.description} onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}></textarea>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="event-btn-cancel" onClick={() => setShowCreateModal(false)}>Cancel</button>
+                <button type="submit" className="event-btn-submit">Publish Event</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

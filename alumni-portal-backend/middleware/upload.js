@@ -1,9 +1,7 @@
-// middleware/upload.js - Add event image handling
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure upload directories exist
 const profilePicturesDir = './uploads/profile-pictures';
 const eventsDir = './uploads/events';
 
@@ -13,10 +11,8 @@ const eventsDir = './uploads/events';
   }
 });
 
-// Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Determine destination based on field name or route
     let uploadPath = profilePicturesDir;
     
     if (req.baseUrl.includes('/events') || file.fieldname === 'image') {
@@ -31,7 +27,6 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter - only allow images
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());

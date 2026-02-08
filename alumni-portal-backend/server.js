@@ -6,6 +6,8 @@ const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const messageRoutes = require('./routes/messages');
+const eventRoutes = require('./routes/events');
+const jobRoutes = require('./routes/jobs'); // 1. Added Job Routes Import
 const Message = require('./models/Message');
 const Conversation = require('./models/Conversation');
 const jwt = require('jsonwebtoken');
@@ -28,8 +30,11 @@ app.options(/(.*)/, cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.use('/api/messages', messageRoutes);
 app.use('/api/auth', authRoutes); 
+app.use('/api', eventRoutes);
+app.use('/api/jobs', jobRoutes); // 2. Added Job Routes Mounting
 
 const server = http.createServer(app);
 
@@ -55,6 +60,7 @@ io.use((socket, next) => {
 
 io.on('connection', (socket) => {
   console.log('User connected to socket:', socket.id);
+  
   socket.on('join_conversation', async (conversationId) => {
     try {
       const conversation = await Conversation.findById(conversationId);

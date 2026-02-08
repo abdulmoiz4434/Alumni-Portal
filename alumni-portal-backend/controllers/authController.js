@@ -309,3 +309,45 @@ exports.getAllUsers = async (req, res) => {
     return errorResponse(res, "Failed to fetch users", 500);
   }
 };
+
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const normalizedEmail = email.toLowerCase();
+
+    if (!email || !password) {
+      return errorResponse(res, 'Please provide email and password');
+    }
+
+    // 1. Find user and explicitly select password
+    const user = await User.findOne({ email: normalizedEmail }).select('+password');
+
+    // 2. Check if user exists AND if they are an admin
+    if (!user || user.role !== 'admin') {
+      // We use a generic message for security, but your frontend can handle the 403
+      return errorResponse(res, 'Invalid admin credentials or unauthorized access', 403);
+    }
+
+    // 3. Check password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return errorResponse(res, 'Invalid admin credentials', 401);
+    }
+
+    const token = generateToken(user._id, user.role);
+
+    return successResponse(res, {
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        profilePicture: user.profilePicture
+      }
+    }, 200, 'Admin login successful');
+  } catch (error) {
+    console.error('Admin Login Error:', error);
+    return errorResponse(res, 'Server Error during admin login', 500);
+  }
+};

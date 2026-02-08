@@ -1,416 +1,284 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import API from "../../../api/axios"; // Updated to use your custom instance
 import {
   Search,
   Building2,
   Clock,
   MapPin,
   Info,
-  Briefcase, 
+  Briefcase,
+  Plus,
+  Trash2,
+  X
 } from "lucide-react";
 import "./Jobs.css";
 
 export default function Jobs() {
+  // 1. Data State
+  const [opportunities, setOpportunities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState("");
+  const [userId, setUserId] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 2. Form State
+  const [formData, setFormData] = useState({
+    category: "job",
+    title: "",
+    company: "",
+    location: "",
+    salary: "",
+    jobType: "full-time",
+    description: "",
+    deadline: "",
+    requirements: ""
+  });
+
+  // 3. Filter States
   const [searchTerm, setSearchTerm] = useState("");
   const [filterLocation, setFilterLocation] = useState("all");
-  const [filterType, setFilterType] = useState("all");
-  const [activeTab, setActiveTab] = useState("all"); // all, jobs, internships
+  const [activeTab, setActiveTab] = useState("all");
 
-  const jobs = [
-    {
-      id: 1,
-      title: "Senior Full Stack Developer",
-      company: "Innovatech Solutions",
-      location: "Lahore, Pakistan",
-      type: "Full-time",
-      experience: "3-5 years",
-      salary: "PKR 150,000 - 250,000",
-      postedBy: "Alumni",
-      postedDate: "2 days ago",
-      description:
-        "We're looking for an experienced Full Stack Developer to join our growing team. You'll work on cutting-edge web applications using React, Node.js, and cloud technologies.",
-      requirements: ["React.js", "Node.js", "MongoDB", "AWS"],
-      category: "job",
-    },
-    {
-      id: 2,
-      title: "Software Engineer",
-      company: "NextGen Solutions",
-      location: "Remote",
-      type: "Full-time",
-      experience: "2-4 years",
-      salary: "PKR 120,000 - 180,000",
-      postedBy: "Admin",
-      postedDate: "5 days ago",
-      description:
-        "Join our team to work on cloud-based applications and APIs. Great opportunity for growth and learning.",
-      requirements: ["Python", "Django", "REST APIs", "Docker"],
-      category: "job",
-    },
-    {
-      id: 3,
-      title: "Frontend Developer",
-      company: "Digital Innovations",
-      location: "Karachi, Pakistan",
-      type: "Full-time",
-      experience: "1-3 years",
-      salary: "PKR 80,000 - 130,000",
-      postedBy: "Alumni",
-      postedDate: "1 week ago",
-      description:
-        "Looking for a creative Frontend Developer to build beautiful and responsive user interfaces.",
-      requirements: ["React.js", "CSS3", "JavaScript", "Responsive Design"],
-      category: "job",
-    },
-    {
-      id: 4,
-      title: "DevOps Engineer",
-      company: "CloudTech Systems",
-      location: "Islamabad, Pakistan",
-      type: "Full-time",
-      experience: "3+ years",
-      salary: "PKR 180,000 - 280,000",
-      postedBy: "Admin",
-      postedDate: "3 days ago",
-      description:
-        "Seeking a skilled DevOps Engineer to manage our cloud infrastructure and CI/CD pipelines.",
-      requirements: ["Kubernetes", "Docker", "Jenkins", "AWS/Azure"],
-      category: "job",
-    },
-    {
-      id: 5,
-      title: "Mobile App Developer",
-      company: "AppVentures",
-      location: "Remote",
-      type: "Full-time",
-      experience: "2+ years",
-      salary: "PKR 100,000 - 160,000",
-      postedBy: "Alumni",
-      postedDate: "4 days ago",
-      description:
-        "Develop cross-platform mobile applications using React Native for our diverse client base.",
-      requirements: ["React Native", "iOS/Android", "Firebase", "Redux"],
-      category: "job",
-    },
-    {
-      id: 6,
-      title: "UI/UX Designer",
-      company: "Creative Minds Studio",
-      location: "Lahore, Pakistan",
-      type: "Full-time",
-      experience: "2-4 years",
-      salary: "PKR 90,000 - 140,000",
-      postedBy: "Alumni",
-      postedDate: "1 week ago",
-      description:
-        "Create stunning user experiences and interfaces for web and mobile applications.",
-      requirements: ["Figma", "Adobe XD", "User Research", "Prototyping"],
-      category: "job",
-    },
-  ];
+  useEffect(() => {
+    fetchJobs();
+    fetchUserProfile();
+  }, []);
 
-  const internships = [
-    {
-      id: 7,
-      title: "Frontend Development Intern",
-      company: "Tech Solutions Ltd.",
-      location: "Remote",
-      type: "Internship",
-      duration: "3 months",
-      stipend: "PKR 20,000 - 30,000",
-      postedBy: "Admin",
-      postedDate: "2 days ago",
-      description:
-        "Work on React projects and assist in UI development. Perfect opportunity to learn modern web development.",
-      requirements: ["HTML/CSS", "JavaScript", "React (Basic)", "Git"],
-      category: "internship",
-    },
-    {
-      id: 8,
-      title: "Data Analyst Intern",
-      company: "Analytics Corp.",
-      location: "Karachi, Pakistan",
-      type: "Internship",
-      duration: "6 months",
-      stipend: "PKR 25,000 - 35,000",
-      postedBy: "Alumni",
-      postedDate: "5 days ago",
-      description:
-        "Analyze datasets and create actionable reports. Gain hands-on experience with data visualization tools.",
-      requirements: ["Excel", "Python", "SQL", "Power BI"],
-      category: "internship",
-    },
-    {
-      id: 9,
-      title: "Backend Development Intern",
-      company: "CodeCraft Solutions",
-      location: "Lahore, Pakistan",
-      type: "Internship",
-      duration: "4 months",
-      stipend: "PKR 22,000 - 32,000",
-      postedBy: "Alumni",
-      postedDate: "1 week ago",
-      description:
-        "Learn server-side development with Node.js and database management.",
-      requirements: ["JavaScript", "Node.js", "MongoDB", "Express"],
-      category: "internship",
-    },
-    {
-      id: 10,
-      title: "Mobile App Development Intern",
-      company: "MobileFirst Inc.",
-      location: "Remote",
-      type: "Internship",
-      duration: "3 months",
-      stipend: "PKR 18,000 - 28,000",
-      postedBy: "Admin",
-      postedDate: "3 days ago",
-      description:
-        "Assist in developing mobile applications for Android and iOS platforms.",
-      requirements: ["Java/Kotlin", "Flutter/React Native", "Git", "Mobile UI"],
-      category: "internship",
-    },
-    {
-      id: 11,
-      title: "Digital Marketing Intern",
-      company: "MarketGrow Agency",
-      location: "Islamabad, Pakistan",
-      type: "Internship",
-      duration: "3 months",
-      stipend: "PKR 15,000 - 25,000",
-      postedBy: "Alumni",
-      postedDate: "4 days ago",
-      description:
-        "Learn SEO, social media marketing, and content creation strategies.",
-      requirements: [
-        "Social Media",
-        "Contdent Writing",
-        "Basic SEO",
-        "Analytics",
-      ],
-      category: "internship",
-    },
-    {
-      id: 12,
-      title: "Graphic Design Intern",
-      company: "Creative Studios",
-      location: "Karachi, Pakistan",
-      type: "Internship",
-      duration: "4 months",
-      stipend: "PKR 20,000 - 30,000",
-      postedBy: "Admin",
-      postedDate: "6 days ago",
-      description:
-        "Create visual content for various digital platforms and marketing materials.",
-      requirements: [
-        "Adobe Photoshop",
-        "Illustrator",
-        "Creativity",
-        "Portfolio",
-      ],
-      category: "internship",
-    },
-  ];
+  const fetchUserProfile = async () => {
+    try {
+      const res = await API.get("/auth/me");
+      const { user } = res.data.data;
+      console.log("User Profile:", user); // Debug log
+      setUserRole(user.role);
+      setUserId(user.id); // API returns 'id' not '_id'
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
+    }
+  };
 
-  // Combine jobs and internships for unified filtering
-  const allOpportunities = [...jobs, ...internships];
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      const res = await API.get("/jobs");
+      if (res.data.success) {
+        setOpportunities(res.data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching jobs:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Filter logic
-  const filteredOpportunities = allOpportunities.filter((item) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // API instance handles base URL and headers automatically
+      const res = await API.post("/jobs", formData);
+      
+      if (res.data.success) {
+        alert("Opportunity posted successfully!");
+        setIsModalOpen(false);
+        setFormData({ 
+          category: "job", title: "", company: "", location: "", 
+          salary: "", jobType: "full-time", description: "", 
+          deadline: "", requirements: "" 
+        });
+        fetchJobs(); // Refresh the list
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to post job");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        const res = await API.delete(`/jobs/${id}`);
+        if (res.data.success) {
+          alert("Job removed successfully");
+          setOpportunities(opportunities.filter(op => op._id !== id));
+        }
+      } catch (err) {
+        alert(err.response?.data?.message || "Failed to delete");
+      }
+    }
+  };
+
+  // RBAC Helper: Check if user can delete
+  // Admin can delete any job, Alumni can only delete their own posts
+  const canDeleteJob = (postedBy) => {
+    console.log("Checking delete permission - userRole:", userRole, "userId:", userId, "postedBy._id:", postedBy._id); // Debug log
+    if (userRole === "admin") return true; // Admin can delete any job
+    if (userRole === "alumni" && userId === postedBy._id) return true; // Alumni can only delete their own
+    return false;
+  };
+
+  // Filter Logic
+  const filteredOpportunities = opportunities.filter((item) => {
     const matchesSearch =
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
+      item.company.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesLocation =
       filterLocation === "all" ||
       item.location.toLowerCase().includes(filterLocation.toLowerCase());
-
-    const matchesType =
-      filterType === "all" ||
-      item.type.toLowerCase() === filterType.toLowerCase();
 
     const matchesTab =
       activeTab === "all" ||
       (activeTab === "jobs" && item.category === "job") ||
       (activeTab === "internships" && item.category === "internship");
 
-    return matchesSearch && matchesLocation && matchesType && matchesTab;
+    return matchesSearch && matchesLocation && matchesTab;
   });
+
+  if (loading) {
+    return (
+      <div className="events-loader-container">
+        <div className="spinner"></div>
+        <p>Loading opportunities...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="jobs">
       <div className="jobs-hero">
         <div className="jobs-hero-content">
           <h1 className="main-title">Career Opportunities</h1>
-          <p className="subtitle">
-            Explore jobs and internships posted by our alumni network and
-            administrators
-          </p>
-        </div>
-      </div>
-      <div className="jobs-container">
-        <div className="jobs-filters">
-          {/* Tab Select */}
-          {/* Search and Filter Section */}
-          <div className="search-filter-section">
-            <div className="search-box">
-              <Search size={22} className="search-icon" />
-              <input
-                type="text"
-                placeholder="Search by title, company, or keyword..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-            </div>
+          <p className="subtitle">Explore jobs and internships posted by our network</p>
 
-            <div className="filters">
-              <select
-                value={filterLocation}
-                onChange={(e) => setFilterLocation(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">All Locations</option>
-                <option value="remote">Remote</option>
-                <option value="lahore">Lahore</option>
-                <option value="karachi">Karachi</option>
-                <option value="islamabad">Islamabad</option>
-              </select>
-
-              <select
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-                className="filter-select"
-              >
-                <option value="all">All Types</option>
-                <option value="full-time">Full-time</option>
-                <option value="internship">Internship</option>
-              </select>
-              <select
-                value={activeTab}
-                onChange={(e) => setActiveTab(e.target.value)}
-                className="tab-select"
-              >
-                <option value="all">
-                  All Opportunities ({allOpportunities.length})
-                </option>
-                <option value="jobs">Jobs ({jobs.length})</option>
-                <option value="internships">
-                  Internships ({internships.length})
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Results Count */}
-        <div className="results-info">
-          <p>{filteredOpportunities.length} opportunities found</p>
-        </div>
-
-        {/* Opportunities Grid */}
-        <div className="opportunities-grid">
-          {filteredOpportunities.length > 0 ? (
-            filteredOpportunities.map((item) => (
-              <div
-                key={item.id}
-                className={`opportunity-card ${item.category}`}
-              >
-<div className="card-header">
-  <div className="card-meta">
-    <span className={`badge ${item.category}`}>
-      {item.category === "job" ? "Job" : "Internship"}
-    </span>
-
-    <span className="posted-date">
-      {item.postedDate}
-    </span>
-  </div>
-
-  <h2 className="job-title">{item.title}</h2>
-
-  <p className="company-name">
-    <Building2 size={18} />
-    {item.company}
-  </p>
-</div>
-
-
-
-                <div className="card-body">
-                  <div className="info-row">
-                    <span className="info-item">
-                     <Clock size={20} />
-
-                      {item.category === "job"
-                        ? item.experience
-                        : item.duration}
-                    </span>
-                    <span className="info-item">
-                     <MapPin size={20} />
-
-                      {item.location}
-                    </span>
-                    <span className="info-item">
-                     <Briefcase size={20} />
-
-                      {item.type}
-                    </span>
-                  </div>
-
-                  <p className="description">{item.description}</p>
-
-                  <div className="requirements">
-                    <p className="requirements-label">Required Skills:</p>
-                    <div className="skills-tags">
-                      {item.requirements.map((req, idx) => (
-                        <span key={idx} className="skill-tag">
-                          {req}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="card-footer">
-                    <div className="salary-info">
-                     <Info size={20} />
-
-                      <span>
-                        {item.category === "job" ? item.salary : item.stipend}
-                      </span>
-                    </div>
-                    <span className="posted-by">Posted by {item.postedBy}</span>
-                  </div>
-                </div>
-
-                <div className="card-actions">
-                  <button className="btn-primary">Apply Now</button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="no-results">
-              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="30"
-                  stroke="#E0E0E0"
-                  strokeWidth="4"
-                />
-                <path
-                  d="M32 20v16M32 44h.01"
-                  stroke="#E0E0E0"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <h3>No opportunities found</h3>
-              <p>Try adjusting your search or filters</p>
-            </div>
+          {(userRole === "admin" || userRole === "alumni") && (
+            <button className="create-job-btn-hero" onClick={() => setIsModalOpen(true)}>
+              <Plus size={20} /> Post an Opportunity
+            </button>
           )}
         </div>
       </div>
+
+      <div className="jobs-container">
+        <div className="search-filter-section">
+          <div className="search-box">
+            <Search size={22} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search by title, company..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+
+          <div className="filters">
+            <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)} className="filter-select">
+              <option value="all">All Locations</option>
+              <option value="remote">Remote</option>
+              <option value="lahore">Lahore</option>
+              <option value="karachi">Karachi</option>
+            </select>
+
+            <select value={activeTab} onChange={(e) => setActiveTab(e.target.value)} className="tab-select">
+              <option value="all">All Opportunities</option>
+              <option value="jobs">Jobs</option>
+              <option value="internships">Internships</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="opportunities-grid">
+          {filteredOpportunities.length === 0 ? (
+            <div className="no-results">
+              <Briefcase size={64} color="#E0E0E0" />
+              <h3>No opportunities found</h3>
+            </div>
+          ) : (
+            filteredOpportunities.map((item) => (
+              <div key={item._id} className={`opportunity-card ${item.category}`}>
+                {canDeleteJob(item.postedBy) && (
+                  <button className="job-delete-btn" onClick={() => handleDelete(item._id)}>
+                    <Trash2 size={18} />
+                  </button>
+                )}
+
+                <div className="card-header">
+                  <div className="card-meta">
+                    <span className={`badge ${item.category}`}>{item.category}</span>
+                    <span className="posted-date">{new Date(item.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <h2 className="job-title">{item.title}</h2>
+                  <p className="company-name"><Building2 size={18} /> {item.company}</p>
+                </div>
+
+                <div className="card-body">
+                  <div className="info-row">
+                    <span className="info-item"><MapPin size={20} /> {item.location}</span>
+                    <span className="info-item"><Briefcase size={20} /> {item.jobType}</span>
+                  </div>
+                  <p className="description">{item.description}</p>
+                  <div className="card-footer">
+                    <div className="salary-info">
+                      <Info size={20} />
+                      <span>{item.salary || "Not Specified"}</span>
+                    </div>
+                    <span className="posted-by">By {item.postedByName || "Admin"}</span>
+                  </div>
+                  <div className="card-actions">
+                    <button className="btn-primary">Apply Now</button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="event-modal">
+            <div className="modal-header">
+              <h2>Post New Opportunity</h2>
+              <button onClick={() => setIsModalOpen(false)} className="close-modal-btn"><X size={24} /></button>
+            </div>
+            <form className="form-grid" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Type</label>
+                <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="filter-select">
+                  <option value="job">Job</option>
+                  <option value="internship">Internship</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Job Title</label>
+                <input required type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <label>Company</label>
+                <input required type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <label>Location</label>
+                <input required type="text" value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <label>Salary/Stipend</label>
+                <input type="text" value={formData.salary} onChange={(e) => setFormData({...formData, salary: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <label>Deadline</label>
+                <input required type="date" value={formData.deadline} onChange={(e) => setFormData({...formData, deadline: e.target.value})} />
+              </div>
+              <div className="form-group" style={{ gridColumn: "1 / -1" }}>
+                <label>Description</label>
+                <textarea required rows="4" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})}></textarea>
+              </div>
+              <div className="modal-footer" style={{ gridColumn: "1 / -1" }}>
+                <button type="button" className="event-btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="submit" className="event-btn-submit">Post Opportunity</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,25 +8,31 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
+    // Check role before clearing storage
+    const user = JSON.parse(localStorage.getItem("user"));
+    const isAdmin = user?.role === "admin";
+
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setIsOpen(false);
-    navigate("/", { replace: true });
+
+    if (isAdmin) {
+      navigate("/admin", { replace: true });
+    } else {
+      navigate("/", { replace: true });
+    }
   };
 
   const closeSidebar = () => setIsOpen(false);
 
   return (
     <>
-      {/* Mobile Menu Button - Partner's addition */}
       <button className="menu-btn" onClick={() => setIsOpen(true)}>
         <Menu size={26} />
       </button>
 
-      {/* Overlay - Partner's addition */}
       {isOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 
-      {/* Sidebar - Merged logic */}
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <nav className="sidebar-nav">
           <NavLink to="/dashboard" end onClick={closeSidebar}>
@@ -53,7 +59,6 @@ export default function Sidebar() {
             Directory
           </NavLink>
 
-          {/* Your Messaging Link - Keep this! */}
           <NavLink to="/dashboard/messaging" onClick={closeSidebar}>
             Messages
           </NavLink>

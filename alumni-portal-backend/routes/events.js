@@ -1,4 +1,3 @@
-// routes/eventRoutes.js
 const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
@@ -255,7 +254,6 @@ router.post('/events/:id/register', protect, async (req, res) => {
       });
     }
 
-    // Check if event is full
     if (event.capacity && event.registeredUsers.length >= event.capacity) {
       return res.status(400).json({
         success: false,

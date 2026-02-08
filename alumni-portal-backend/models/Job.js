@@ -7,6 +7,12 @@ const jobSchema = new mongoose.Schema(
       ref: "User",
       required: true
     },
+    // Adding this so you can display "Posted by: Admin" or the person's name 
+    // without doing a heavy database 'populate' every time.
+    postedByName: {
+      type: String,
+      default: "Admin"
+    },
     title: {
       type: String,
       required: [true, "Please provide job title"],
@@ -27,10 +33,22 @@ const jobSchema = new mongoose.Schema(
       required: [true, "Please provide job description"],
       trim: true
     },
+    // This helps your frontend "Category" filter (Jobs vs Internships)
+    category: {
+      type: String,
+      enum: ["job", "internship"],
+      required: true,
+      default: "job"
+    },
     jobType: {
       type: String,
-      enum: ["full-time", "part-time", "internship"],
+      enum: ["full-time", "part-time", "internship", "remote"],
       required: [true, "Please provide job type"]
+    },
+    // Added for your card-footer salary display
+    salary: {
+      type: String,
+      trim: true
     },
     requirements: [{ type: String, trim: true }],
     deadline: {
