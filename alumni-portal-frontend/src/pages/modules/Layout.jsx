@@ -1,18 +1,18 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Topbar from "../../components/Topbar/Topbar";
-import "./DashboardLayout.css";
+import "./Layout.css";
 
-export default function DashboardLayout() {
+export default function Layout() {
   return (
-    <div className="dashboard-layout">
+    <div className="layout">
       {/* Top navigation bar */}
       <Topbar />
 
       {/* Dashboard body */}
-      <div className="dashboard-body">
+      <div className="body">
         <Sidebar />
-        <main className="dashboard-content">
+        <main className="content">
           <Outlet />
         </main>
       </div>

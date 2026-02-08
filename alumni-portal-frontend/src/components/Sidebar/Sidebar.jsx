@@ -35,35 +35,39 @@ export default function Sidebar() {
 
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <nav className="sidebar-nav">
-          <NavLink to="/dashboard" end onClick={closeSidebar}>
+          <NavLink to="/modules" end onClick={closeSidebar}>
             Dashboard
           </NavLink>
 
-          <NavLink to="/dashboard/profile" onClick={closeSidebar}>
+          <NavLink to="/modules/profile" onClick={closeSidebar}>
             Profile
           </NavLink>
 
-          <NavLink to="/dashboard/events" onClick={closeSidebar}>
+          <NavLink to="/modules/events" onClick={closeSidebar}>
             Events
           </NavLink>
 
-          <NavLink to="/dashboard/jobs" onClick={closeSidebar}>
+          <NavLink to="/modules/jobs" onClick={closeSidebar}>
             Jobs / Internships
           </NavLink>
 
-          <NavLink to="/dashboard/mentorship" onClick={closeSidebar}>
+          <NavLink to="/modules/mentorship" onClick={closeSidebar}>
             Mentorship
           </NavLink>
 
-          <NavLink to="/dashboard/directory" onClick={closeSidebar}>
+          <NavLink to="/modules/directory" onClick={closeSidebar}>
             Directory
           </NavLink>
 
-          <NavLink to="/dashboard/messaging" onClick={closeSidebar}>
+          <NavLink to="/modules/messaging" onClick={closeSidebar}>
             Messages
           </NavLink>
 
-          <NavLink to="/dashboard/stories" onClick={closeSidebar}>
+          <NavLink to="/modules/careerInsights" onClick={closeSidebar}>
+            Career Insights
+          </NavLink>
+
+          <NavLink to="/modules/stories" onClick={closeSidebar}>
             Success Stories
           </NavLink>
 

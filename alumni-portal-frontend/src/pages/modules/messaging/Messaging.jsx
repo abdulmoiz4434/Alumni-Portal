@@ -49,7 +49,7 @@ export default function Messaging() {
 
         // Safety check to ensure the URL matches the current conversation
         if (conversation._id !== conversationId) {
-          navigate(`/dashboard/messaging/${conversation._id}`, { replace: true });
+          navigate(`/modules/messaging/${conversation._id}`, { replace: true });
           return;
         }
 
@@ -199,7 +199,7 @@ useEffect(() => {
                 <div
                   key={conv._id}
                   className={`conv-item ${conversationId === conv._id ? "active" : ""}`}
-                  onClick={() => navigate(`/dashboard/messaging/${conv._id}`)}
+                  onClick={() => navigate(`/modules/messaging/${conv._id}`)}
                 >
                   <div className="conv-avatar">
                     {otherUser?.fullName?.charAt(0).toUpperCase() || "?"}

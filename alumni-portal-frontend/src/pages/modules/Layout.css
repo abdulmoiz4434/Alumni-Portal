@@ -1,4 +1,4 @@
-.dashboard-layout {
+.layout {
   display: flex;
   flex-direction: column;
   height: 100vh;   /* 🔴 IMPORTANT */
@@ -7,7 +7,7 @@
 }
 
 /* Area below topbar */
-.dashboard-body {
+.body {
   display: flex;
   flex: 1;
   overflow: hidden;
@@ -16,7 +16,7 @@
 
 /* Main content */
 
-.dashboard-content {
+.content {
   flex: 1;
   display: flex;           /* needed for Messaging page layout */
   flex-direction: column;

@@ -31,7 +31,8 @@ export default function Jobs() {
     jobType: "full-time",
     description: "",
     deadline: "",
-    requirements: ""
+    requirements: "",
+    contactEmail: ""
   });
 
   // 3. Filter States
@@ -48,7 +49,6 @@ export default function Jobs() {
     try {
       const res = await API.get("/auth/me");
       const { user } = res.data.data;
-      console.log("User Profile:", user); // Debug log
       setUserRole(user.role);
       setUserId(user.id); // API returns 'id' not '_id'
     } catch (err) {
@@ -72,8 +72,8 @@ export default function Jobs() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      // API instance handles base URL and headers automatically
       const res = await API.post("/jobs", formData);
       
       if (res.data.success) {
@@ -82,7 +82,7 @@ export default function Jobs() {
         setFormData({ 
           category: "job", title: "", company: "", location: "", 
           salary: "", jobType: "full-time", description: "", 
-          deadline: "", requirements: "" 
+          deadline: "", requirements: "", contactEmail: "" 
         });
         fetchJobs(); // Refresh the list
       }
@@ -105,10 +105,7 @@ export default function Jobs() {
     }
   };
 
-  // RBAC Helper: Check if user can delete
-  // Admin can delete any job, Alumni can only delete their own posts
   const canDeleteJob = (postedBy) => {
-    console.log("Checking delete permission - userRole:", userRole, "userId:", userId, "postedBy._id:", postedBy._id); // Debug log
     if (userRole === "admin") return true; // Admin can delete any job
     if (userRole === "alumni" && userId === postedBy._id) return true; // Alumni can only delete their own
     return false;
@@ -222,8 +219,13 @@ export default function Jobs() {
                     </div>
                     <span className="posted-by">By {item.postedByName || "Admin"}</span>
                   </div>
-                  <div className="card-actions">
-                    <button className="btn-primary">Apply Now</button>
+                  <div className="contact-email-section">
+                    <p className="contact-label">Send CV to:</p>
+                    {item.contactEmail ? (
+                      <p href={`mailto:${item.contactEmail}`} className="email-link">{item.contactEmail}</p>
+                    ) : (
+                      <p className="email-missing">Email not provided</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -266,6 +268,10 @@ export default function Jobs() {
               <div className="form-group">
                 <label>Deadline</label>
                 <input required type="date" value={formData.deadline} onChange={(e) => setFormData({...formData, deadline: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <label>Contact Email</label>
+                <input required type="email" value={formData.contactEmail} onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} placeholder="email@example.com" />
               </div>
               <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                 <label>Description</label>

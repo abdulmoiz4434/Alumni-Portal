@@ -13,7 +13,7 @@ export default function AuthPage() {
     if (token) {
       API.get("/auth/verify")
         .then(() => {
-          navigate("/dashboard");
+          navigate("/modules");
         })
         .catch(() => {
           localStorage.removeItem("token");
@@ -89,7 +89,7 @@ export default function AuthPage() {
       const { token, user } = res.data.data;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      navigate("/dashboard", { replace: true });
+      navigate("/modules", { replace: true });
     } catch (err) {
       console.error("Login Error:", err);
       setStudentLoginError(true);
@@ -106,7 +106,7 @@ export default function AuthPage() {
       const { token, user } = res.data.data;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      window.location.href = "/dashboard";
+      window.location.href = "/modules";
     } catch (err) {
       console.error("Login Error:", err);
       setAlumniLoginError(true);
@@ -134,7 +134,7 @@ export default function AuthPage() {
       if (res.data.success) {
         localStorage.setItem("token", res.data.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.data.user));
-        window.location.href = "/dashboard";
+        window.location.href = "/modules";
       }
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
@@ -163,7 +163,7 @@ export default function AuthPage() {
       if (res.data.success) {
         localStorage.setItem("token", res.data.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.data.user));
-        window.location.href = "/dashboard";
+        window.location.href = "/modules";
       }
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");

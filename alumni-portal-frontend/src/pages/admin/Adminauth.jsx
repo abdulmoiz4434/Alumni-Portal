@@ -14,7 +14,7 @@ export default function AdminAuth() {
         .then((res) => {
           const user = JSON.parse(localStorage.getItem("user"));
           if (user?.role === "admin") {
-            navigate("/dashboard");
+            navigate("/modules", { replace: true });
           } else {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
@@ -61,7 +61,7 @@ export default function AdminAuth() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       
-      navigate("/dashboard", { replace: true });
+      navigate("/modules", { replace: true }, { replace: true });
     } catch (err) {
       console.error("Admin Login Error:", err);
       setLoginError(true);
