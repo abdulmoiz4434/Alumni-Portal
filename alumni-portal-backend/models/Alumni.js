@@ -74,5 +74,7 @@ const alumniSchema = new mongoose.Schema(
 
 alumniSchema.index({ graduationYear: -1 });
 alumniSchema.index({ regNo: 1 });
+alumniSchema.index({ jobTitle: 1 });
+alumniSchema.index({ company: 1 });
 
 module.exports = mongoose.model("Alumni", alumniSchema);

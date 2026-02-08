@@ -7,10 +7,12 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const messageRoutes = require('./routes/messages');
 const eventRoutes = require('./routes/events');
-const jobRoutes = require('./routes/jobs'); // 1. Added Job Routes Import
+const jobRoutes = require('./routes/jobs'); 
+const mentorshipRoutes = require('./routes/mentorship');
 const Message = require('./models/Message');
 const Conversation = require('./models/Conversation');
 const jwt = require('jsonwebtoken');
+const careerInsightsRoutes = require("./routes/careerInsights");
 
 dotenv.config();
 
@@ -34,7 +36,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/messages', messageRoutes);
 app.use('/api/auth', authRoutes); 
 app.use('/api', eventRoutes);
-app.use('/api/jobs', jobRoutes); // 2. Added Job Routes Mounting
+app.use('/api/jobs', jobRoutes); 
+app.use('/api/mentorship', mentorshipRoutes);
+app.use("/api/careerInsights", careerInsightsRoutes);
 
 const server = http.createServer(app);
 

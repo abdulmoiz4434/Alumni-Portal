@@ -13,11 +13,12 @@ const createJob = async (req, res) => {
       category, 
       salary, 
       requirements, 
-      deadline 
+      deadline,
+      contactEmail
     } = req.body;
 
     // 1. Validation check
-    if (!title || !company || !location || !description || !deadline) {
+    if (!title || !company || !location || !description || !deadline || !contactEmail) {
       return res.status(400).json({ 
         success: false, 
         message: "Please fill all required fields" 
@@ -39,6 +40,7 @@ const createJob = async (req, res) => {
         ? requirements 
         : (requirements ? requirements.split(',').map(s => s.trim()) : []),
       deadline,
+      contactEmail,
     });
 
     res.status(201).json({
