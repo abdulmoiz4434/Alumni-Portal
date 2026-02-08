@@ -12,7 +12,6 @@ import CareerInsights from "./pages/modules/careerInsights/CareerInsights";
 import Directory from "./pages/modules/directory/Directory";
 import Messaging from "./pages/modules/messaging/Messaging";
 import AdminAuth from "./pages/admin/Adminauth";
-import CareerInsights from "./pages/dashboard/careerInsights/CareerInsights"; 
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
