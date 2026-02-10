@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import "./Profile.css";
 
-// Animation variants
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -297,7 +296,7 @@ export default function Profile() {
           semester: roleData?.semester || "",
           cgpa: roleData?.cgpa || "",
           careerGoals: roleData?.careerGoals || "",
-          interests: roleData?.interests || "",
+          interests: Array.isArray(roleData?.interests) && roleData.interests.length > 0 ? roleData.interests.join(", ") : "",
           location: roleData?.location || "",
         };
 

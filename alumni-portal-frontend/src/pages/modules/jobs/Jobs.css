@@ -138,6 +138,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 3rem;
+  padding: 20px;
 }
 
 /* Opportunity Card */

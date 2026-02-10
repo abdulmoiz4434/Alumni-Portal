@@ -249,16 +249,20 @@ exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     const role = req.user.role;
-    
-    // Fields coming from your Profile.jsx handleSave function
-    const { about, company, jobTitle, skills, linkedin } = req.body;
+    const { 
+      about, company, jobTitle, skills, linkedin, 
+      degree, semester, cgpa, careerGoals, interests, location 
+    } = req.body;
 
     let updatedProfile;
 
-    // Convert skills string to array if necessary
     const skillsArray = typeof skills === 'string' 
       ? skills.split(',').map(s => s.trim()) 
       : skills;
+
+    const interestsArray = typeof interests === 'string'
+      ? interests.split(',').map(i => i.trim())
+      : interests;
 
     if (role === 'student') {
       updatedProfile = await Student.findOneAndUpdate(
@@ -266,10 +270,15 @@ exports.updateProfile = async (req, res) => {
         { 
           $set: { 
             about, 
+            degree,
+            semester: semester ? parseInt(semester) : undefined, 
+            cgpa: cgpa ? parseFloat(cgpa) : undefined,           
+            careerGoals,
+            interests: interestsArray,
             skills: skillsArray 
           } 
         },
-        { new: true }
+        { new: true, runValidators: true }
       );
     } else if (role === 'alumni') {
       updatedProfile = await Alumni.findOneAndUpdate(
@@ -280,11 +289,17 @@ exports.updateProfile = async (req, res) => {
             company, 
             jobTitle, 
             linkedin, 
+            location,
+            degree,
             skills: skillsArray 
           } 
         },
-        { new: true }
+        { new: true, runValidators: true }
       );
+    }
+
+    if (!updatedProfile) {
+      return errorResponse(res, 'Profile not found', 404);
     }
 
     return successResponse(res, updatedProfile, 200, 'Profile updated successfully');

@@ -45,7 +45,7 @@ export default function Events() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const categories = [
-    "All",
+    "All Types",
     "Workshop",
     "Seminar",
     "Networking",
