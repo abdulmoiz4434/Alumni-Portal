@@ -18,6 +18,15 @@
   padding: 24px 20px;
   border-bottom: 1px solid #2a2a2a;
   background: linear-gradient(180deg, #1a1a1a 0%, #111111 100%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.socket-status {
+  color: #22c55e;
+  font-size: 10px;
+  margin-left: 4px;
 }
 
 .chat-sidebar h3 {

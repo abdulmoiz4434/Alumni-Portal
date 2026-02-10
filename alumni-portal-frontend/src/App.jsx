@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { SocketProvider } from "./context/SocketContext";
 import AuthPage from "./pages/auth/AuthPage";
 import Layout from "./pages/modules/Layout";
 import Dashboard from "./pages/modules/dashboard/Dashboard";
@@ -18,7 +17,6 @@ function App() {
   const userId = user?._id || user?.id;
 
   return (
-    <SocketProvider userId={userId}>
       <Router>
         <Routes>
           <Route path="/" element={<AuthPage />} />
@@ -36,7 +34,6 @@ function App() {
           </Route>
         </Routes>
       </Router>
-    </SocketProvider>
   );
 }
 export default App;

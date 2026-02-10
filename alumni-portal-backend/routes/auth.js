@@ -4,8 +4,9 @@ const {
   registerStudent,
   registerAlumni,
   login,
-  adminLogin, // 1. Add this import
+  adminLogin,
   getMe,
+  getUserById,
   updateProfile,
   getAllUsers
 } = require('../controllers/authController');
@@ -15,9 +16,10 @@ router.post('/register/student', registerStudent);
 router.post('/register/alumni', registerAlumni);
 
 router.post('/login', login);
-router.post('/login/admin', adminLogin); 
+router.post('/login/admin', adminLogin);
 
 router.get('/me', protect, getMe);
+router.get('/user/:id', protect, getUserById);
 router.put('/update-profile', protect, updateProfile);
 router.get('/all-users', protect, getAllUsers);
 router.get('/verify', protect, getMe);

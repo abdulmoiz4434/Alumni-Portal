@@ -74,7 +74,8 @@ exports.registerStudent = async (req, res) => {
 
   } catch (error) {
     console.error('Register Student Error:', error);
-    return errorResponse(res, error.message || 'Server Error during registration', 500);
+    const message = error.message || 'Server Error during registration';
+    return errorResponse(res, message, 500);
   }
 };
 
@@ -144,7 +145,8 @@ exports.registerAlumni = async (req, res) => {
 
   } catch (error) {
     console.error('Register Alumni Error:', error);
-    return errorResponse(res, error.message || 'Server Error during registration', 500);
+    const message = error.message || 'Server Error during registration';
+    return errorResponse(res, message, 500);
   }
 };
 
@@ -193,7 +195,23 @@ exports.login = async (req, res) => {
     }, 200, 'Login successful');
   } catch (error) {
     console.error('Login Error:', error);
-    return errorResponse(res, 'Server Error during login', 500);
+    const message = error.message || 'Server Error during login';
+    return errorResponse(res, message, 500);
+  }
+};
+
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .select("fullName email role profilePicture")
+      .lean();
+    if (!user) {
+      return errorResponse(res, 'User not found', 404);
+    }
+    return successResponse(res, { ...user, _id: user._id, id: user._id }, 200);
+  } catch (error) {
+    console.error('Get User Error:', error);
+    return errorResponse(res, 'Server Error fetching user', 500);
   }
 };
 

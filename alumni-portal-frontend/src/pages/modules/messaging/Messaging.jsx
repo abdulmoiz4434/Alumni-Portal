@@ -1,13 +1,13 @@
+// Messaging.jsx
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../../api/axios";
-import { useSocket } from "../../../context/SocketContext";
+import * as socketService from "../../../services/socketService";
 import "./Messaging.css";
 
 export default function Messaging() {
   const { conversationId } = useParams();
   const navigate = useNavigate();
-  const socket = useSocket();
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const currentUserId = currentUser?._id || currentUser?.id;
@@ -16,15 +16,40 @@ export default function Messaging() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [activeChatUser, setActiveChatUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const scrollRef = useRef(null);
+
+  // Socket.IO: connect on mount with JWT
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const socket = socketService.connect(token);
+    if (!socket) return;
+
+    const onConnect = () => setSocketConnected(true);
+    const onDisconnect = () => setSocketConnected(false);
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    if (socket.connected) setSocketConnected(true);
+
+    return () => {
+      // FIX: Only remove listeners, DON'T disconnect socket
+      // Socket should stay connected across the entire app session
+      if (socket) {
+        socket.off("connect", onConnect);
+        socket.off("disconnect", onDisconnect);
+      }
+      // REMOVED: socketService.disconnect(); <-- This was causing premature disconnection
+    };
+  }, []);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // 1. Fetch all conversations for the sidebar
   const fetchConversations = async () => {
     try {
       const res = await API.get("/messages/conversations");
@@ -38,181 +63,126 @@ export default function Messaging() {
     fetchConversations();
   }, [conversationId]);
 
-  // 2. Initialize the active chat - DEBUGGED VERSION
+  // Initialize active chat and messages (HTTP)
   useEffect(() => {
-    if (!conversationId || !socket) return;
+    if (!conversationId) {
+      setLoading(false);
+      return;
+    }
 
+    setLoading(true);
     const initChat = async () => {
       try {
         const res = await API.get(`/messages/${conversationId}`);
-        const { conversation, messages: chatMessages } = res.data.data;
+        const { conversation, messages: chatMessages } = res.data.data || {};
 
-        // Safety check to ensure the URL matches the current conversation
-        if (conversation._id !== conversationId) {
-          navigate(`/modules/messaging/${conversation._id}`, { replace: true });
+        if (!conversation) {
+          setMessages([]);
+          setActiveChatUser(null);
+          setLoading(false);
+          return;
+        }
+
+        const convId = conversation._id || conversation.id;
+        if (convId !== conversationId) {
+          navigate(`/modules/messaging/${convId}`, { replace: true });
           return;
         }
 
         setMessages(chatMessages || []);
 
-        conversation.participants.forEach((p, index) => {
-          
-          const participantId = (p._id || p).toString();
-          const myId = currentUserId?.toString();
-          console.log(`  - Participant ID (string): "${participantId}"`);
-          console.log(`  - My ID (string): "${myId}"`);
-          console.log(`  - Are they equal?: ${participantId === myId}`);
-          console.log(`  - Are they NOT equal?: ${participantId !== myId}`);
-        });
+        const otherParticipantId = conversation.participants?.find(
+          (p) => (p._id || p.id || p).toString() !== currentUserId?.toString()
+        );
 
-        const otherParticipant = conversation.participants.find((p) => {
-          const participantId = (p._id || p).toString();
-          const myId = currentUserId?.toString();
-          return participantId !== myId;
-        });
-
-        console.log("=== Found other participant ===");
-        console.log("Other participant:", otherParticipant);
-
-        if (otherParticipant) {
-          // If it's a populated object with user details
-          if (otherParticipant._id && otherParticipant.fullName) {
-            console.log("Setting activeChatUser with populated data:", otherParticipant);
-            setActiveChatUser(otherParticipant);
-          } else if (otherParticipant._id) {
-            // Has _id but missing other fields - treat as populated but incomplete
-            console.log("Participant has _id but may be missing fields:", otherParticipant);
-            setActiveChatUser(otherParticipant);
-          } else {
-            // It's just an ID string, fetch full details
-            console.warn("Participant is just an ID string, fetching details...");
+        if (otherParticipantId) {
+          const id = otherParticipantId._id || otherParticipantId.id || otherParticipantId;
+          if (typeof id === "string") {
             try {
-              const userRes = await API.get(`/auth/user/${otherParticipant}`);
+              const userRes = await API.get(`/auth/user/${id}`);
               setActiveChatUser(userRes.data.data);
-            } catch (err) {
-              console.error("Failed to fetch user details:", err);
-              setActiveChatUser({ _id: otherParticipant, fullName: "Unknown User" });
+            } catch {
+              setActiveChatUser({ _id: id, fullName: "Unknown User" });
             }
+          } else {
+            setActiveChatUser(otherParticipantId);
           }
         } else {
-          console.error("Could not find other participant");
-          console.error("Current user ID:", currentUserId);
-          console.error("Participants:", conversation.participants);
           setActiveChatUser(null);
         }
 
+        setLoading(false);
       } catch (err) {
         console.error("Error initializing chat", err);
+        console.error("Error response:", err.response?.data);
+        setLoading(false);
       }
     };
 
     initChat();
-    socket.emit("join_conversation", conversationId);
+  }, [conversationId, currentUserId, navigate]);
 
-    return () => {
-      socket.emit("leave_conversation", conversationId);
-    };
-  }, [conversationId, socket, currentUserId, navigate]);
+  // Socket.IO: join conversation room and listen for message:new
+  useEffect(() => {
+    if (!conversationId) return;
 
-  // 3. Socket listener for real-time messages
-useEffect(() => {
-  if (!socket) return;
+    socketService.joinConversation(conversationId);
 
-  const handleReceiveMessage = (data) => {
-    console.log("📨 Received message via socket:", data);
-    if (data.conversationId === conversationId) {
+    const unsubscribe = socketService.on("message:new", (payload) => {
       setMessages((prev) => {
-        const exists = prev.some(m => m._id === data._id);
-        if (exists) {
-          console.log("⚠️ Message already in state, skipping");
-          return prev;
-        }
-        console.log("✅ Adding message to state");
-        return [...prev, data];
+        const exists = prev.some((m) => (m.id || m._id) === payload.id);
+        if (exists) return prev;
+        return [...prev, payload];
       });
-    }
-    fetchConversations();
-  };
-
-  socket.on("receive_message", handleReceiveMessage);
-  return () => socket.off("receive_message", handleReceiveMessage);
-}, [socket, conversationId]);
-
-  // 4. Handle sending messages
-  const handleSend = async (e) => {
-  e.preventDefault();
-  if (!newMessage.trim() || !conversationId) return;
-
-  try {
-    let receiverId = activeChatUser?._id;
-
-    if (!receiverId) {
-      const currentChat = conversations.find((c) => c._id === conversationId);
-      const otherParticipant = currentChat?.participants.find(
-        (p) => {
-          const pId = (p._id || p).toString();
-          return pId !== currentUserId.toString();
-        }
-      );
-      receiverId = otherParticipant?._id || otherParticipant;
-    }
-
-    // 1. Create message via API
-    const res = await API.post("/messages/send", {
-      conversationId,
-      content: newMessage,
-      receiverId: receiverId?.toString(),
+      fetchConversations();
     });
 
-    const sentMsg = res.data.data;
-    
-    // 2. Emit to socket for real-time delivery (don't add to state here)
-    socket.emit("send_message", sentMsg);
-    
-    // 3. Clear input
+    return () => {
+      unsubscribe();
+      socketService.leaveConversation(conversationId);
+    };
+  }, [conversationId]);
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!newMessage.trim() || !conversationId) return;
+
+    socketService.sendMessage(conversationId, newMessage);
     setNewMessage("");
-    
-    // 4. Refresh conversation list
-    fetchConversations();
-  } catch (err) {
-    console.error("Failed to send message", err);
-  }
-};
+    // Message will appear via message:new from server
+  };
 
   return (
     <div className="chat-layout">
-      {/* SIDEBAR */}
       <div className="chat-sidebar">
         <div className="sidebar-header">
           <h3>Messages</h3>
+          {socketConnected && <span className="socket-status" title="Connected">●</span>}
         </div>
 
         <div className="conv-list">
           {conversations.length > 0 ? (
             conversations.map((conv) => {
-              const otherUser = conv.participants.find((p) => {
-                const pId = (p._id || p).toString();
-                return pId !== currentUserId.toString();
-              });
+              const otherParticipant = conv.participants?.find(
+                (p) => (p._id || p.id || p).toString() !== currentUserId?.toString()
+              );
+              const displayName = otherParticipant?.fullName || "Unknown User";
+              const displayInitial = displayName.charAt(0).toUpperCase();
+              const convId = conv._id || conv.id;
 
               return (
                 <div
-                  key={conv._id}
-                  className={`conv-item ${conversationId === conv._id ? "active" : ""}`}
-                  onClick={() => navigate(`/modules/messaging/${conv._id}`)}
+                  key={convId}
+                  className={`conv-item ${conversationId === convId ? "active" : ""}`}
+                  onClick={() => navigate(`/modules/messaging/${convId}`)}
                 >
-                  <div className="conv-avatar">
-                    {otherUser?.fullName?.charAt(0).toUpperCase() || "?"}
-                  </div>
-
+                  <div className="conv-avatar">{displayInitial}</div>
                   <div className="conv-info">
                     <div className="conv-info-top">
-                      <h4>{otherUser?.fullName || "Unknown User"}</h4>
+                      <h4>{displayName}</h4>
                     </div>
                     <p className="last-msg">
-                      {typeof conv.lastMessage === "object"
-                        ? conv.lastMessage.content
-                        : conv.lastMessage || "No messages yet"}
+                      {conv.last_message_content || "Start a conversation"}
                     </p>
                   </div>
                 </div>
@@ -224,9 +194,10 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* MAIN CHAT AREA */}
       <div className="chat-main">
-        {conversationId ? (
+        {loading ? (
+          <h4>Loading chat...</h4>
+        ) : conversationId ? (
           <>
             <div className="chat-header">
               {activeChatUser ? (
@@ -250,15 +221,15 @@ useEffect(() => {
 
             <div className="chat-messages">
               {messages.map((m, i) => {
-                const senderId = typeof m.sender === "string" ? m.sender : m.sender?._id;
-                const isMe = senderId.toString() === currentUserId.toString();
+                const senderId = m.sender_id || m.sender?._id || m.sender?.id || m.sender;
+                const isMe = senderId?.toString() === currentUserId?.toString();
 
                 return (
-                  <div key={m._id || i} className={`msg-row ${isMe ? "me" : "them"}`}>
+                  <div key={m.id || m._id || i} className={`msg-row ${isMe ? "me" : "them"}`}>
                     <div className="msg-bubble">
                       <p>{m.content}</p>
                       <span className="msg-time">
-                        {new Date(m.createdAt).toLocaleTimeString([], {
+                        {new Date(m.created_at || m.createdAt).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}

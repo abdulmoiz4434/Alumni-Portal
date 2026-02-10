@@ -137,7 +137,8 @@ export default function AuthPage() {
         window.location.href = "/modules";
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+      const msg = err.response?.data?.message || (err.response ? "Registration failed" : "Cannot reach server. Is the backend running on the correct port?");
+      alert(msg);
     }
   };
 
@@ -166,7 +167,8 @@ export default function AuthPage() {
         window.location.href = "/modules";
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+      const msg = err.response?.data?.message || (err.response ? "Registration failed" : "Cannot reach server. Is the backend running on the correct port?");
+      alert(msg);
     }
   };
 

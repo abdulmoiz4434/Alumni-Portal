@@ -8,15 +8,14 @@ const messageSchema = new mongoose.Schema(
       required: true,
       index: true
     },
-    sender: {
+    senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-      index: true
+      required: true
     },
     content: {
       type: String,
-      required: [true, "Message cannot be empty"],
+      required: true,
       trim: true
     },
     isRead: {
@@ -26,5 +25,7 @@ const messageSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 messageSchema.index({ conversationId: 1, createdAt: 1 });
+
 module.exports = mongoose.model("Message", messageSchema);

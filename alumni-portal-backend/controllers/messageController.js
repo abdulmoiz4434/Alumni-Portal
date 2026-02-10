@@ -1,151 +1,152 @@
-const Conversation = require("../models/Conversation");
-const Message = require("../models/Message");
+const messageService = require("../services/messageService");
 const { successResponse, errorResponse } = require("../utils/response");
+const mongoose = require('mongoose');
 
-exports.getOrCreateConversation = async (req, res) => {
+const getOrCreateConversation = async (req, res) => {
   try {
-    const { receiverId } = req.body;
     const senderId = req.user._id;
-
-    console.log("=== START getOrCreateConversation ===");
-    console.log("Sender ID:", senderId);
-    console.log("Receiver ID:", receiverId);
-    console.log("Receiver ID type:", typeof receiverId);
-
-    let conversation = await Conversation.findOne({
-      participants: { $all: [senderId, receiverId], $size: 2 },
-    }).populate("participants", "fullName email profilePicture role");
-
-    console.log("Found existing conversation:", conversation ? "YES" : "NO");
-
-    if (!conversation) {
-      console.log("Creating new conversation with participants:", [senderId, receiverId]);
-      conversation = await Conversation.create({
-        participants: [senderId, receiverId],
-      });
-      console.log("Created conversation:", conversation);
-      console.log("Participants count:", conversation.participants.length);
-      
-      await conversation.populate("participants", "fullName email profilePicture role");
-      console.log("After populate:", conversation);
+    const { receiverId } = req.body;
+    
+    if (!receiverId) {
+      return errorResponse(res, "Receiver ID is required", 400);
     }
 
-    console.log("Final conversation participants:", conversation.participants);
-    console.log("=== END getOrCreateConversation ===");
-
-    return successResponse(res, conversation, 200, "Conversation retrieved");
+    const conversation = await messageService.getOrCreateConversation(
+      senderId,
+      receiverId
+    );
+    
+    // ADD LOGGING FOR DEBUGGING
+    console.log('✅ Conversation created/found:', {
+      id: conversation._id.toString(),
+      participants: conversation.participants
+    });
+    
+    const payload = {
+      ...conversation.toObject(),
+      id: conversation._id.toString()
+    };
+    
+    return successResponse(res, payload, 200, "Conversation retrieved");
   } catch (error) {
     console.error("getOrCreateConversation Error:", error);
+    console.error("Error stack:", error.stack);
     return errorResponse(res, "Failed to initialize conversation", 500);
   }
 };
 
-exports.sendMessage = async (req, res) => {
+const sendMessage = async (req, res) => {
   try {
-    const { conversationId, content, receiverId } = req.body;
     const senderId = req.user._id;
-
-    if (!content || !conversationId) {
-      return errorResponse(res, "Missing content or conversation ID", 400);
+    const { conversationId, content } = req.body;
+    
+    if (!conversationId || !content) {
+      return errorResponse(res, "Missing conversationId or content", 400);
     }
-
-    const conversation = await Conversation.findById(conversationId);
+    
+    const conversation = await messageService.getConversationById(conversationId);
     if (!conversation) {
       return errorResponse(res, "Conversation not found", 404);
     }
-
+    
+    const userIdStr = req.user._id.toString();
     const isParticipant = conversation.participants.some(
-      (p) => p.toString() === senderId.toString()
+      (p) => (p._id || p).toString() === userIdStr
     );
+    
     if (!isParticipant) {
-      return errorResponse(res, "Unauthorized to post in this chat", 403);
+      return errorResponse(res, "Unauthorized access to conversation", 403);
     }
-
-    const newMessage = await Message.create({
+    
+    const message = await messageService.createMessage(
       conversationId,
-      sender: senderId,
-      content,
-    });
-
-    await Conversation.findByIdAndUpdate(conversationId, {
-      lastMessage: {
-        content: content,
-        sender: senderId
-      },
-      lastMessageAt: new Date(),
-    });
-
-    const populatedMessage = await Message.findById(newMessage._id).populate(
-      "sender",
-      "fullName profilePicture role"
+      senderId,
+      content
     );
-
-    return successResponse(res, populatedMessage, 201, "Message sent");
+    
+    const sender = await messageService.getUserById(message.senderId);
+    const payload = {
+      id: message._id.toString(),
+      conversationId: message.conversationId.toString(),
+      sender_id: message.senderId.toString(),
+      content: message.content,
+      isRead: message.isRead,
+      created_at: message.createdAt,
+      sender
+    };
+    
+    return successResponse(res, payload, 201, "Message sent");
   } catch (error) {
-    console.error("sendMessage Error Details:", error);
+    console.error("sendMessage Error:", error);
+    console.error("Error stack:", error.stack);
     return errorResponse(res, "Message delivery failed", 500);
   }
 };
 
-exports.getMessages = async (req, res) => {
+const getMessagesController = async (req, res) => {
   try {
     const { conversationId } = req.params;
     const userId = req.user._id;
 
-    // FIXED: Only find existing conversations, don't create new ones
-    let conversation;
+    // ADD LOGGING
+    console.log('📩 getMessages called:', { conversationId, userId: userId.toString() });
 
-    // Try to find by Conversation ID with populated participants
-    if (conversationId.match(/^[0-9a-fA-F]{24}$/)) {
-      conversation = await Conversation.findById(conversationId)
-        .populate("participants", "fullName email profilePicture role department graduationYear batch");
+    // Validate conversationId format
+    if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+      console.error('❌ Invalid conversationId format:', conversationId);
+      return errorResponse(res, "Invalid conversation ID", 400);
     }
 
-    // If not found, return error - don't create it here
+    const messages = await messageService.getMessages(conversationId, userId);
+    
+    if (messages === null) {
+      console.error('❌ Conversation not found or user not participant:', { 
+        conversationId, 
+        userId: userId.toString() 
+      });
+      return errorResponse(res, "Conversation not found or access denied", 404);
+    }
+
+    const conversation = await messageService.getConversationById(conversationId);
+    
     if (!conversation) {
+      console.error('❌ Conversation not found after getMessages:', conversationId);
       return errorResponse(res, "Conversation not found", 404);
     }
 
-    // Verify user is a participant
-    const isParticipant = conversation.participants.some(
-      p => p._id.toString() === userId.toString()
+    console.log('✅ Messages retrieved successfully:', { 
+      conversationId, 
+      messageCount: messages.length 
+    });
+
+    return successResponse(
+      res,
+      { conversation, messages },
+      200,
+      "Messages retrieved"
     );
-    
-    if (!isParticipant) {
-      return errorResponse(res, "Unauthorized", 403);
-    }
-
-    // Get all messages for this conversation
-    const messages = await Message.find({ conversationId: conversation._id })
-      .populate("sender", "fullName profilePicture role")
-      .sort({ createdAt: 1 });
-
-    return successResponse(res, {
-      conversation,
-      messages
-    }, 200, "Messages retrieved");
   } catch (error) {
-    console.error("getMessages Error:", error);
+    console.error("❌ getMessages Error:", error);
+    console.error("Error stack:", error.stack);
     return errorResponse(res, "Could not fetch messages", 500);
   }
 };
 
-exports.getConversations = async (req, res) => {
+const getConversations = async (req, res) => {
   try {
     const userId = req.user._id;
-    const conversations = await Conversation.find({
-      participants: { $in: [userId] },
-    })
-    .populate({
-      path: "participants",
-      select: "fullName email profilePicture role department graduationYear batch"
-    })
-    .sort({ lastMessageAt: -1 })
-    .exec();
-
+    const conversations = await messageService.getConversationsForUser(userId);
     return successResponse(res, conversations, 200, "Conversations retrieved");
   } catch (error) {
     console.error("getConversations Error:", error);
+    console.error("Error stack:", error.stack);
     return errorResponse(res, "Could not fetch conversation list", 500);
   }
+};
+
+module.exports = {
+  getOrCreateConversation,
+  sendMessage,
+  getMessagesController,
+  getConversations,
 };

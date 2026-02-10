@@ -1,173 +1,154 @@
-import { 
-  Calendar, 
-  Briefcase, 
-  Users, 
-  MessageSquare, 
-  Award, 
-  TrendingUp, 
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Calendar,
+  Briefcase,
+  Users,
+  MessageSquare,
+  Award,
+  TrendingUp,
   Clock,
   MapPin,
   Building,
   ArrowRight,
   Bell,
-  ChevronRight
+  ChevronRight,
+  Loader
 } from "lucide-react";
+import { getDashboardStats, getDashboardData } from "../../../api/dashboard";
 import "./Dashboard.css";
 
-// Mock Data
-const stats = [
-  { label: "Upcoming Events", value: "12", icon: Calendar, trend: "+3 this week" },
-  { label: "Job Openings", value: "48", icon: Briefcase, trend: "+8 new" },
-  { label: "Mentorship Requests", value: "6", icon: Users, trend: "2 pending" },
-  { label: "Unread Messages", value: "9", icon: MessageSquare, trend: "3 urgent" },
-];
-
-const upcomingEvents = [
-  {
-    id: 1,
-    title: "Annual Alumni Meetup 2025",
-    date: "Feb 15, 2025",
-    time: "6:00 PM",
-    location: "University Main Hall",
-    attendees: 245,
-    type: "Networking",
-  },
-  {
-    id: 2,
-    title: "Tech Talk: AI in Industry",
-    date: "Feb 20, 2025",
-    time: "3:00 PM",
-    location: "Virtual Event",
-    attendees: 128,
-    type: "Webinar",
-  },
-  {
-    id: 3,
-    title: "Career Fair Spring 2025",
-    date: "Mar 5, 2025",
-    time: "10:00 AM",
-    location: "Campus Convention Center",
-    attendees: 500,
-    type: "Career",
-  },
-];
-
-const recentJobs = [
-  {
-    id: 1,
-    title: "Senior Software Engineer",
-    company: "TechCorp Inc.",
-    location: "San Francisco, CA",
-    type: "Full-time",
-    posted: "2 days ago",
-    salary: "$150k - $180k",
-  },
-  {
-    id: 2,
-    title: "Product Manager",
-    company: "InnovateTech",
-    location: "New York, NY",
-    type: "Full-time",
-    posted: "3 days ago",
-    salary: "$130k - $160k",
-  },
-  {
-    id: 3,
-    title: "Data Analyst Intern",
-    company: "DataDriven Co.",
-    location: "Remote",
-    type: "Internship",
-    posted: "1 day ago",
-    salary: "$35/hour",
-  },
-];
-
-const activeMentorships = [
-  {
-    id: 1,
-    mentorName: "Dr. Sarah Johnson",
-    mentorRole: "CTO at CloudTech",
-    mentorAvatar: "SJ",
-    topic: "Career Transition to Tech Leadership",
-    nextSession: "Feb 12, 2025",
-    progress: 60,
-  },
-  {
-    id: 2,
-    mentorName: "Michael Chen",
-    mentorRole: "Senior PM at Google",
-    mentorAvatar: "MC",
-    topic: "Product Management Fundamentals",
-    nextSession: "Feb 14, 2025",
-    progress: 35,
-  },
-];
-
-const successStories = [
-  {
-    id: 1,
-    name: "Emily Rodriguez",
-    batch: "Class of 2020",
-    avatar: "ER",
-    achievement: "Founded AI startup valued at $50M",
-    story: "From campus hackathon winner to leading a team of 40 engineers...",
-  },
-  {
-    id: 2,
-    name: "James Park",
-    batch: "Class of 2018",
-    avatar: "JP",
-    achievement: "Youngest VP at Fortune 500 Company",
-    story: "Leveraged mentorship connections to accelerate career growth...",
-  },
-];
-
-const notifications = [
-  { id: 1, message: "New mentorship request from Alex Turner", time: "10 min ago", unread: true },
-  { id: 2, message: "Event reminder: Tech Talk tomorrow at 3 PM", time: "1 hour ago", unread: true },
-  { id: 3, message: "Your job application was viewed by TechCorp", time: "2 hours ago", unread: false },
-];
-
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  // Get current user from localStorage
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userName = currentUser?.fullName || "User";
+  const userInitials = userName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  // State management
+  const [stats, setStats] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch dashboard data on mount
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch stats and data in parallel
+        const [statsRes, dataRes] = await Promise.all([
+          getDashboardStats(),
+          getDashboardData(),
+        ]);
+
+        setStats(statsRes.data.data);
+        setDashboardData(dataRes.data.data);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setError("Failed to load dashboard data. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  // Format stats for display
+  const formattedStats = stats
+    ? [
+      {
+        label: "Upcoming Events",
+        value: stats.upcomingEvents?.toString() || "0",
+        icon: Calendar,
+        trend: `+${stats.recentJobsCount || 0} this week`,
+      },
+      {
+        label: "Job Openings",
+        value: stats.jobOpenings?.toString() || "0",
+        icon: Briefcase,
+        trend: `+${stats.recentJobsCount || 0} new`,
+      },
+      {
+        label: "Mentorship Requests",
+        value: stats.mentorshipRequests?.toString() || "0",
+        icon: Users,
+        trend: currentUser.role === "alumni" ? "pending" : "active",
+      },
+      {
+        label: "Unread Messages",
+        value: stats.unreadMessages?.toString() || "0",
+        icon: MessageSquare,
+        trend: "conversations",
+      },
+    ]
+    : [];
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="dashboard">
+        <div className="dashboard-loading">
+          <Loader className="loading-spinner" />
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="dashboard">
+        <div className="dashboard-error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard">
       {/* Header Section */}
       <header className="dashboard-header">
         <div className="header-content">
           <div className="welcome-section">
-            <h1 className="welcome-title">Welcome back, <span className="highlight">Ahmed</span></h1>
-            <p className="welcome-subtitle">Here's what's happening in your alumni network</p>
+            <h1 className="welcome-title">
+              Welcome back, <span className="highlight">{userName}</span>
+            </h1>
+            <p className="welcome-subtitle">
+              Here's what's happening in your alumni network
+            </p>
           </div>
           <div className="header-actions">
             <div className="notification-bell">
               <Bell className="bell-icon" />
-              <span className="notification-badge">3</span>
+              {stats?.unreadMessages > 0 && (
+                <span className="notification-badge">{stats.unreadMessages}</span>
+              )}
             </div>
-            <div className="user-avatar">AK</div>
+            <div className="user-avatar">{userInitials}</div>
           </div>
         </div>
       </header>
 
-      {/* Quick Notifications */}
-      <section className="notifications-strip">
-        <div className="notifications-scroll">
-          {notifications.filter(n => n.unread).map((notification) => (
-            <div key={notification.id} className="notification-item">
-              <span className="notification-dot"></span>
-              <span className="notification-text">{notification.message}</span>
-              <span className="notification-time">{notification.time}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Stats Grid */}
       <section className="stats-section">
         <div className="stats-grid">
-          {stats.map((stat, index) => (
-            <div 
-              key={stat.label} 
-              className={`stat-card ${index === 0 ? 'stat-card-primary' : ''}`}
+          {formattedStats.map((stat, index) => (
+            <div
+              key={stat.label}
+              className={`stat-card ${index === 0 ? "stat-card-primary" : ""}`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="stat-icon-wrapper">
@@ -194,34 +175,54 @@ const Dashboard = () => {
                 <Calendar className="title-icon" />
                 Upcoming Events
               </h2>
-              <button className="view-all-btn">
+              <button
+                className="view-all-btn"
+                onClick={() => navigate("/modules/events")}
+              >
                 View All <ChevronRight className="btn-icon" />
               </button>
             </div>
             <div className="events-list">
-              {upcomingEvents.map((event) => (
-                <div key={event.id} className="event-item">
-                  <div className="event-date-badge">
-                    <span className="event-day">{event.date.split(' ')[1].replace(',', '')}</span>
-                    <span className="event-month">{event.date.split(' ')[0]}</span>
-                  </div>
-                  <div className="event-details">
-                    <h3 className="event-title">{event.title}</h3>
-                    <div className="event-meta">
-                      <span className="event-meta-item">
-                        <Clock className="meta-icon" /> {event.time}
-                      </span>
-                      <span className="event-meta-item">
-                        <MapPin className="meta-icon" /> {event.location}
-                      </span>
+              {dashboardData?.upcomingEvents?.length > 0 ? (
+                dashboardData.upcomingEvents.map((event) => {
+                  const eventDate = new Date(event.date);
+                  const day = eventDate.getDate();
+                  const month = eventDate.toLocaleString("default", {
+                    month: "short",
+                  });
+
+                  return (
+                    <div key={event._id} className="event-item">
+                      <div className="event-date-badge">
+                        <span className="event-day">{day}</span>
+                        <span className="event-month">{month}</span>
+                      </div>
+                      <div className="event-details">
+                        <h3 className="event-title">{event.title}</h3>
+                        <div className="event-meta">
+                          <span className="event-meta-item">
+                            <Clock className="meta-icon" /> {event.time || "TBA"}
+                          </span>
+                          <span className="event-meta-item">
+                            <MapPin className="meta-icon" />{" "}
+                            {event.location || "TBA"}
+                          </span>
+                        </div>
+                        <div className="event-footer">
+                          <span className="event-type-badge">
+                            {event.type || "Event"}
+                          </span>
+                          <span className="event-attendees">
+                            {event.attendees || 0} attending
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="event-footer">
-                      <span className="event-type-badge">{event.type}</span>
-                      <span className="event-attendees">{event.attendees} attending</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  );
+                })
+              ) : (
+                <p className="empty-state">No upcoming events</p>
+              )}
             </div>
           </section>
 
@@ -232,32 +233,56 @@ const Dashboard = () => {
                 <Briefcase className="title-icon" />
                 Recent Job Postings
               </h2>
-              <button className="view-all-btn">
+              <button
+                className="view-all-btn"
+                onClick={() => navigate("/modules/jobs")}
+              >
                 View All <ChevronRight className="btn-icon" />
               </button>
             </div>
             <div className="jobs-list">
-              {recentJobs.map((job) => (
-                <div key={job.id} className="job-item">
-                  <div className="job-company-logo">
-                    <Building className="company-icon" />
-                  </div>
-                  <div className="job-details">
-                    <h3 className="job-title">{job.title}</h3>
-                    <p className="job-company">{job.company}</p>
-                    <div className="job-meta">
-                      <span className="job-location">
-                        <MapPin className="meta-icon" /> {job.location}
-                      </span>
-                      <span className="job-type-badge">{job.type}</span>
+              {dashboardData?.recentJobs?.length > 0 ? (
+                dashboardData.recentJobs.map((job) => {
+                  const postedDate = job.postedDate
+                    ? new Date(job.postedDate)
+                    : new Date(job.createdAt);
+                  const daysAgo = Math.floor(
+                    (Date.now() - postedDate) / (1000 * 60 * 60 * 24)
+                  );
+                  const postedText =
+                    daysAgo === 0
+                      ? "Today"
+                      : daysAgo === 1
+                        ? "Yesterday"
+                        : `${daysAgo} days ago`;
+
+                  return (
+                    <div key={job._id} className="job-item">
+                      <div className="job-company-logo">
+                        <Building className="company-icon" />
+                      </div>
+                      <div className="job-details">
+                        <h3 className="job-title">{job.title}</h3>
+                        <p className="job-company">{job.company}</p>
+                        <div className="job-meta">
+                          <span className="job-location">
+                            <MapPin className="meta-icon" /> {job.location}
+                          </span>
+                          <span className="job-type-badge">
+                            {job.jobType || "Full-time"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="job-actions">
+                        <span className="job-salary">{job.salary || "N/A"}</span>
+                        <span className="job-posted">{postedText}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="job-actions">
-                    <span className="job-salary">{job.salary}</span>
-                    <span className="job-posted">{job.posted}</span>
-                  </div>
-                </div>
-              ))}
+                  );
+                })
+              ) : (
+                <p className="empty-state">No job postings available</p>
+              )}
             </div>
           </section>
         </div>
@@ -271,62 +296,59 @@ const Dashboard = () => {
                 <Users className="title-icon" />
                 Active Mentorships
               </h2>
-              <button className="view-all-btn">
+              <button
+                className="view-all-btn"
+                onClick={() => navigate("/modules/mentorship")}
+              >
                 View All <ChevronRight className="btn-icon" />
               </button>
             </div>
             <div className="mentorship-list">
-              {activeMentorships.map((mentorship) => (
-                <div key={mentorship.id} className="mentorship-item">
-                  <div className="mentor-avatar">{mentorship.mentorAvatar}</div>
-                  <div className="mentorship-details">
-                    <h3 className="mentor-name">{mentorship.mentorName}</h3>
-                    <p className="mentor-role">{mentorship.mentorRole}</p>
-                    <p className="mentorship-topic">{mentorship.topic}</p>
-                    <div className="mentorship-progress">
-                      <div className="progress-bar">
-                        <div 
-                          className="progress-fill" 
-                          style={{ width: `${mentorship.progress}%` }}
-                        ></div>
-                      </div>
-                      <span className="progress-text">{mentorship.progress}% complete</span>
-                    </div>
-                    <p className="next-session">
-                      <Clock className="meta-icon" /> Next: {mentorship.nextSession}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+              {dashboardData?.activeMentorships?.length > 0 ? (
+                dashboardData.activeMentorships.map((mentorship) => {
+                  const otherUser =
+                    currentUser.role === "student"
+                      ? mentorship.mentor
+                      : mentorship.student;
+                  const initials = otherUser?.fullName
+                    ?.split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()
+                    .slice(0, 2) || "??";
 
-          {/* Success Stories */}
-          <section className="content-card">
-            <div className="card-header">
-              <h2 className="card-title">
-                <Award className="title-icon" />
-                Success Stories
-              </h2>
-              <button className="view-all-btn">
-                View All <ChevronRight className="btn-icon" />
-              </button>
-            </div>
-            <div className="stories-list">
-              {successStories.map((story) => (
-                <div key={story.id} className="story-item">
-                  <div className="story-avatar">{story.avatar}</div>
-                  <div className="story-content">
-                    <h3 className="story-name">{story.name}</h3>
-                    <span className="story-batch">{story.batch}</span>
-                    <p className="story-achievement">{story.achievement}</p>
-                    <p className="story-excerpt">{story.story}</p>
-                    <button className="read-more-btn">
-                      Read Full Story <ArrowRight className="btn-icon" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                  return (
+                    <div key={mentorship._id} className="mentorship-item">
+                      <div className="mentor-avatar">{initials}</div>
+                      <div className="mentorship-details">
+                        <h3 className="mentor-name">
+                          {otherUser?.fullName || "Unknown"}
+                        </h3>
+                        <p className="mentor-role">{otherUser?.role || "User"}</p>
+                        <p className="mentorship-topic">
+                          {mentorship.topic || "General Mentorship"}
+                        </p>
+                        <div className="mentorship-progress">
+                          <div className="progress-bar">
+                            <div
+                              className="progress-fill"
+                              style={{ width: `${mentorship.progress || 0}%` }}
+                            ></div>
+                          </div>
+                          <span className="progress-text">
+                            {mentorship.progress || 0}% complete
+                          </span>
+                        </div>
+                        <p className="next-session">
+                          <Clock className="meta-icon" /> Status: {mentorship.status}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="empty-state">No active mentorships</p>
+              )}
             </div>
           </section>
 
@@ -338,19 +360,27 @@ const Dashboard = () => {
             </h2>
             <div className="quick-stats-grid">
               <div className="quick-stat">
-                <span className="quick-stat-value">2,450</span>
+                <span className="quick-stat-value">
+                  {stats?.totalAlumni?.toLocaleString() || "0"}
+                </span>
                 <span className="quick-stat-label">Total Alumni</span>
               </div>
               <div className="quick-stat">
-                <span className="quick-stat-value">156</span>
+                <span className="quick-stat-value">
+                  {stats?.newThisMonth || "0"}
+                </span>
                 <span className="quick-stat-label">New This Month</span>
               </div>
               <div className="quick-stat">
-                <span className="quick-stat-value">89%</span>
+                <span className="quick-stat-value">
+                  {stats?.engagementRate || "0"}%
+                </span>
                 <span className="quick-stat-label">Engagement Rate</span>
               </div>
               <div className="quick-stat">
-                <span className="quick-stat-value">42</span>
+                <span className="quick-stat-value">
+                  {stats?.countries || "0"}
+                </span>
                 <span className="quick-stat-label">Countries</span>
               </div>
             </div>
