@@ -68,7 +68,6 @@ const getDashboardStats = async (req, res) => {
             totalAlumni: totalUsers,
             newThisMonth: recentAlumni,
             engagementRate: engagementRate,
-            countries: 42, // This would require geo data - using placeholder
             recentJobsCount: recentJobs,
         };
 

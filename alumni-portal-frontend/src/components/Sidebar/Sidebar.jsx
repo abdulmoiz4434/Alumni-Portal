@@ -43,8 +43,8 @@ export default function Sidebar() {
             Profile
           </NavLink>
 
-          <NavLink to="/modules/events" onClick={closeSidebar}>
-            Events
+         <NavLink to="/modules/directory" onClick={closeSidebar}>
+            Directory
           </NavLink>
 
           <NavLink to="/modules/jobs" onClick={closeSidebar}>
@@ -55,16 +55,16 @@ export default function Sidebar() {
             Mentorship
           </NavLink>
 
-          <NavLink to="/modules/directory" onClick={closeSidebar}>
-            Directory
+          <NavLink to="/modules/careerInsights" onClick={closeSidebar}>
+            Career Insights
           </NavLink>
 
           <NavLink to="/modules/messaging" onClick={closeSidebar}>
             Messages
           </NavLink>
 
-          <NavLink to="/modules/careerInsights" onClick={closeSidebar}>
-            Career Insights
+          <NavLink to="/modules/events" onClick={closeSidebar}>
+            Events
           </NavLink>
 
           <NavLink to="/modules/stories" onClick={closeSidebar}>

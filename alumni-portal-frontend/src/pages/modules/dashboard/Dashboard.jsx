@@ -5,12 +5,10 @@ import {
   Briefcase,
   Users,
   MessageSquare,
-  Award,
   TrendingUp,
   Clock,
   MapPin,
   Building,
-  ArrowRight,
   Bell,
   ChevronRight,
   Loader
@@ -92,7 +90,6 @@ const Dashboard = () => {
       },
     ]
     : [];
-
   // Loading state
   if (loading) {
     return (
@@ -120,27 +117,30 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       {/* Header Section */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <div className="welcome-section">
-            <h1 className="welcome-title">
-              Welcome back, <span className="highlight">{userName}</span>
-            </h1>
-            <p className="welcome-subtitle">
-              Here's what's happening in your alumni network
-            </p>
-          </div>
-          <div className="header-actions">
-            <div className="notification-bell">
-              <Bell className="bell-icon" />
-              {stats?.unreadMessages > 0 && (
-                <span className="notification-badge">{stats.unreadMessages}</span>
-              )}
-            </div>
-            <div className="user-avatar">{userInitials}</div>
-          </div>
-        </div>
-      </header>
+<header className="dashboard-header">
+  {/* Background Image */}
+  <img
+    src="Cover-Alumni.jpg"
+    alt="Header Background"
+    className="header-bg"
+  />
+
+  {/* Dimming overlay */}
+  <div className="header-dim-overlay"></div>
+
+  {/* Left-side info panel */}
+  <div className="header-left-panel">
+    <h1 className="welcome-title">
+      Welcome, <span>{userName}</span>
+    </h1>
+    <p className="welcome-subtitle">
+      Stay connected with your alumni network. Explore connections, events, and mentorships at a glance.
+    </p>
+  </div>
+</header>
+
+
+
 
       {/* Stats Grid */}
       <section className="stats-section">
@@ -377,12 +377,7 @@ const Dashboard = () => {
                 </span>
                 <span className="quick-stat-label">Engagement Rate</span>
               </div>
-              <div className="quick-stat">
-                <span className="quick-stat-value">
-                  {stats?.countries || "0"}
-                </span>
-                <span className="quick-stat-label">Countries</span>
-              </div>
+
             </div>
           </section>
         </div>

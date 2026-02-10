@@ -1,9 +1,11 @@
+/* Layout.css - Fixed Sidebar with Footer at Bottom */
+
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;   /* 🔴 IMPORTANT */
+  height: 100vh;   /* Full viewport height */
   width: 100%;
-  overflow: hidden; /* prevent body scroll */
+  overflow: hidden; /* Prevent body scroll */
 }
 
 /* Area below topbar */
@@ -13,13 +15,24 @@
   overflow: hidden;
 }
 
-
-/* Main content */
-
+/* Main content area - scrollable */
 .content {
   flex: 1;
-  display: flex;           /* needed for Messaging page layout */
+  display: flex;
   flex-direction: column;
-  overflow: auto;        /* prevents content from pushing input */
-  min-height: 0;           /* critical for flex children scrolling */
+  overflow-y: auto;      /* Enable vertical scrolling */
+  overflow-x: hidden;    /* Prevent horizontal scroll */
+  min-height: 0;         /* Critical for flex children scrolling */
+}
+
+/* Wrapper to ensure footer stays at bottom */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;  /* Fill the scrollable area */
+}
+
+/* Main content grows to push footer down */
+.content-main {
+  flex: 1;
 }

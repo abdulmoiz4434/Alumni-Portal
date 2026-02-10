@@ -1,7 +1,14 @@
-.chat-layout {
+.messaging {
+  height: 100%;
+  min-height: 0;   /* scoped here, safe */
   display: flex;
+}
+
+.chat-layout {
   flex: 1;
-  background: #0a0a0a;
+  display: flex;
+  min-height: 0;
+    background: #0a0a0a;
   overflow: hidden;
 }
 
@@ -356,10 +363,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100%;          /* 🔴 critical */
+  width: 100%;
   color: #a0a0a0;
   text-align: center;
   padding: 40px;
 }
+
 
 .empty-state-icon {
   font-size: 56px;

@@ -92,11 +92,14 @@ export default function Messaging() {
         setMessages(chatMessages || []);
 
         const otherParticipantId = conversation.participants?.find(
-          (p) => (p._id || p.id || p).toString() !== currentUserId?.toString()
+          (p) => (p._id || p.id || p).toString() !== currentUserId?.toString(),
         );
 
         if (otherParticipantId) {
-          const id = otherParticipantId._id || otherParticipantId.id || otherParticipantId;
+          const id =
+            otherParticipantId._id ||
+            otherParticipantId.id ||
+            otherParticipantId;
           if (typeof id === "string") {
             try {
               const userRes = await API.get(`/auth/user/${id}`);
@@ -153,112 +156,134 @@ export default function Messaging() {
   };
 
   return (
-    <div className="chat-layout">
-      <div className="chat-sidebar">
-        <div className="sidebar-header">
-          <h3>Messages</h3>
-          {socketConnected && <span className="socket-status" title="Connected">●</span>}
-        </div>
+    <div className="messaging">
+      <div className="chat-layout">
+        <div className="chat-sidebar">
+          <div className="sidebar-header">
+            <h3>Messages</h3>
+            {socketConnected && (
+              <span className="socket-status" title="Connected">
+                ●
+              </span>
+            )}
+          </div>
 
-        <div className="conv-list">
-          {conversations.length > 0 ? (
-            conversations.map((conv) => {
-              const otherParticipant = conv.participants?.find(
-                (p) => (p._id || p.id || p).toString() !== currentUserId?.toString()
-              );
-              const displayName = otherParticipant?.fullName || "Unknown User";
-              const displayInitial = displayName.charAt(0).toUpperCase();
-              const convId = conv._id || conv.id;
-
-              return (
-                <div
-                  key={convId}
-                  className={`conv-item ${conversationId === convId ? "active" : ""}`}
-                  onClick={() => navigate(`/modules/messaging/${convId}`)}
-                >
-                  <div className="conv-avatar">{displayInitial}</div>
-                  <div className="conv-info">
-                    <div className="conv-info-top">
-                      <h4>{displayName}</h4>
-                    </div>
-                    <p className="last-msg">
-                      {conv.last_message_content || "Start a conversation"}
-                    </p>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <p className="no-convs">No conversations yet</p>
-          )}
-        </div>
-      </div>
-
-      <div className="chat-main">
-        {loading ? (
-          <h4>Loading chat...</h4>
-        ) : conversationId ? (
-          <>
-            <div className="chat-header">
-              {activeChatUser ? (
-                <div className="header-content">
-                  <div className="header-avatar">
-                    {activeChatUser.profilePicture ? (
-                      <img src={activeChatUser.profilePicture} alt="profile" />
-                    ) : (
-                      <span>{activeChatUser.fullName?.charAt(0).toUpperCase() || "?"}</span>
-                    )}
-                  </div>
-                  <div className="header-text">
-                    <h4>{activeChatUser.fullName || "Unknown User"}</h4>
-                    <p>{activeChatUser.role || "Member"}</p>
-                  </div>
-                </div>
-              ) : (
-                <h4>Loading chat...</h4>
-              )}
-            </div>
-
-            <div className="chat-messages">
-              {messages.map((m, i) => {
-                const senderId = m.sender_id || m.sender?._id || m.sender?.id || m.sender;
-                const isMe = senderId?.toString() === currentUserId?.toString();
+          <div className="conv-list">
+            {conversations.length > 0 ? (
+              conversations.map((conv) => {
+                const otherParticipant = conv.participants?.find(
+                  (p) =>
+                    (p._id || p.id || p).toString() !==
+                    currentUserId?.toString(),
+                );
+                const displayName =
+                  otherParticipant?.fullName || "Unknown User";
+                const displayInitial = displayName.charAt(0).toUpperCase();
+                const convId = conv._id || conv.id;
 
                 return (
-                  <div key={m.id || m._id || i} className={`msg-row ${isMe ? "me" : "them"}`}>
-                    <div className="msg-bubble">
-                      <p>{m.content}</p>
-                      <span className="msg-time">
-                        {new Date(m.created_at || m.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
+                  <div
+                    key={convId}
+                    className={`conv-item ${conversationId === convId ? "active" : ""}`}
+                    onClick={() => navigate(`/modules/messaging/${convId}`)}
+                  >
+                    <div className="conv-avatar">{displayInitial}</div>
+                    <div className="conv-info">
+                      <div className="conv-info-top">
+                        <h4>{displayName}</h4>
+                      </div>
+                      <p className="last-msg">
+                        {conv.last_message_content || "Start a conversation"}
+                      </p>
                     </div>
                   </div>
                 );
-              })}
-              <div ref={scrollRef} />
-            </div>
-
-            <form className="chat-input" onSubmit={handleSend}>
-              <input
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message..."
-              />
-              <button type="submit" disabled={!newMessage.trim()}>
-                Send
-              </button>
-            </form>
-          </>
-        ) : (
-          <div className="no-chat-selected">
-            <div className="empty-state-icon">💬</div>
-            <h3>Select a conversation to start chatting</h3>
-            <p>Connect with alumni and students across the portal.</p>
+              })
+            ) : (
+              <p className="no-convs">No conversations yet</p>
+            )}
           </div>
-        )}
+        </div>
+
+        <div className="chat-main">
+          {loading ? (
+            <h4>Loading chat...</h4>
+          ) : conversationId ? (
+            <>
+              <div className="chat-header">
+                {activeChatUser ? (
+                  <div className="header-content">
+                    <div className="header-avatar">
+                      {activeChatUser.profilePicture ? (
+                        <img
+                          src={activeChatUser.profilePicture}
+                          alt="profile"
+                        />
+                      ) : (
+                        <span>
+                          {activeChatUser.fullName?.charAt(0).toUpperCase() ||
+                            "?"}
+                        </span>
+                      )}
+                    </div>
+                    <div className="header-text">
+                      <h4>{activeChatUser.fullName || "Unknown User"}</h4>
+                      <p>{activeChatUser.role || "Member"}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <h4>Loading chat...</h4>
+                )}
+              </div>
+
+              <div className="chat-messages">
+                {messages.map((m, i) => {
+                  const senderId =
+                    m.sender_id || m.sender?._id || m.sender?.id || m.sender;
+                  const isMe =
+                    senderId?.toString() === currentUserId?.toString();
+
+                  return (
+                    <div
+                      key={m.id || m._id || i}
+                      className={`msg-row ${isMe ? "me" : "them"}`}
+                    >
+                      <div className="msg-bubble">
+                        <p>{m.content}</p>
+                        <span className="msg-time">
+                          {new Date(
+                            m.created_at || m.createdAt,
+                          ).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div ref={scrollRef} />
+              </div>
+
+              <form className="chat-input" onSubmit={handleSend}>
+                <input
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type your message..."
+                />
+                <button type="submit" disabled={!newMessage.trim()}>
+                  Send
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="no-chat-selected">
+              <div className="empty-state-icon">💬</div>
+              <h3>Select a conversation to start chatting</h3>
+              <p>Connect with alumni and students across the portal.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

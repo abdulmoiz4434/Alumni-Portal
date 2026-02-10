@@ -34,7 +34,7 @@
 
 .topbar-welcome {
   position: absolute;
-  left: 470px; 
+  left: 520px; 
   white-space: nowrap;
   color: #d0cfcb; 
   font-size: 20px; 
@@ -57,34 +57,7 @@
   }
 }
 
-.topbar-right {
-  display: flex;
-  align-items: center;
-}
-.topbar-social {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding-right: 30px;
-}
 
-.topbar-social a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.topbar-social img {
-  width: 26px;
-  height: 26px;
-  cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
-}
-
-.topbar-social img:hover {
-  transform: scale(1.15);
-  opacity: 0.8;
-}
 
 /* ===== Responsive Adjustments ===== */
 @media (max-width: 1024px) {
@@ -94,15 +67,6 @@
   }
   .topbar-logo {
     font-size: 18px;
-  }
-
-  .topbar-social {
-    gap: 18px;
-    padding-right: 20px;
-  }
-  .topbar-social img {
-    width: 22px;
-    height: 22px;
   }
 }
 
@@ -123,13 +87,5 @@
   }
   .topbar-welcome {
     display: none; /* hide for small screens */
-  }
-  .topbar-social {
-    gap: 12px;
-    padding-right: 12px;
-  }
-  .topbar-social img {
-    width: 18px;
-    height: 18px;
   }
 }

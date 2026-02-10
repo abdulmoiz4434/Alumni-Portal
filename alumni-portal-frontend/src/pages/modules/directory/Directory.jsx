@@ -118,14 +118,6 @@ export default function Directory() {
               >
                 Students
               </button>
-              {currentUserRole === "admin" && (
-                <button
-                  className={`filter-btn ${filter === "admin" ? "active" : ""}`}
-                  onClick={() => setFilter("admin")}
-                >
-                  Admins
-                </button>
-              )}
             </div>
           </div>
         </div>
