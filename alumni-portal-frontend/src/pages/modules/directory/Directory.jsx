@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
-import { startConversation } from "../../../api/messages";
+import { Search, UserPlus, CheckCircle } from "lucide-react"; // Added icons for feedback
 import API from "../../../api/axios";
 import "./Directory.css";
 
@@ -10,11 +8,10 @@ export default function Directory() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
-  const navigate = useNavigate();
+  // NEW: State to track which users have been sent a request during this session
+  const [sentRequests, setSentRequests] = useState([]);
 
-  // Get current user info
   const currentUser = JSON.parse(localStorage.getItem("user"));
-  const currentUserRole = currentUser?.role;
   const currentUserId = currentUser?._id || currentUser?.id;
 
   useEffect(() => {
@@ -31,39 +28,30 @@ export default function Directory() {
     fetchUsers();
   }, []);
 
-  const handleStartChat = async (targetUser) => {
-    if (targetUser.role === "admin" && currentUserRole !== "admin") {
-      alert("Unauthorized: You cannot message the administrative account.");
-      return;
-    }
-
+  // NEW: Updated function to send a connection request instead of starting a chat
+  const handleConnectRequest = async (targetUserId) => {
     try {
-      // Start conversation via API
-      const res = await startConversation(targetUser._id);
+      const res = await API.post("/connections/send", { 
+        receiverId: targetUserId 
+      });
 
-      const conversation = res.data.data;
-
-      if (res.data.success && (conversation?.id || conversation?._id)) {
-        navigate(`/modules/messaging/${conversation.id || conversation._id}`);
-      } else {
-        console.error("Unexpected startConversation response:", res.data);
-        alert("Could not start conversation");
+      if (res.data.success) {
+        // Add to sentRequests to update button UI locally
+        setSentRequests((prev) => [...prev, targetUserId]);
+        alert("Connection request sent successfully!");
       }
     } catch (err) {
-      console.error("Error starting chat:", err);
-      alert("Something went wrong. Please try again.");
+      console.error("Error sending request:", err);
+      alert(err.response?.data?.message || "Failed to send request. It might already be pending.");
     }
   };
 
   const filteredUsers = users.filter((user) => {
     const isSelf = user._id === currentUserId;
-    const isAdminVisible = currentUserRole === "admin" || user.role !== "admin";
-
-    if (isSelf || !isAdminVisible) return false;
+    if (isSelf) return false;
 
     const matchesFilter = filter === "all" || user.role === filter;
     const search = searchTerm.toLowerCase();
-
     const matchesSearch =
       user.fullName?.toLowerCase().includes(search) ||
       (user.department && user.department.toLowerCase().includes(search));
@@ -71,11 +59,11 @@ export default function Directory() {
     return matchesFilter && matchesSearch;
   });
 
-  if (loading)
-    return <div className="directory-loader">Loading community...</div>;
+  if (loading) return <div className="directory-loader">Loading community...</div>;
 
   return (
     <div className="directory">
+      {/* ... Hero section remains the same ... */}
       <div className="directory-hero">
         <div className="directory-hero-content">
           <h1 className="directory-title">Directory Listing</h1>
@@ -100,98 +88,72 @@ export default function Directory() {
             </div>
 
             <div className="filters">
-              <button
-                className={`filter-btn ${filter === "all" ? "active" : ""}`}
-                onClick={() => setFilter("all")}
-              >
-                All Members
-              </button>
-              <button
-                className={`filter-btn ${filter === "alumni" ? "active" : ""}`}
-                onClick={() => setFilter("alumni")}
-              >
-                Alumni
-              </button>
-              <button
-                className={`filter-btn ${filter === "student" ? "active" : ""}`}
-                onClick={() => setFilter("student")}
-              >
-                Students
-              </button>
+              {["all", "alumni", "student"].map((type) => (
+                <button
+                  key={type}
+                  className={`filter-btn ${filter === type ? "active" : ""}`}
+                  onClick={() => setFilter(type)}
+                >
+                  {type === "all" ? "All Members" : type.charAt(0).toUpperCase() + type.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
         <div className="results-info">
-          <p>
-            {filteredUsers.length} {filteredUsers.length === 1 ? "member" : "members"} found
-          </p>
+          <p>{filteredUsers.length} {filteredUsers.length === 1 ? "member" : "members"} found</p>
         </div>
 
         <div className="directory-grid">
           {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <article key={user._id} className="directory-card">
-                <div className="directory-card-header">
-                  <div className="directory-avatar-wrapper">
-                    {user.profilePicture ? (
-                      <img
-                        src={user.profilePicture}
-                        alt={user.fullName}
-                        className="directory-avatar"
-                      />
-                    ) : (
-                      <div className="directory-avatar-placeholder">
-                        {user.fullName.charAt(0).toUpperCase()}
-                      </div>
-                    )}
+            filteredUsers.map((user) => {
+              const isRequestSent = sentRequests.includes(user._id);
+
+              return (
+                <article key={user._id} className="directory-card">
+                  <div className="directory-card-header">
+                    <div className="directory-avatar-wrapper">
+                      {user.profilePicture ? (
+                        <img src={user.profilePicture} alt={user.fullName} className="directory-avatar" />
+                      ) : (
+                        <div className="directory-avatar-placeholder">
+                          {user.fullName.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <span className={`directory-role-badge ${user.role}`}>{user.role}</span>
                   </div>
-                  <span className={`directory-role-badge ${user.role}`}>
-                    {user.role}
-                  </span>
-                </div>
 
-                <div className="directory-card-body">
-                  <h3 className="directory-name">{user.fullName}</h3>
-                  <p className="directory-dept">
-                    {user.department || "Department not listed"}
-                  </p>
+                  <div className="directory-card-body">
+                    <h3 className="directory-name">{user.fullName}</h3>
+                    <p className="directory-dept">{user.department || "Department not listed"}</p>
+                  </div>
 
-                  {user.role === "alumni" && user.graduationYear && (
-                    <p className="directory-meta">Class of {user.graduationYear}</p>
-                  )}
-                  {user.role === "student" && (user.batch || user.semester) && (
-                    <p className="directory-meta">Batch {user.batch || user.semester}</p>
-                  )}
-                </div>
-
-                <div className="directory-card-footer">
-                  <button
-                    onClick={() => handleStartChat(user)}
-                    className="directory-message-btn"
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                  <div className="directory-card-footer">
+                    <button
+                      onClick={() => handleConnectRequest(user._id)}
+                      className={`directory-message-btn ${isRequestSent ? "sent" : ""}`}
+                      disabled={isRequestSent}
                     >
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                    Connect
-                  </button>
-                </div>
-              </article>
-            ))
+                      {isRequestSent ? (
+                        <>
+                          <CheckCircle size={18} /> Sent
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus size={18} /> Connect
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </article>
+              );
+            })
           ) : (
             <div className="no-results">
               <div className="no-results-icon">🔍</div>
               <h3>No members found</h3>
-              <p>Try adjusting your search or filter criteria</p>
             </div>
           )}
         </div>

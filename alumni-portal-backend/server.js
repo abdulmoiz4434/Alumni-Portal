@@ -15,6 +15,7 @@ const mentorshipRoutes = require('./routes/mentorship');
 const careerInsightsRoutes = require('./routes/careerInsights');
 const dashboardRoutes = require('./routes/dashboard');
 const storyRoutes = require('./routes/stories');
+const connectionRoutes = require('./routes/connections'); // ADDED: New routes for directory connections
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ const app = express();
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // ADDED: PATCH for accept/reject actions
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
@@ -42,7 +43,8 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', eventRoutes);
 app.use('/api/jobs', jobRoutes);
-app.use('/api/mentorship', mentorshipRoutes);
+app.use('/api/mentorship', mentorshipRoutes); // Will handle mentorship notifications
+app.use('/api/connections', connectionRoutes); // ADDED: Will handle directory/connection notifications
 app.use("/api/careerInsights", careerInsightsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/stories', storyRoutes);

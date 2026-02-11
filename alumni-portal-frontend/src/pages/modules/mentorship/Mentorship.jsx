@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User, Calendar, Trash2, Plus } from "lucide-react";
+import { User, Calendar, Trash2, Plus, Send, CheckCircle } from "lucide-react";
 import API from "../../../api/axios";
 import "./Mentorship.css";
 
@@ -10,7 +10,16 @@ export default function Mentorship() {
   const [userId, setUserId] = useState("");
   const [filterField, setFilterField] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Modal States
   const [showOfferModal, setShowOfferModal] = useState(false);
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  
+  // Application State
+  const [selectedMentor, setSelectedMentor] = useState(null);
+  const [applyMessage, setApplyMessage] = useState("");
+  const [sentApplications, setSentApplications] = useState([]);
+
   const [newMentorshipForm, setNewMentorshipForm] = useState({
     title: "",
     field: "",
@@ -29,7 +38,7 @@ export default function Mentorship() {
       const res = await API.get("/auth/me");
       const { user } = res.data.data;
       setUserRole(user.role);
-      setUserId(user.id);
+      setUserId(user.id || user._id);
     } catch (err) {
       console.error("Error fetching user profile:", err);
     }
@@ -49,6 +58,27 @@ export default function Mentorship() {
     }
   };
 
+  // NEW: Handle sending the mentorship application
+  const handleApplySubmit = async () => {
+    if (!applyMessage.trim()) return alert("Please enter a message for the mentor.");
+
+    try {
+      const res = await API.post("/mentorship/apply", {
+        alumnusId: selectedMentor.postedBy._id,
+        message: applyMessage
+      });
+
+      if (res.data.success) {
+        setSentApplications([...sentApplications, selectedMentor._id]);
+        alert("Application sent! The mentor will be notified.");
+        setShowApplyModal(false);
+        setApplyMessage("");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to send application");
+    }
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this mentorship?")) {
       try {
@@ -64,8 +94,9 @@ export default function Mentorship() {
   };
 
   const canDeleteMentorship = (postedBy) => {
+    const ownerId = postedBy._id || postedBy;
     if (userRole === "admin") return true;
-    if (userRole === "alumni" && userId === postedBy._id) return true;
+    if (userRole === "alumni" && userId === ownerId) return true;
     return false;
   };
 
@@ -73,15 +104,12 @@ export default function Mentorship() {
 
   const filteredMentorships = mentorships.filter((m) => {
     const matchesField = filterField === "All" || m.field === filterField;
+    const search = searchTerm.toLowerCase();
     const matchesSearch =
       searchTerm === "" ||
-      m.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.postedByName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (m.skills &&
-        m.skills.some((skill) =>
-          skill.toLowerCase().includes(searchTerm.toLowerCase())
-        ));
+      m.title.toLowerCase().includes(search) ||
+      m.postedByName.toLowerCase().includes(search) ||
+      m.description.toLowerCase().includes(search);
 
     return matchesField && matchesSearch;
   });
@@ -92,29 +120,15 @@ export default function Mentorship() {
   };
 
   const handleOfferSubmit = async () => {
-    if (userRole !== "alumni") {
-      alert("Only alumni can offer mentorship");
-      return;
-    }
-
     try {
       const res = await API.post("/mentorship", {
-        title: newMentorshipForm.title,
-        field: newMentorshipForm.field,
-        duration: newMentorshipForm.duration,
-        description: newMentorshipForm.description,
+        ...newMentorshipForm,
         skills: newMentorshipForm.skills.split(",").map((s) => s.trim()),
       });
 
       if (res.data.success) {
         alert("Mentorship posted successfully!");
-        setNewMentorshipForm({
-          title: "",
-          field: "",
-          duration: "",
-          description: "",
-          skills: "",
-        });
+        setNewMentorshipForm({ title: "", field: "", duration: "", description: "", skills: "" });
         setShowOfferModal(false);
         fetchMentorships();
       }
@@ -123,29 +137,16 @@ export default function Mentorship() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="events-loader-container">
-        <div className="spinner"></div>
-        <p>Loading mentorships...</p>
-      </div>
-    );
-  }
+  if (loading) return <div className="events-loader-container"><div className="spinner"></div><p>Loading...</p></div>;
 
   return (
     <div className="mentorship">
       <div className="mentorship-hero">
         <div className="mentorship-hero-content">
           <h1 className="main-title">Mentorship Program</h1>
-          <p className="subtitle">
-            Connect with experienced alumni who are ready to guide you on your
-            career journey
-          </p>
+          <p className="subtitle">Connect with experienced alumni who are ready to guide you.</p>
           {userRole === "alumni" && (
-            <button
-              className="create-mentorship-btn-hero"
-              onClick={() => setShowOfferModal(true)}
-            >
+            <button className="create-mentorship-btn-hero" onClick={() => setShowOfferModal(true)}>
               <Plus size={20} /> Offer Mentorship
             </button>
           )}
@@ -157,7 +158,7 @@ export default function Mentorship() {
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search by title, mentor name, skills..."
+              placeholder="Search by title, mentor, or skills..."
               className="search-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -165,35 +166,21 @@ export default function Mentorship() {
           </div>
 
           <div className="filters">
-            <select
-              className="filter-select"
-              value={filterField}
-              onChange={(e) => setFilterField(e.target.value)}
-            >
+            <select className="filter-select" value={filterField} onChange={(e) => setFilterField(e.target.value)}>
               {fields.map((field) => (
-                <option key={field} value={field}>
-                  {field}
-                </option>
+                <option key={field} value={field}>{field}</option>
               ))}
             </select>
           </div>
         </div>
 
         <div className="opportunities-grid">
-          {filteredMentorships.length === 0 ? (
-            <div className="no-results">
-              <User size={64} color="#E0E0E0" />
-              <h3>No mentorships found</h3>
-              <p>Try adjusting your search or filters</p>
-            </div>
-          ) : (
-            filteredMentorships.map((mentorship) => (
+          {filteredMentorships.map((mentorship) => {
+            const isApplied = sentApplications.includes(mentorship._id);
+            return (
               <div key={mentorship._id} className="opportunity-card">
                 {canDeleteMentorship(mentorship.postedBy) && (
-                  <button
-                    className="mentorship-delete-btn"
-                    onClick={() => handleDelete(mentorship._id)}
-                  >
+                  <button className="mentorship-delete-btn" onClick={() => handleDelete(mentorship._id)}>
                     <Trash2 size={18} />
                   </button>
                 )}
@@ -201,62 +188,77 @@ export default function Mentorship() {
                 <div className="card-header">
                   <div className="card-meta">
                     <span className="badge">{mentorship.field}</span>
-                    <span className="posted-date">
-                      {new Date(mentorship.createdAt).toLocaleDateString()}
-                    </span>
+                    <span className="posted-date">{new Date(mentorship.createdAt).toLocaleDateString()}</span>
                   </div>
                   <h2 className="job-title">{mentorship.title}</h2>
-                  <p className="company-name">
-                    <User size={18} /> {mentorship.postedByName}
-                  </p>
+                  <p className="company-name"><User size={18} /> {mentorship.postedByName}</p>
                 </div>
 
                 <div className="card-body">
                   <div className="info-row">
-                    <span className="info-item">
-                      <Calendar size={20} /> {mentorship.duration}
-                    </span>
+                    <span className="info-item"><Calendar size={20} /> {mentorship.duration}</span>
                   </div>
-
                   <p className="description">{mentorship.description}</p>
-
-                  {mentorship.skills && mentorship.skills.length > 0 && (
+                  
+                  {mentorship.skills?.length > 0 && (
                     <div className="skills-container">
                       {mentorship.skills.map((skill, index) => (
-                        <span key={index} className="skill-tag">
-                          {skill}
-                        </span>
+                        <span key={index} className="skill-tag">{skill}</span>
                       ))}
                     </div>
                   )}
 
-                  <div className="card-footer">
-                    <div className="mentorship-type">
-                      <span>1-on-1 Mentorship</span>
-                    </div>
-                    <span className="posted-by">
-                      By {mentorship.postedByName || "Alumni"}
-                    </span>
+                  <div className="card-actions">
+                    {userRole === "student" && (
+                      <button
+                        className={`btn-primary ${isApplied ? "applied" : ""}`}
+                        disabled={isApplied}
+                        onClick={() => {
+                          setSelectedMentor(mentorship);
+                          setShowApplyModal(true);
+                        }}
+                      >
+                        {isApplied ? <><CheckCircle size={18} /> Applied</> : "Apply for Mentorship"}
+                      </button>
+                    )}
+                    {userRole === "alumni" && userId === (mentorship.postedBy._id || mentorship.postedBy) && (
+                      <span className="own-post-tag">Your Offering</span>
+                    )}
                   </div>
                 </div>
-
-                <div className="card-actions">
-                  <button
-                    className="btn-primary"
-                    onClick={() =>
-                      alert(
-                        `You clicked Connect With Mentor for ${mentorship.title}`
-                      )
-                    }
-                  >
-                    Connect With Mentor
-                  </button>
-                </div>
               </div>
-            ))
-          )}
+            );
+          })}
         </div>
       </div>
+
+      {/* NEW: Application Modal */}
+      {showApplyModal && (
+        <div className="modal-overlay" onClick={() => setShowApplyModal(false)}>
+          <div className="event-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Apply to {selectedMentor?.postedByName}</h2>
+              <button onClick={() => setShowApplyModal(false)} className="close-modal-btn">×</button>
+            </div>
+            <div className="modal-body">
+              <label>Introduce yourself and explain why you're seeking mentorship:</label>
+              <textarea
+                className="apply-textarea"
+                rows="5"
+                placeholder="Write your message here..."
+                value={applyMessage}
+                onChange={(e) => setApplyMessage(e.target.value)}
+              />
+            </div>
+            <div className="modal-footer">
+              <button className="event-btn-cancel" onClick={() => setShowApplyModal(false)}>Cancel</button>
+              <button className="event-btn-submit" onClick={handleApplySubmit}>
+                <Send size={18} /> Send Application
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Offer Mentorship Modal */}
       {showOfferModal && (
@@ -264,92 +266,33 @@ export default function Mentorship() {
           <div className="event-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Offer Mentorship</h2>
-              <button
-                onClick={() => setShowOfferModal(false)}
-                className="close-modal-btn"
-              >
-                ×
-              </button>
+              <button onClick={() => setShowOfferModal(false)} className="close-modal-btn">×</button>
             </div>
 
-            <form
-              className="form-grid"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleOfferSubmit();
-              }}
-            >
+            <form className="form-grid" onSubmit={(e) => { e.preventDefault(); handleOfferSubmit(); }}>
               <div className="form-group">
                 <label>Mentorship Title *</label>
-                <input
-                  type="text"
-                  name="title"
-                  placeholder="e.g. React & Frontend Career Guidance"
-                  value={newMentorshipForm.title}
-                  onChange={handleNewFormChange}
-                  required
-                />
+                <input type="text" name="title" value={newMentorshipForm.title} onChange={handleNewFormChange} required />
               </div>
-
               <div className="form-group">
                 <label>Field *</label>
-                <input
-                  type="text"
-                  name="field"
-                  placeholder="e.g. Frontend Development"
-                  value={newMentorshipForm.field}
-                  onChange={handleNewFormChange}
-                  required
-                />
+                <input type="text" name="field" value={newMentorshipForm.field} onChange={handleNewFormChange} required />
               </div>
-
               <div className="form-group">
                 <label>Duration *</label>
-                <input
-                  type="text"
-                  name="duration"
-                  placeholder="e.g. 3 months"
-                  value={newMentorshipForm.duration}
-                  onChange={handleNewFormChange}
-                  required
-                />
+                <input type="text" name="duration" value={newMentorshipForm.duration} onChange={handleNewFormChange} required />
               </div>
-
               <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                 <label>Description *</label>
-                <textarea
-                  name="description"
-                  placeholder="Briefly describe what mentees will learn and how you will guide them"
-                  value={newMentorshipForm.description}
-                  onChange={handleNewFormChange}
-                  rows="4"
-                  required
-                />
+                <textarea name="description" value={newMentorshipForm.description} onChange={handleNewFormChange} rows="4" required />
               </div>
-
               <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                 <label>Skills (comma separated) *</label>
-                <input
-                  type="text"
-                  name="skills"
-                  placeholder="e.g. React, JavaScript, UI/UX, Career Planning"
-                  value={newMentorshipForm.skills}
-                  onChange={handleNewFormChange}
-                  required
-                />
+                <input type="text" name="skills" value={newMentorshipForm.skills} onChange={handleNewFormChange} required />
               </div>
-
               <div className="modal-footer" style={{ gridColumn: "1 / -1" }}>
-                <button
-                  type="button"
-                  className="event-btn-cancel"
-                  onClick={() => setShowOfferModal(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="event-btn-submit">
-                  Post Mentorship
-                </button>
+                <button type="button" className="event-btn-cancel" onClick={() => setShowOfferModal(false)}>Cancel</button>
+                <button type="submit" className="event-btn-submit">Post Mentorship</button>
               </div>
             </form>
           </div>
