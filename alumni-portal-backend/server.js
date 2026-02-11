@@ -14,6 +14,7 @@ const jobRoutes = require('./routes/jobs');
 const mentorshipRoutes = require('./routes/mentorship');
 const careerInsightsRoutes = require('./routes/careerInsights');
 const dashboardRoutes = require('./routes/dashboard');
+const storyRoutes = require('./routes/stories');
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/mentorship', mentorshipRoutes);
 app.use("/api/careerInsights", careerInsightsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/stories', storyRoutes);
 
 // Health check route
 app.get('/', (req, res) => {
