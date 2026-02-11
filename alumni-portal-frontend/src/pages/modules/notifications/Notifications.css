@@ -1,0 +1,130 @@
+.notifications-page {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+.notifications-header {
+  margin-bottom: 30px;
+}
+
+.notifications-header h1 {
+  color: #1a1a1a;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.notifications-header p {
+  color: #64748b;
+}
+
+/* Tab Styling */
+.notifications-tabs {
+  display: flex;
+  gap: 15px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 24px;
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #64748b;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.tab-btn.active {
+  color: #e6bb2f; /* Your Gold Color */
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #e6bb2f;
+}
+
+/* Request Cards */
+.request-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #f1f5f9;
+}
+
+.req-user-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.req-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.req-details h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.req-details p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.req-message {
+  font-style: italic;
+  background: #f8fafc;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 8px !important;
+}
+
+/* Action Buttons */
+.req-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-accept, .btn-reject {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-accept { background: #e6bb2f; color: #1a1a1a; }
+.btn-reject { background: #f1f5f9; color: #64748b; }
+
+.btn-accept:hover, .btn-reject:hover { opacity: 0.8; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
