@@ -47,8 +47,12 @@ export default function Messaging() {
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (!loading && messages.length > 0) {
+      setTimeout(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [messages, loading, conversationId]);
 
   const fetchConversations = async () => {
     try {

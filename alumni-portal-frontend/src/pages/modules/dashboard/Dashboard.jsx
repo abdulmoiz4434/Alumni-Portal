@@ -148,7 +148,7 @@ const Dashboard = () => {
           {formattedStats.map((stat, index) => (
             <div
               key={stat.label}
-              className={`stat-card ${index === 0 ? "stat-card-primary" : ""}`}
+              className={"stat-card"}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="stat-icon-wrapper">

@@ -80,11 +80,12 @@ const CareerInsights = () => {
 
   return (
     <div className="career-insights">
-      <div className="insights-header">
-        <h2>Career Insights Dashboard</h2>
-        {/* INSIGHT-006: Display total number of alumni contributing */}
-        <div className="contributor-count">
-          Data based on <span>{data?.totalContributors}</span> Alumni profiles
+      <div className="career-insights-hero">
+        <div className="career-insights-hero-content">
+          <h1 className="career-main-title">Career Insights</h1>
+          <div className="career-subtitle">
+            Data derived from <span>{data?.totalContributors || 0}</span> alumni profiles
+          </div>
         </div>
       </div>
 

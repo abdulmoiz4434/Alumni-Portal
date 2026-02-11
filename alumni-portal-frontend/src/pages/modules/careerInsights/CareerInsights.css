@@ -4,21 +4,44 @@
   min-height: 100vh;
 }
 
-.insights-header {
-  margin-bottom: 2rem;
+/* Header Section */
+.career-insights-hero {
+  background: #1a1a1a;
+  padding: 40px;
   text-align: center;
+  color: #d4aa28;
+  border-radius: 15px;
+  margin-bottom: 2rem;
 }
 
-.contributor-count {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  color: #64748b;
+.career-insights-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.contributor-count span {
+.career-main-title {
+  font-family: Georgia, serif;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  animation: fadeInUp 0.6s ease-out;
+  color: #d4aa28;
+}
+
+.career-subtitle {
+  font-size: 1.15rem;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #e0e0e0;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.career-subtitle span {
   font-weight: bold;
   color: #3b82f6;
-  background: #dbeafe;
+  background: rgba(59, 130, 246, 0.1);
+  /* Subtle background */
   padding: 2px 8px;
   border-radius: 12px;
 }

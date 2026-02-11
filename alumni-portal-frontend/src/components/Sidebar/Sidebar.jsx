@@ -6,6 +6,8 @@ import "./Sidebar.css";
 export default function Sidebar() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user?.role === "admin";
 
   const handleLogout = () => {
     // Check role before clearing storage
@@ -43,7 +45,7 @@ export default function Sidebar() {
             Profile
           </NavLink>
 
-         <NavLink to="/modules/directory" onClick={closeSidebar}>
+          <NavLink to="/modules/directory" onClick={closeSidebar}>
             Directory
           </NavLink>
 
@@ -59,9 +61,11 @@ export default function Sidebar() {
             Career Insights
           </NavLink>
 
-          <NavLink to="/modules/messaging" onClick={closeSidebar}>
-            Messages
-          </NavLink>
+          {!isAdmin && (
+            <NavLink to="/modules/messaging" onClick={closeSidebar}>
+              Messages
+            </NavLink>
+          )}
 
           <NavLink to="/modules/events" onClick={closeSidebar}>
             Events

@@ -51,7 +51,7 @@ async function getMessages(conversationId, userId) {
       // FIX: Add safety checks for undefined fields
       const senderId = msg.senderId || msg.sender?._id || msg.sender;
       const sender = senderId ? await getUserById(senderId) : { _id: 'unknown', fullName: 'Unknown User' };
-      
+
       return {
         ...msg,
         id: msg._id?.toString() || msg._id,
@@ -150,6 +150,19 @@ async function updateConversationLastMessage(conversationId, message) {
   return Conversation.updateLastMessage(conversationId, message);
 }
 
+/**
+ * Count unread messages for a user across specified conversations.
+ */
+async function countUnreadMessages(userId, conversationIds) {
+  if (!conversationIds || conversationIds.length === 0) return 0;
+
+  return await Message.countDocuments({
+    conversationId: { $in: conversationIds },
+    senderId: { $ne: userId },
+    isRead: false
+  });
+}
+
 module.exports = {
   createMessage,
   getMessages,
@@ -158,5 +171,6 @@ module.exports = {
   getConversationById,
   markMessagesAsRead,
   updateConversationLastMessage,
-  getUserById
+  getUserById,
+  countUnreadMessages
 };
