@@ -16,12 +16,6 @@ const getOrCreateConversation = async (req, res) => {
       receiverId
     );
     
-    // ADD LOGGING FOR DEBUGGING
-    console.log('✅ Conversation created/found:', {
-      id: conversation._id.toString(),
-      participants: conversation.participants
-    });
-    
     const payload = {
       ...conversation.toObject(),
       id: conversation._id.toString()
@@ -30,7 +24,6 @@ const getOrCreateConversation = async (req, res) => {
     return successResponse(res, payload, 200, "Conversation retrieved");
   } catch (error) {
     console.error("getOrCreateConversation Error:", error);
-    console.error("Error stack:", error.stack);
     return errorResponse(res, "Failed to initialize conversation", 500);
   }
 };
@@ -78,7 +71,6 @@ const sendMessage = async (req, res) => {
     return successResponse(res, payload, 201, "Message sent");
   } catch (error) {
     console.error("sendMessage Error:", error);
-    console.error("Error stack:", error.stack);
     return errorResponse(res, "Message delivery failed", 500);
   }
 };
@@ -88,36 +80,22 @@ const getMessagesController = async (req, res) => {
     const { conversationId } = req.params;
     const userId = req.user._id;
 
-    // ADD LOGGING
-    console.log('📩 getMessages called:', { conversationId, userId: userId.toString() });
-
     // Validate conversationId format
     if (!mongoose.Types.ObjectId.isValid(conversationId)) {
-      console.error('❌ Invalid conversationId format:', conversationId);
       return errorResponse(res, "Invalid conversation ID", 400);
     }
 
     const messages = await messageService.getMessages(conversationId, userId);
     
     if (messages === null) {
-      console.error('❌ Conversation not found or user not participant:', { 
-        conversationId, 
-        userId: userId.toString() 
-      });
       return errorResponse(res, "Conversation not found or access denied", 404);
     }
 
     const conversation = await messageService.getConversationById(conversationId);
     
     if (!conversation) {
-      console.error('❌ Conversation not found after getMessages:', conversationId);
       return errorResponse(res, "Conversation not found", 404);
     }
-
-    console.log('✅ Messages retrieved successfully:', { 
-      conversationId, 
-      messageCount: messages.length 
-    });
 
     return successResponse(
       res,
@@ -126,8 +104,7 @@ const getMessagesController = async (req, res) => {
       "Messages retrieved"
     );
   } catch (error) {
-    console.error("❌ getMessages Error:", error);
-    console.error("Error stack:", error.stack);
+    console.error("getMessages Error:", error);
     return errorResponse(res, "Could not fetch messages", 500);
   }
 };
@@ -139,7 +116,6 @@ const getConversations = async (req, res) => {
     return successResponse(res, conversations, 200, "Conversations retrieved");
   } catch (error) {
     console.error("getConversations Error:", error);
-    console.error("Error stack:", error.stack);
     return errorResponse(res, "Could not fetch conversation list", 500);
   }
 };

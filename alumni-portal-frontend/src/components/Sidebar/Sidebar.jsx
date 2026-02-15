@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
+import * as socketService from "../../services/socketService";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -10,9 +11,10 @@ export default function Sidebar() {
   const isAdmin = user?.role === "admin";
 
   const handleLogout = () => {
-    // Check role before clearing storage
     const user = JSON.parse(localStorage.getItem("user"));
     const isAdmin = user?.role === "admin";
+
+    socketService.disconnect();
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -41,9 +43,12 @@ export default function Sidebar() {
             Dashboard
           </NavLink>
 
-          <NavLink to="/modules/profile" onClick={closeSidebar}>
-            Profile
-          </NavLink>
+          {/* HIDE PROFILE FOR ADMIN */}
+          {!isAdmin && (
+            <NavLink to="/modules/profile" onClick={closeSidebar}>
+              Profile
+            </NavLink>
+          )}
 
           <NavLink to="/modules/directory" onClick={closeSidebar}>
             Directory

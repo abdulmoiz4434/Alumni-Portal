@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, UserPlus, CheckCircle } from "lucide-react"; // Added icons for feedback
+import { Search, UserPlus, CheckCircle, MessageCircle, Trash2 } from "lucide-react";
 import API from "../../../api/axios";
 import "./Directory.css";
 
@@ -8,35 +8,49 @@ export default function Directory() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
-  // NEW: State to track which users have been sent a request during this session
   const [sentRequests, setSentRequests] = useState([]);
+  const [connectedUsers, setConnectedUsers] = useState([]);
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const currentUserId = currentUser?._id || currentUser?.id;
+  const isAdmin = currentUser?.role === "admin";
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        const res = await API.get("/auth/all-users");
-        setUsers(res.data.data || []);
+        const usersRes = await API.get("/auth/all-users");
+        const filteredUsers = (usersRes.data.data || []).filter(user => user.role !== "admin");
+        setUsers(filteredUsers);
+
+        // Only fetch connection status for non-admin users
+        if (!isAdmin) {
+          const statusRes = await API.get("/connections/status");
+          const { pending, connected } = statusRes.data.data;
+          setSentRequests(pending || []);
+          setConnectedUsers(connected || []);
+        }
       } catch (err) {
-        console.error("Error fetching users:", err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchUsers();
-  }, []);
+    fetchData();
+  }, [isAdmin]);
 
-  // NEW: Updated function to send a connection request instead of starting a chat
   const handleConnectRequest = async (targetUserId) => {
     try {
+      const targetUser = users.find(u => u._id === targetUserId);
+      if (targetUser?.role === "admin") {
+        alert("Cannot connect with admin users.");
+        return;
+      }
+
       const res = await API.post("/connections/send", { 
         receiverId: targetUserId 
       });
 
       if (res.data.success) {
-        // Add to sentRequests to update button UI locally
         setSentRequests((prev) => [...prev, targetUserId]);
         alert("Connection request sent successfully!");
       }
@@ -46,9 +60,27 @@ export default function Directory() {
     }
   };
 
+  const handleDeleteUser = async (userId, userName) => {
+    if (window.confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+      try {
+        const res = await API.delete(`/auth/delete-user/${userId}`);
+        
+        if (res.data.success) {
+          setUsers((prev) => prev.filter(user => user._id !== userId));
+          alert("User deleted successfully!");
+        }
+      } catch (err) {
+        console.error("Error deleting user:", err);
+        alert(err.response?.data?.message || "Failed to delete user.");
+      }
+    }
+  };
+
   const filteredUsers = users.filter((user) => {
     const isSelf = user._id === currentUserId;
     if (isSelf) return false;
+
+    if (user.role === "admin") return false;
 
     const matchesFilter = filter === "all" || user.role === filter;
     const search = searchTerm.toLowerCase();
@@ -63,7 +95,6 @@ export default function Directory() {
 
   return (
     <div className="directory">
-      {/* ... Hero section remains the same ... */}
       <div className="directory-hero">
         <div className="directory-hero-content">
           <h1 className="directory-title">Directory Listing</h1>
@@ -109,9 +140,21 @@ export default function Directory() {
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => {
               const isRequestSent = sentRequests.includes(user._id);
+              const isConnected = connectedUsers.includes(user._id);
 
               return (
                 <article key={user._id} className="directory-card">
+                  {/* ADMIN DELETE BUTTON */}
+                  {isAdmin && (
+                    <button 
+                      className="directory-delete-btn" 
+                      onClick={() => handleDeleteUser(user._id, user.fullName)}
+                      title="Delete user"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
+
                   <div className="directory-card-header">
                     <div className="directory-avatar-wrapper">
                       {user.profilePicture ? (
@@ -131,21 +174,27 @@ export default function Directory() {
                   </div>
 
                   <div className="directory-card-footer">
-                    <button
-                      onClick={() => handleConnectRequest(user._id)}
-                      className={`directory-message-btn ${isRequestSent ? "sent" : ""}`}
-                      disabled={isRequestSent}
-                    >
-                      {isRequestSent ? (
-                        <>
-                          <CheckCircle size={18} /> Sent
-                        </>
-                      ) : (
-                        <>
-                          <UserPlus size={18} /> Connect
-                        </>
-                      )}
-                    </button>
+                    {/* HIDE CONNECT BUTTON FOR ADMIN */}
+                    {!isAdmin && (
+                      <>
+                        {isConnected ? (
+                          <button className="directory-message-btn connected" disabled>
+                            <MessageCircle size={18} /> Connected
+                          </button>
+                        ) : isRequestSent ? (
+                          <button className="directory-message-btn sent" disabled>
+                            <CheckCircle size={18} /> Sent
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleConnectRequest(user._id)}
+                            className="directory-message-btn"
+                          >
+                            <UserPlus size={18} /> Connect
+                          </button>
+                        )}
+                      </>
+                    )}
                   </div>
                 </article>
               );

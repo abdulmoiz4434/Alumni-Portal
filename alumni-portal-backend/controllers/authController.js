@@ -250,20 +250,26 @@ exports.updateProfile = async (req, res) => {
     const userId = req.user.id;
     const role = req.user.role;
     const { 
+      fullName, profilePicture, // Fields from User model
       about, company, jobTitle, skills, linkedin, 
       degree, semester, cgpa, careerGoals, interests, location 
     } = req.body;
 
+    // 1. Update User model (fullName, etc.)
+    const userUpdateData = {};
+    if (fullName) userUpdateData.fullName = fullName;
+    if (profilePicture) userUpdateData.profilePicture = profilePicture;
+
+    if (Object.keys(userUpdateData).length > 0) {
+      await User.findByIdAndUpdate(userId, { $set: userUpdateData });
+    }
+
+    // 2. Prepare Profile Data
     let updatedProfile;
+    const skillsArray = Array.isArray(skills) ? skills : (typeof skills === 'string' ? skills.split(',').map(s => s.trim()) : []);
+    const interestsArray = Array.isArray(interests) ? interests : (typeof interests === 'string' ? interests.split(',').map(i => i.trim()) : []);
 
-    const skillsArray = typeof skills === 'string' 
-      ? skills.split(',').map(s => s.trim()) 
-      : skills;
-
-    const interestsArray = typeof interests === 'string'
-      ? interests.split(',').map(i => i.trim())
-      : interests;
-
+    // 3. Update or CREATE (upsert) the specific role profile
     if (role === 'student') {
       updatedProfile = await Student.findOneAndUpdate(
         { user: userId },
@@ -278,7 +284,8 @@ exports.updateProfile = async (req, res) => {
             skills: skillsArray 
           } 
         },
-        { new: true, runValidators: true }
+        // upsert: true fixes the "Ammar" problem by creating the doc if missing
+        { new: true, runValidators: true, upsert: true, setDefaultsOnInsert: true }
       );
     } else if (role === 'alumni') {
       updatedProfile = await Alumni.findOneAndUpdate(
@@ -294,18 +301,22 @@ exports.updateProfile = async (req, res) => {
             skills: skillsArray 
           } 
         },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true, upsert: true, setDefaultsOnInsert: true }
       );
     }
 
     if (!updatedProfile) {
-      return errorResponse(res, 'Profile not found', 404);
+      return errorResponse(res, 'Could not update or create profile', 404);
     }
 
     return successResponse(res, updatedProfile, 200, 'Profile updated successfully');
   } catch (error) {
     console.error('Update Profile Error:', error);
-    return errorResponse(res, 'Server Error updating profile', 500);
+    // Specifically handle duplicate registration number errors
+    if (error.code === 11000) {
+        return errorResponse(res, 'Registration number already exists', 400);
+    }
+    return errorResponse(res, 'Server Error updating profile: ' + error.message, 500);
   }
 };
 
@@ -382,5 +393,85 @@ exports.adminLogin = async (req, res) => {
   } catch (error) {
     console.error('Admin Login Error:', error);
     return errorResponse(res, 'Server Error during admin login', 500);
+  }
+};
+
+exports.uploadProfilePicture = async (req, res) => {
+  try {
+    if (!req.file) {
+      return errorResponse(res, 'No image file provided', 400);
+    }
+
+    const userId = req.user.id;
+    
+    // Cloudinary automatically uploads and returns the URL
+    const imageUrl = req.file.path; // Cloudinary URL
+
+    // Update user's profile picture
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePicture: imageUrl },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return errorResponse(res, 'User not found', 404);
+    }
+
+    return successResponse(
+      res, 
+      { 
+        profilePicture: imageUrl,
+        user: {
+          id: updatedUser._id,
+          email: updatedUser.email,
+          fullName: updatedUser.fullName,
+          role: updatedUser.role,
+          profilePicture: updatedUser.profilePicture
+        }
+      }, 
+      200, 
+      'Profile picture uploaded successfully'
+    );
+  } catch (error) {
+    console.error('Upload Profile Picture Error:', error);
+    return errorResponse(res, 'Failed to upload profile picture: ' + error.message, 500);
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Only admins can delete users
+    if (req.user.role !== 'admin') {
+      return errorResponse(res, 'Unauthorized. Only admins can delete users.', 403);
+    }
+
+    // Prevent admin from deleting themselves
+    if (userId === req.user.id || userId === req.user._id.toString()) {
+      return errorResponse(res, 'You cannot delete your own account.', 400);
+    }
+
+    // Find and delete the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return errorResponse(res, 'User not found', 404);
+    }
+
+    // Delete associated profile (Student or Alumni)
+    if (user.role === 'student') {
+      await Student.findOneAndDelete({ user: userId });
+    } else if (user.role === 'alumni') {
+      await Alumni.findOneAndDelete({ user: userId });
+    }
+
+    // Delete the user
+    await User.findByIdAndDelete(userId);
+
+    return successResponse(res, null, 200, 'User deleted successfully');
+  } catch (error) {
+    console.error('Delete User Error:', error);
+    return errorResponse(res, 'Failed to delete user', 500);
   }
 };

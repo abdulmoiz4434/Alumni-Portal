@@ -19,6 +19,27 @@
   color: #64748b;
 }
 
+/* Back Button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 6px;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.back-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
 /* Tab Styling */
 .notifications-tabs {
   display: flex;
@@ -64,14 +85,21 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   border: 1px solid #f1f5f9;
+  transition: all 0.3s;
+}
+
+.request-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-color: #e2e8f0;
 }
 
 .req-user-info {
   display: flex;
   gap: 16px;
-  align-items: center;
+  align-items: flex-start;
+  flex: 1;
 }
 
 .req-avatar {
@@ -79,6 +107,11 @@
   height: 56px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
+}
+
+.req-details {
+  flex: 1;
 }
 
 .req-details h3 {
@@ -87,7 +120,7 @@
   color: #1e293b;
 }
 
-.req-details p {
+.req-role {
   margin: 4px 0 0;
   font-size: 0.9rem;
   color: #64748b;
@@ -95,16 +128,75 @@
 
 .req-message {
   font-style: italic;
-  background: #f8fafc;
-  padding: 8px;
+  background: #fff3cd;
+  border-left: 3px solid #ffc107;
+  padding: 10px;
   border-radius: 4px;
-  margin-top: 8px !important;
+  margin-top: 12px !important;
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+/* Student Details Section */
+.student-details {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #e6bb2f;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  color: #333;
+  flex: 1;
+}
+
+.skills-row {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.skill-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 /* Action Buttons */
 .req-actions {
   display: flex;
   gap: 10px;
+  flex-shrink: 0;
+  margin-left: 16px;
 }
 
 .btn-accept, .btn-reject {
@@ -116,15 +208,91 @@
   align-items: center;
   gap: 6px;
   font-weight: 600;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 
-.btn-accept { background: #e6bb2f; color: #1a1a1a; }
-.btn-reject { background: #f1f5f9; color: #64748b; }
+.btn-accept { 
+  background: #e6bb2f; 
+  color: #1a1a1a; 
+}
 
-.btn-accept:hover, .btn-reject:hover { opacity: 0.8; }
+.btn-reject { 
+  background: #f1f5f9; 
+  color: #64748b; 
+}
+
+.btn-accept:hover { 
+  background: #d4aa2a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(230, 187, 47, 0.3);
+}
+
+.btn-reject:hover { 
+  background: #e2e8f0;
+  color: #475569;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.empty-state svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Loading State */
+.notif-loader {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  border: 3px solid #f1f5f9;
+  border-top-color: #e6bb2f;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .request-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .req-actions {
+    margin-left: 0;
+    margin-top: 16px;
+    justify-content: flex-end;
+  }
+
+  .notifications-tabs {
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    white-space: nowrap;
+  }
+
+  .detail-label {
+    min-width: 80px;
+  }
 }

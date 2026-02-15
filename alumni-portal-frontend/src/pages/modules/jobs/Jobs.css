@@ -60,7 +60,7 @@
 
 /* Search and Filter Section */
 .search-filter-section {
-  background-color: #c8ccb1;
+  background-color: #dff083;
   padding: 20px;
   border-radius: 12px;
   display: flex;
@@ -113,6 +113,9 @@
   transition: all 0.3s ease;
   outline: none;
   appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
 }
 
 .filter-select:hover {
@@ -637,6 +640,13 @@
 .job-delete-btn:hover {
   background: #dc3545;
   transform: scale(1.1);
+}
+
+.contact-label {
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
 }
 
 /* --- KEYFRAMES --- */

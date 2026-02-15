@@ -33,7 +33,20 @@ const userSchema = new mongoose.Schema(
     profilePicture: {
       type: String,
       default: ""
-    }
+    },
+    // ADD THESE NEW FIELDS FOR CONNECTIONS AND MENTORSHIP:
+    connections: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    mentors: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    mentees: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }]
   },
   { timestamps: true }
 );

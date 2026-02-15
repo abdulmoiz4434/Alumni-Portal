@@ -31,7 +31,6 @@ const jobSchema = new mongoose.Schema(
       required: [true, "Please provide job description"],
       trim: true
     },
-    // This helps your frontend "Category" filter (Jobs vs Internships)
     category: {
       type: String,
       enum: ["job", "internship"],
@@ -43,7 +42,6 @@ const jobSchema = new mongoose.Schema(
       enum: ["full-time", "part-time", "internship", "remote"],
       required: [true, "Please provide job type"]
     },
-    // Added for your card-footer salary display
     salary: {
       type: String,
       trim: true

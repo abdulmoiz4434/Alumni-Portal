@@ -1,72 +1,94 @@
 const Event = require("../models/Event");
 const Job = require("../models/Job");
-const Mentorship = require("../models/Mentorship");
+const Message = require("../models/Message");
 const messageService = require("../services/messageService");
-const User = require("../models/User");
 const Alumni = require("../models/Alumni");
 const Student = require("../models/Student");
+const User = require("../models/User");
 
-// Get aggregated dashboard statistics
 const getDashboardStats = async (req, res) => {
     try {
         const userId = req.user._id;
-        const userRole = req.user.role;
 
-        // Fetch all data in parallel for better performance
+        const now = new Date();
+        const oneWeekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+        const oneMonthAgo = new Date(now - 30 * 24 * 60 * 60 * 1000);
+
+        const adminUsers = await User.find({ role: 'admin' }).distinct('_id');
+
         const [
-            totalEvents,
             upcomingEvents,
+            upcomingEventsThisWeek,
             totalJobs,
             recentJobs,
-            allMentorships,
-            userConversations,
             totalAlumni,
             totalStudents,
-            recentAlumni,
+            recentUsers,
+            usersWithProfileUpdates,
+            usersWhoPostedJobs,
+            usersWhoCreatedEvents,
+            usersWhoSentMessages,
         ] = await Promise.all([
-            Event.countDocuments(),
-            Event.countDocuments({ date: { $gte: new Date() } }),
+            Event.countDocuments({ date: { $gte: now } }),
+            Event.countDocuments({ 
+                createdAt: { $gte: oneWeekAgo },
+                date: { $gte: now } 
+            }),
             Job.countDocuments(),
-            Job.countDocuments({ createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } }),
-            Mentorship.find(),
-            messageService.getConversationsForUser(userId),
+            Job.countDocuments({ createdAt: { $gte: oneWeekAgo } }),
             Alumni.countDocuments(),
             Student.countDocuments(),
-            Alumni.countDocuments({ createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } }),
+            User.countDocuments({
+                createdAt: { $gte: oneMonthAgo },
+                role: { $ne: 'admin' }
+            }),
+                    
+            User.find({ 
+                updatedAt: { $gte: oneMonthAgo },
+                _id: { $nin: adminUsers }
+            }).distinct('_id'),
+            
+            Job.find({ 
+                createdAt: { $gte: oneMonthAgo },
+                postedBy: { $nin: adminUsers }
+            }).distinct('postedBy'),
+            
+            Event.find({ 
+                createdAt: { $gte: oneMonthAgo },
+                createdBy: { $nin: adminUsers }
+            }).distinct('createdBy'),
+            
+            Message.find({ 
+                createdAt: { $gte: oneMonthAgo },
+                senderId: { $nin: adminUsers }
+            }).distinct('senderId'),
         ]);
 
-        // Calculate mentorship requests based on user role
-        let mentorshipRequests = 0;
-        if (userRole === "alumni") {
-            // For alumni, count mentorships where they are the mentor and status is pending
-            mentorshipRequests = allMentorships.filter(
-                (m) => m.mentor?.toString() === userId.toString() && m.status === "pending"
-            ).length;
-        } else if (userRole === "student") {
-            // For students, count their active mentorships
-            mentorshipRequests = allMentorships.filter(
-                (m) => m.student?.toString() === userId.toString() && m.status === "active"
-            ).length;
-        }
-
-        // Calculate unread messages (simplified - count all conversations for now)
-        const unreadMessages = userConversations.length;
-
-        // Calculate total users
         const totalUsers = totalAlumni + totalStudents;
 
-        // Calculate engagement rate (simplified formula)
-        const activeUsers = recentAlumni;
-        const engagementRate = totalAlumni > 0 ? Math.round((activeUsers / totalAlumni) * 100) : 0;
+        const allActiveUserIds = [
+            ...usersWithProfileUpdates,
+            ...usersWhoPostedJobs,
+            ...usersWhoCreatedEvents,
+            ...usersWhoSentMessages
+        ];
+        
+        const uniqueActiveUsers = new Set(
+            allActiveUserIds.map(id => id.toString())
+        );
+        
+        const activeUsersCount = uniqueActiveUsers.size;
+        
+        const engagementRate = totalUsers > 0 
+            ? Math.round((activeUsersCount / totalUsers) * 100) 
+            : 0;
 
-        // Prepare response
         const stats = {
             upcomingEvents: upcomingEvents,
+            upcomingEventsThisWeek: upcomingEventsThisWeek,
             jobOpenings: totalJobs,
-            mentorshipRequests: mentorshipRequests,
-            unreadMessages: unreadMessages,
             totalAlumni: totalUsers,
-            newThisMonth: recentAlumni,
+            newThisMonth: recentUsers,
             engagementRate: engagementRate,
             recentJobsCount: recentJobs,
         };
@@ -85,48 +107,22 @@ const getDashboardStats = async (req, res) => {
     }
 };
 
-// Get dashboard data (events, jobs, mentorships)
 const getDashboardData = async (req, res) => {
     try {
-        const userId = req.user._id;
-        const userRole = req.user.role;
-
-        // Fetch upcoming events (next 3)
         const upcomingEvents = await Event.find({ date: { $gte: new Date() } })
             .sort({ date: 1 })
             .limit(3)
-            .select("title date time location attendees type");
-
-        // Fetch recent jobs (last 3)
+            .select("title date time venue capacity category");
         const recentJobs = await Job.find()
             .sort({ createdAt: -1 })
             .limit(3)
-            .select("title company location jobType salary postedDate");
-
-        // Fetch active mentorships for the user
-        let activeMentorships = [];
-        if (userRole === "student") {
-            activeMentorships = await Mentorship.find({
-                student: userId,
-                status: "active",
-            })
-                .populate("mentor", "fullName email role")
-                .limit(2);
-        } else if (userRole === "alumni") {
-            activeMentorships = await Mentorship.find({
-                mentor: userId,
-                status: "active",
-            })
-                .populate("student", "fullName email role")
-                .limit(2);
-        }
+            .select("title company location category salary createdAt");
 
         res.status(200).json({
             success: true,
             data: {
                 upcomingEvents,
                 recentJobs,
-                activeMentorships,
             },
         });
     } catch (error) {

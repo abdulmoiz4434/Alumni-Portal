@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User, Calendar, Trash2, Plus, Send, CheckCircle } from "lucide-react";
+import { User, Calendar, Trash2, Plus, Send, CheckCircle, Users } from "lucide-react";
 import API from "../../../api/axios";
 import "./Mentorship.css";
 
@@ -15,10 +15,11 @@ export default function Mentorship() {
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
   
-  // Application State
+  // Application State - UPDATED to track by alumnus ID instead of mentorship ID
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [applyMessage, setApplyMessage] = useState("");
-  const [sentApplications, setSentApplications] = useState([]);
+  const [pendingApplications, setPendingApplications] = useState([]); // Alumnus IDs with pending apps
+  const [acceptedMentors, setAcceptedMentors] = useState([]); // Alumnus IDs who accepted
 
   const [newMentorshipForm, setNewMentorshipForm] = useState({
     title: "",
@@ -31,6 +32,7 @@ export default function Mentorship() {
   useEffect(() => {
     fetchUserProfile();
     fetchMentorships();
+    fetchMentorshipStatus(); // ADD THIS
   }, []);
 
   const fetchUserProfile = async () => {
@@ -58,7 +60,19 @@ export default function Mentorship() {
     }
   };
 
-  // NEW: Handle sending the mentorship application
+  // NEW: Fetch mentorship application status
+  const fetchMentorshipStatus = async () => {
+    try {
+      const res = await API.get("/mentorship/status");
+      const { pending, accepted } = res.data.data;
+      setPendingApplications(pending || []);
+      setAcceptedMentors(accepted || []);
+    } catch (err) {
+      console.error("Error fetching mentorship status:", err);
+    }
+  };
+
+  // UPDATED: Handle sending the mentorship application
   const handleApplySubmit = async () => {
     if (!applyMessage.trim()) return alert("Please enter a message for the mentor.");
 
@@ -69,7 +83,7 @@ export default function Mentorship() {
       });
 
       if (res.data.success) {
-        setSentApplications([...sentApplications, selectedMentor._id]);
+        setPendingApplications([...pendingApplications, selectedMentor.postedBy._id]);
         alert("Application sent! The mentor will be notified.");
         setShowApplyModal(false);
         setApplyMessage("");
@@ -176,7 +190,10 @@ export default function Mentorship() {
 
         <div className="opportunities-grid">
           {filteredMentorships.map((mentorship) => {
-            const isApplied = sentApplications.includes(mentorship._id);
+            const alumnusId = mentorship.postedBy._id || mentorship.postedBy;
+            const isApplied = pendingApplications.includes(alumnusId);
+            const isAccepted = acceptedMentors.includes(alumnusId);
+            
             return (
               <div key={mentorship._id} className="opportunity-card">
                 {canDeleteMentorship(mentorship.postedBy) && (
@@ -210,18 +227,29 @@ export default function Mentorship() {
 
                   <div className="card-actions">
                     {userRole === "student" && (
-                      <button
-                        className={`btn-primary ${isApplied ? "applied" : ""}`}
-                        disabled={isApplied}
-                        onClick={() => {
-                          setSelectedMentor(mentorship);
-                          setShowApplyModal(true);
-                        }}
-                      >
-                        {isApplied ? <><CheckCircle size={18} /> Applied</> : "Apply for Mentorship"}
-                      </button>
+                      <>
+                        {isAccepted ? (
+                          <button className="btn-primary mentorship-accepted" disabled>
+                            <Users size={18} /> Mentorship Active
+                          </button>
+                        ) : isApplied ? (
+                          <button className="btn-primary applied" disabled>
+                            <CheckCircle size={18} /> Applied
+                          </button>
+                        ) : (
+                          <button
+                            className="btn-primary"
+                            onClick={() => {
+                              setSelectedMentor(mentorship);
+                              setShowApplyModal(true);
+                            }}
+                          >
+                            Apply for Mentorship
+                          </button>
+                        )}
+                      </>
                     )}
-                    {userRole === "alumni" && userId === (mentorship.postedBy._id || mentorship.postedBy) && (
+                    {userRole === "alumni" && userId === alumnusId && (
                       <span className="own-post-tag">Your Offering</span>
                     )}
                   </div>
@@ -232,7 +260,7 @@ export default function Mentorship() {
         </div>
       </div>
 
-      {/* NEW: Application Modal */}
+      {/* Application Modal */}
       {showApplyModal && (
         <div className="modal-overlay" onClick={() => setShowApplyModal(false)}>
           <div className="event-modal" onClick={(e) => e.stopPropagation()}>

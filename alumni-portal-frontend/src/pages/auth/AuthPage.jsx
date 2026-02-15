@@ -3,6 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/auth";
 import API from "../../api/axios";
+import * as socketService from "../../services/socketService"; // ADD THIS IMPORT
 import "./AuthPage.css";
 
 export default function AuthPage() {
@@ -79,17 +80,23 @@ export default function AuthPage() {
 
   // --- CONNECTED HANDLERS ---
 
- const handleStudentLogin = async (e) => {
+  const handleStudentLogin = async (e) => {
     e.preventDefault();
     if (!studentEmail || !studentPassword) return alert("Missing fields");
 
     try {
       setStudentLoginError(false);
+      
+      // DISCONNECT OLD SOCKET BEFORE LOGIN
+      socketService.disconnect();
+      
       const res = await loginUser(studentEmail, studentPassword, "student");
       const { token, user } = res.data.data;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      navigate("/modules", { replace: true });
+      
+      // Use window.location.href for full page reload (reconnects socket with new token)
+      window.location.href = "/modules";
     } catch (err) {
       console.error("Login Error:", err);
       setStudentLoginError(true);
@@ -102,6 +109,10 @@ export default function AuthPage() {
 
     try {
       setAlumniLoginError(false);
+      
+      // DISCONNECT OLD SOCKET BEFORE LOGIN
+      socketService.disconnect();
+      
       const res = await loginUser(alumniEmail, alumniPassword, "alumni");
       const { token, user } = res.data.data;
       localStorage.setItem("token", token);
@@ -122,6 +133,10 @@ export default function AuthPage() {
 
     try {
       setStudentPasswordMismatch(false);
+      
+      // DISCONNECT OLD SOCKET BEFORE REGISTRATION
+      socketService.disconnect();
+      
       const res = await API.post("/auth/register/student", {
         fullName: studentRegFullName,
         email: studentRegEmail,
@@ -151,6 +166,10 @@ export default function AuthPage() {
 
     try {
       setAlumniPasswordMismatch(false);
+      
+      // DISCONNECT OLD SOCKET BEFORE REGISTRATION
+      socketService.disconnect();
+      
       const res = await API.post("/auth/register/alumni", {
         fullName: alumniRegFullName,
         email: alumniRegEmail,

@@ -79,13 +79,14 @@
 
 /* Filters Section */
 .events-filters-section {
-  background-color: #c8ccb1;
+  background-color: #dff083;
   padding: 20px;
   border-radius: 12px;
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 20px;
+  margin-right: 10px;
 }
 
 .events-search-box {
@@ -104,8 +105,8 @@
 }
 
 .events-search-input {
-  width: 90%;
-  padding: 0.875rem 1rem 0.875rem 3rem;
+  width: 85%;
+  padding: 1rem 1rem 0.875rem 3rem;
   border: 2px solid #e2e8f0;
   border-radius: 10px;
   font-size: 1rem;
@@ -126,16 +127,18 @@
 }
 
 .filter-select {
-  padding: 12px 16px;
-  border: 2px solid #e9ecef;
+  padding: 0.875rem 2.5rem 0.875rem 1rem;
+  border: 2px solid #e2e8f0;
   border-radius: 10px;
-  font-size: 15px;
-  font-family: inherit;
-  background: #ffffff;
+  font-size: 1rem;
+  background: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #1a1a1a;
-  font-weight: 500;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
 }
 
 /* Grid Layout */
@@ -409,11 +412,12 @@
 }
 
 /* Admin Delete Button */
+/* Admin Delete Button */
 .event-delete-btn {
   position: absolute;
   top: 16px;
   right: 120px;
-  background: rgba(220, 53, 69, 0.9);
+  background: rgba(239, 68, 68, 0.9);
   color: white;
   border: none;
   border-radius: 50%;
@@ -425,10 +429,17 @@
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s ease;
+  opacity: 0;              /* ADD THIS */
+  visibility: hidden;      /* ADD THIS */
+}
+
+.event-card:hover .event-delete-btn {
+  opacity: 1;
+  visibility: visible;
 }
 
 .event-delete-btn:hover {
-  background: #dc3545;
+  background: #ef4444;
   transform: scale(1.15);
 }
 
