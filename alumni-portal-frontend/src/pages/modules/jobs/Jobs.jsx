@@ -209,7 +209,7 @@ export default function Jobs() {
                 <div className="card-body">
                   <div className="info-row">
                     <span className="info-item"><MapPin size={20} /> {item.location}</span>
-                    <span className="info-item"><Briefcase size={20} /> {item.jobType}</span>
+                    <span className="info-item"><Briefcase size={20} /> {item.category.charAt(0).toUpperCase() + item.category.slice(1)}</span>
                   </div>
                   <p className="description">{item.description}</p>
                   <div className="card-footer">

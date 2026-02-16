@@ -21,12 +21,59 @@ ChartJS.register(
   Legend
 );
 
+const GOLD_SHADES = [
+  'rgba(230, 187, 47, 0.9)',
+  'rgba(212, 170, 40, 0.9)',
+  'rgba(194, 153, 33, 0.9)',
+  'rgba(176, 136, 26, 0.9)',
+  'rgba(158, 119, 19, 0.9)',
+  'rgba(140, 102, 12, 0.9)',
+  'rgba(122, 85, 5, 0.9)',
+  'rgba(104, 68, 0, 0.9)',
+  'rgba(86, 51, 0, 0.9)',
+  'rgba(68, 34, 0, 0.9)',
+];
+
+const UsersIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
+const BriefcaseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  </svg>
+);
+
+const BuildingIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+    <path d="M9 22v-4h6v4" />
+    <path d="M8 6h.01" /><path d="M16 6h.01" />
+    <path d="M12 6h.01" /><path d="M12 10h.01" />
+    <path d="M12 14h.01" /><path d="M16 10h.01" />
+    <path d="M16 14h.01" /><path d="M8 10h.01" />
+    <path d="M8 14h.01" />
+  </svg>
+);
+
+const TrendingUpIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+    <polyline points="16 7 22 7 22 13" />
+  </svg>
+);
+
 const CareerInsights = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // INSIGHT-004: Automatically fetch/update insights on component load
     const fetchInsights = async () => {
       try {
         const res = await API.get('/careerInsights/career-data');
@@ -42,44 +89,91 @@ const CareerInsights = () => {
     fetchInsights();
   }, []);
 
-  if (loading) return <div className="insights-loader">Loading Career Data...</div>;
+  if (loading) {
+    return (
+      <div className="career-loader">
+        <div className="spinner" />
+        <p>Loading Career Data...</p>
+      </div>
+    );
+  }
 
-  // Formatting data for INSIGHT-001 (Job Titles)
+  // Job Titles Chart Data
   const jobTitleData = {
     labels: data?.jobTitles.map(item => item._id) || [],
     datasets: [{
       label: 'Number of Alumni',
       data: data?.jobTitles.map(item => item.count) || [],
-      backgroundColor: 'rgba(59, 130, 246, 0.6)',
-      borderColor: 'rgba(59, 130, 246, 1)',
+      backgroundColor: GOLD_SHADES,
+      borderColor: GOLD_SHADES.map(color => color.replace('0.9', '1')),
       borderWidth: 1,
+      borderRadius: 6,
     }]
   };
 
+  // Companies Chart Data
   const companyData = {
     labels: data?.companies.map(item => item._id) || [],
     datasets: [{
       label: 'Alumni Employed',
       data: data?.companies.map(item => item.count) || [],
-      backgroundColor: 'rgba(16, 185, 129, 0.6)',
-      borderColor: 'rgba(16, 185, 129, 1)',
+      backgroundColor: GOLD_SHADES,
+      borderColor: GOLD_SHADES.map(color => color.replace('0.9', '1')),
       borderWidth: 1,
+      borderRadius: 6,
     }]
   };
 
-  const options = {
+  const chartOptions = {
+    indexAxis: 'y', // Horizontal bars
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom' },
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: '#fff',
+        titleColor: '#1a1a2e',
+        bodyColor: '#6b7280',
+        borderColor: '#e0e0e0',
+        borderWidth: 1,
+        padding: 12,
+        displayColors: false,
+        callbacks: {
+          title: (context) => context[0].label,
+          label: (context) => `Count: ${context.parsed.x}`,
+        }
+      }
     },
     scales: {
-      y: { beginAtZero: true, ticks: { stepSize: 1 } }
+      x: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          color: '#6b7280',
+          font: { size: 12 }
+        },
+        grid: {
+          color: '#e0e0e0',
+          drawBorder: false,
+        }
+      },
+      y: {
+        ticks: {
+          color: '#6b7280',
+          font: { size: 12 }
+        },
+        grid: {
+          display: false,
+        }
+      }
     }
   };
 
   return (
     <div className="career-insights">
+      {/* Hero */}
       <div className="career-insights-hero">
         <div className="career-insights-hero-content">
           <h1 className="career-main-title">Career Insights</h1>
@@ -89,20 +183,50 @@ const CareerInsights = () => {
         </div>
       </div>
 
-      <div className="insights-grid">
-        {/* INSIGHT-001: Job Titles Chart */}
-        <div className="chart-container">
-          <h3>Common Job Titles</h3>
+      {/* Stats */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon"><UsersIcon /></div>
+          <div>
+            <p className="stat-label">Total Alumni</p>
+            <p className="stat-value">{data?.totalContributors?.toLocaleString()}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon"><BriefcaseIcon /></div>
+          <div>
+            <p className="stat-label">Unique Roles</p>
+            <p className="stat-value">{data?.jobTitles?.length}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon"><BuildingIcon /></div>
+          <div>
+            <p className="stat-label">Companies</p>
+            <p className="stat-value">{data?.companies?.length}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts */}
+      <div className="charts-grid">
+        <div className="chart-card">
+          <div className="chart-header">
+            <TrendingUpIcon />
+            <h3>Common Job Titles</h3>
+          </div>
           <div className="chart-box">
-            <Bar data={jobTitleData} options={options} />
+            <Bar data={jobTitleData} options={chartOptions} />
           </div>
         </div>
 
-        {/* INSIGHT-002: Top 10 Companies Chart */}
-        <div className="chart-container">
-          <h3>Top 10 Employers</h3>
+        <div className="chart-card">
+          <div className="chart-header">
+            <BuildingIcon />
+            <h3>Top 10 Employers</h3>
+          </div>
           <div className="chart-box">
-            <Bar data={companyData} options={options} />
+            <Bar data={companyData} options={chartOptions} />
           </div>
         </div>
       </div>

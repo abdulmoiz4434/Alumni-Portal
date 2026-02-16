@@ -11,9 +11,10 @@ import CareerInsights from "./pages/modules/careerInsights/CareerInsights";
 import Directory from "./pages/modules/directory/Directory";
 import Messaging from "./pages/modules/messaging/Messaging";
 import AdminAuth from "./pages/admin/Adminauth";
+import Notifications from "./pages/modules/notifications/Notifications";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
-
   return (
     <Router>
       <Routes>
@@ -21,17 +22,38 @@ function App() {
         <Route path="/admin" element={<AdminAuth />} />
         <Route path="/modules" element={<Layout />}>
           <Route index element={<Dashboard />} />
-          <Route path="profile" element={<Profile />} />
+          
+          {/* PROTECTED: Only students and alumni can access Profile */}
+          <Route 
+            path="profile" 
+            element={
+              <ProtectedRoute allowedRoles={["student", "alumni"]}>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* PROTECTED: Only students and alumni can access Messaging */}
+          <Route 
+            path="messaging/:conversationId?" 
+            element={
+              <ProtectedRoute allowedRoles={["student", "alumni"]}>
+                <Messaging />
+              </ProtectedRoute>
+            } 
+          />
+          
           <Route path="events" element={<Events />} />
           <Route path="jobs" element={<Jobs />} />
           <Route path="mentorship" element={<Mentorship />} />
           <Route path="stories" element={<SuccessStories />} />
           <Route path="careerInsights" element={<CareerInsights />} />
           <Route path="directory" element={<Directory />} />
-          <Route path="messaging/:conversationId?" element={<Messaging />} />
+          <Route path="notifications" element={<Notifications />} />
         </Route>
       </Routes>
     </Router>
   );
 }
+
 export default App;

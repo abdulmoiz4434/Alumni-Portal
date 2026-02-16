@@ -47,24 +47,30 @@ function handleConnection(socket) {
         socket.emit("message:error", { message: "Missing conversationId or content" });
         return;
       }
+      
       const senderId = socket.user._id;
       const conversation = await messageService.getConversationById(conversationId);
+      
       if (!conversation) {
         socket.emit("message:error", { message: "Conversation not found" });
         return;
       }
+      
       const isParticipant = conversation.participants.some(
         (p) => (p._id || p).toString() === socket.userId
       );
+      
       if (!isParticipant) {
         socket.emit("message:error", { message: "Not a participant" });
         return;
       }
+      
       const message = await messageService.createMessage(
         conversationId,
         senderId,
         content.trim()
       );
+      
       const payload = await toMessagePayload(message);
       const room = CONVERSATION_ROOM_PREFIX + conversationId;
       socket.server.to(room).emit("message:new", payload);

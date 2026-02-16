@@ -1,50 +1,58 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 
-const profilePicturesDir = './uploads/profile-pictures';
-const eventsDir = './uploads/events';
-
-[profilePicturesDir, eventsDir].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+// Profile Pictures Storage
+const profilePictureStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'alumni-portal/profile-pictures',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+    transformation: [{ width: 500, height: 500, crop: 'limit' }]
   }
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    let uploadPath = profilePicturesDir;
-    
-    if (req.baseUrl.includes('/events') || file.fieldname === 'image') {
-      uploadPath = eventsDir;
-    }
-    
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    const uniqueName = `${req.user.id}-${Date.now()}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
+// Events Images Storage
+const eventImageStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'alumni-portal/events',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+    transformation: [{ width: 1200, height: 800, crop: 'limit' }]
   }
 });
 
+// File filter
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
 
-  if (mimetype && extname) {
-    return cb(null, true);
+  if (mimetype) {
+    cb(null, true);
   } else {
     cb(new Error('Only image files are allowed (jpeg, jpg, png, gif, webp)'));
   }
 };
 
-const upload = multer({
-  storage: storage,
+// Profile picture upload
+const uploadProfilePicture = multer({
+  storage: profilePictureStorage,
   limits: {
-    fileSize: 5 * 1024 * 1024
+    fileSize: 5 * 1024 * 1024 // 5MB
   },
   fileFilter: fileFilter
 });
 
-module.exports = upload;
+// Event image upload
+const uploadEventImage = multer({
+  storage: eventImageStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB
+  },
+  fileFilter: fileFilter
+});
+
+module.exports = {
+  uploadProfilePicture,
+  uploadEventImage
+};

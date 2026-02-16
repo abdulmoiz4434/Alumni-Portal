@@ -9,10 +9,10 @@ import {
   FaUserGraduate,
   FaUserTie,
   FaGlobe,
-  FaTrashAlt,
   FaTimesCircle,
   FaPlus,
 } from "react-icons/fa";
+import { Trash2 } from "lucide-react";
 import API from "../../../api/axios";
 import "./Events.css";
 
@@ -286,7 +286,7 @@ export default function Events() {
                       onClick={() => handleDeleteEvent(event._id)}
                       title="Delete Event"
                     >
-                      <FaTrashAlt />
+                      <Trash2 />
                     </button>
                   )}
 

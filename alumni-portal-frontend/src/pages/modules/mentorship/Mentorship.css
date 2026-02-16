@@ -46,7 +46,7 @@
 
 /* Search and Filter Section */
 .search-filter-section {
-  background-color: #c8ccb1;
+  background-color: #dff083;
   padding: 20px;
   border-radius: 12px;
   display: flex;
@@ -99,6 +99,9 @@
   transition: all 0.3s ease;
   outline: none;
   appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
 }
 
 .filter-select:hover {
@@ -639,4 +642,39 @@
     padding: 10px 20px;
     font-size: 0.9rem;
   }
+}
+
+.apply-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.btn-primary.applied {
+  background-color: #27ae60;
+  cursor: default;
+}
+
+.own-post-tag {
+  color: #666;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Mentorship accepted button */
+.btn-primary.mentorship-accepted {
+  background: #10b981;
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.btn-primary.applied {
+  background: #94a3b8;
+  color: white;
+  cursor: not-allowed;
 }

@@ -67,13 +67,13 @@ const alumniSchema = new mongoose.Schema(
     },
     linkedin: { 
       type: String, 
-      default: "" }
+      default: "" 
+    }
   },
   { timestamps: true }
 );
 
 alumniSchema.index({ graduationYear: -1 });
-alumniSchema.index({ regNo: 1 });
 alumniSchema.index({ jobTitle: 1 });
 alumniSchema.index({ company: 1 });
 

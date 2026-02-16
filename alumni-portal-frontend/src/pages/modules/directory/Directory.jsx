@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
-import { startConversation } from "../../../api/messages";
+import { Search, UserPlus, CheckCircle, MessageCircle, Trash2 } from "lucide-react";
 import API from "../../../api/axios";
 import "./Directory.css";
 
@@ -10,60 +8,82 @@ export default function Directory() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
-  const navigate = useNavigate();
+  const [sentRequests, setSentRequests] = useState([]);
+  const [connectedUsers, setConnectedUsers] = useState([]);
 
-  // Get current user info
   const currentUser = JSON.parse(localStorage.getItem("user"));
-  const currentUserRole = currentUser?.role;
   const currentUserId = currentUser?._id || currentUser?.id;
+  const isAdmin = currentUser?.role === "admin";
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        const res = await API.get("/auth/all-users");
-        setUsers(res.data.data || []);
+        const usersRes = await API.get("/auth/all-users");
+        const filteredUsers = (usersRes.data.data || []).filter(user => user.role !== "admin");
+        setUsers(filteredUsers);
+
+        // Only fetch connection status for non-admin users
+        if (!isAdmin) {
+          const statusRes = await API.get("/connections/status");
+          const { pending, connected } = statusRes.data.data;
+          setSentRequests(pending || []);
+          setConnectedUsers(connected || []);
+        }
       } catch (err) {
-        console.error("Error fetching users:", err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchUsers();
-  }, []);
+    fetchData();
+  }, [isAdmin]);
 
-  const handleStartChat = async (targetUser) => {
-    if (targetUser.role === "admin" && currentUserRole !== "admin") {
-      alert("Unauthorized: You cannot message the administrative account.");
-      return;
-    }
-
+  const handleConnectRequest = async (targetUserId) => {
     try {
-      // Start conversation via API
-      const res = await startConversation(targetUser._id);
+      const targetUser = users.find(u => u._id === targetUserId);
+      if (targetUser?.role === "admin") {
+        alert("Cannot connect with admin users.");
+        return;
+      }
 
-      const conversation = res.data.data;
+      const res = await API.post("/connections/send", { 
+        receiverId: targetUserId 
+      });
 
-      if (res.data.success && (conversation?.id || conversation?._id)) {
-        navigate(`/modules/messaging/${conversation.id || conversation._id}`);
-      } else {
-        console.error("Unexpected startConversation response:", res.data);
-        alert("Could not start conversation");
+      if (res.data.success) {
+        setSentRequests((prev) => [...prev, targetUserId]);
+        alert("Connection request sent successfully!");
       }
     } catch (err) {
-      console.error("Error starting chat:", err);
-      alert("Something went wrong. Please try again.");
+      console.error("Error sending request:", err);
+      alert(err.response?.data?.message || "Failed to send request. It might already be pending.");
+    }
+  };
+
+  const handleDeleteUser = async (userId, userName) => {
+    if (window.confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+      try {
+        const res = await API.delete(`/auth/delete-user/${userId}`);
+        
+        if (res.data.success) {
+          setUsers((prev) => prev.filter(user => user._id !== userId));
+          alert("User deleted successfully!");
+        }
+      } catch (err) {
+        console.error("Error deleting user:", err);
+        alert(err.response?.data?.message || "Failed to delete user.");
+      }
     }
   };
 
   const filteredUsers = users.filter((user) => {
     const isSelf = user._id === currentUserId;
-    const isAdminVisible = currentUserRole === "admin" || user.role !== "admin";
+    if (isSelf) return false;
 
-    if (isSelf || !isAdminVisible) return false;
+    if (user.role === "admin") return false;
 
     const matchesFilter = filter === "all" || user.role === filter;
     const search = searchTerm.toLowerCase();
-
     const matchesSearch =
       user.fullName?.toLowerCase().includes(search) ||
       (user.department && user.department.toLowerCase().includes(search));
@@ -71,8 +91,7 @@ export default function Directory() {
     return matchesFilter && matchesSearch;
   });
 
-  if (loading)
-    return <div className="directory-loader">Loading community...</div>;
+  if (loading) return <div className="directory-loader">Loading community...</div>;
 
   return (
     <div className="directory">
@@ -100,98 +119,90 @@ export default function Directory() {
             </div>
 
             <div className="filters">
-              <button
-                className={`filter-btn ${filter === "all" ? "active" : ""}`}
-                onClick={() => setFilter("all")}
-              >
-                All Members
-              </button>
-              <button
-                className={`filter-btn ${filter === "alumni" ? "active" : ""}`}
-                onClick={() => setFilter("alumni")}
-              >
-                Alumni
-              </button>
-              <button
-                className={`filter-btn ${filter === "student" ? "active" : ""}`}
-                onClick={() => setFilter("student")}
-              >
-                Students
-              </button>
+              {["all", "alumni", "student"].map((type) => (
+                <button
+                  key={type}
+                  className={`filter-btn ${filter === type ? "active" : ""}`}
+                  onClick={() => setFilter(type)}
+                >
+                  {type === "all" ? "All Members" : type.charAt(0).toUpperCase() + type.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
         <div className="results-info">
-          <p>
-            {filteredUsers.length} {filteredUsers.length === 1 ? "member" : "members"} found
-          </p>
+          <p>{filteredUsers.length} {filteredUsers.length === 1 ? "member" : "members"} found</p>
         </div>
 
         <div className="directory-grid">
           {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <article key={user._id} className="directory-card">
-                <div className="directory-card-header">
-                  <div className="directory-avatar-wrapper">
-                    {user.profilePicture ? (
-                      <img
-                        src={user.profilePicture}
-                        alt={user.fullName}
-                        className="directory-avatar"
-                      />
-                    ) : (
-                      <div className="directory-avatar-placeholder">
-                        {user.fullName.charAt(0).toUpperCase()}
-                      </div>
+            filteredUsers.map((user) => {
+              const isRequestSent = sentRequests.includes(user._id);
+              const isConnected = connectedUsers.includes(user._id);
+
+              return (
+                <article key={user._id} className="directory-card">
+                  {/* ADMIN DELETE BUTTON */}
+                  {isAdmin && (
+                    <button 
+                      className="directory-delete-btn" 
+                      onClick={() => handleDeleteUser(user._id, user.fullName)}
+                      title="Delete user"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
+
+                  <div className="directory-card-header">
+                    <div className="directory-avatar-wrapper">
+                      {user.profilePicture ? (
+                        <img src={user.profilePicture} alt={user.fullName} className="directory-avatar" />
+                      ) : (
+                        <div className="directory-avatar-placeholder">
+                          {user.fullName.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <span className={`directory-role-badge ${user.role}`}>{user.role}</span>
+                  </div>
+
+                  <div className="directory-card-body">
+                    <h3 className="directory-name">{user.fullName}</h3>
+                    <p className="directory-dept">{user.department || "Department not listed"}</p>
+                  </div>
+
+                  <div className="directory-card-footer">
+                    {/* HIDE CONNECT BUTTON FOR ADMIN */}
+                    {!isAdmin && (
+                      <>
+                        {isConnected ? (
+                          <button className="directory-message-btn connected" disabled>
+                            <MessageCircle size={18} /> Connected
+                          </button>
+                        ) : isRequestSent ? (
+                          <button className="directory-message-btn sent" disabled>
+                            <CheckCircle size={18} /> Sent
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleConnectRequest(user._id)}
+                            className="directory-message-btn"
+                          >
+                            <UserPlus size={18} /> Connect
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
-                  <span className={`directory-role-badge ${user.role}`}>
-                    {user.role}
-                  </span>
-                </div>
-
-                <div className="directory-card-body">
-                  <h3 className="directory-name">{user.fullName}</h3>
-                  <p className="directory-dept">
-                    {user.department || "Department not listed"}
-                  </p>
-
-                  {user.role === "alumni" && user.graduationYear && (
-                    <p className="directory-meta">Class of {user.graduationYear}</p>
-                  )}
-                  {user.role === "student" && (user.batch || user.semester) && (
-                    <p className="directory-meta">Batch {user.batch || user.semester}</p>
-                  )}
-                </div>
-
-                <div className="directory-card-footer">
-                  <button
-                    onClick={() => handleStartChat(user)}
-                    className="directory-message-btn"
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                    Connect
-                  </button>
-                </div>
-              </article>
-            ))
+                </article>
+              );
+            })
           ) : (
             <div className="no-results">
               <div className="no-results-icon">🔍</div>
               <h3>No members found</h3>
-              <p>Try adjusting your search or filter criteria</p>
             </div>
           )}
         </div>

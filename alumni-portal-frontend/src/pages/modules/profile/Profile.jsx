@@ -267,7 +267,6 @@ export default function Profile() {
     const fetchProfile = async () => {
       try {
         const res = await API.get("/auth/me");
-        console.log("Profile Response Data:", res.data);
         const payload = res.data.data;
 
         if (!payload) {
