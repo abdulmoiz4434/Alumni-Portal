@@ -1,0 +1,22 @@
+{
+  "name": "alumni-portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "",
+    "start": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghulamahmad-work/Alumni-Portal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ghulamahmad-work/Alumni-Portal/issues"
+  },
+  "homepage": "https://github.com/ghulamahmad-work/Alumni-Portal#readme"
+}
