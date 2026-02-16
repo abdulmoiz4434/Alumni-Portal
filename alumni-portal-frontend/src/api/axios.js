@@ -1,13 +1,8 @@
 import axios from "axios";
 
-const getBaseURL = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  if (window.location.hostname === "localhost") return "http://localhost:5000/api";
-  return "https://alumni-portal-backend-two.vercel.app/api";
-};
-
 const API = axios.create({
-  baseURL: getBaseURL(),
+  baseURL: import.meta.env.MODE === "development" ? "http://localhost:5000/api" : "/api",
+  withCredentials: true,
 });
 
 API.interceptors.request.use((config) => {

@@ -1,0 +1,22 @@
+{
+  "name": "alumni-portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix alumni-portal-backend && npm install --prefix alumni-portal-frontend && npm run build --prefix alumni-portal-frontend",
+    "start": "npm run start --prefix alumni-portal-backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghulamahmad-work/Alumni-Portal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ghulamahmad-work/Alumni-Portal/issues"
+  },
+  "homepage": "https://github.com/ghulamahmad-work/Alumni-Portal#readme"
+}

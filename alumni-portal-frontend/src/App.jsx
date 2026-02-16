@@ -23,7 +23,6 @@ function App() {
         <Route path="/modules" element={<Layout />}>
           <Route index element={<Dashboard />} />
           
-          {/* PROTECTED: Only students and alumni can access Profile */}
           <Route 
             path="profile" 
             element={
@@ -32,8 +31,7 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          
-          {/* PROTECTED: Only students and alumni can access Messaging */}
+
           <Route 
             path="messaging/:conversationId?" 
             element={
