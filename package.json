@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "",
-    "start": ""
+    "build": "npm install --prefix alumni-portal-backend && npm install --prefix alumni-portal-frontend && npm run build --prefix alumni-portal-frontend",
+    "start": "npm run start --prefix alumni-portal-backend"
   },
   "repository": {
     "type": "git",
