@@ -36,13 +36,10 @@ export default function Messaging() {
     if (socket.connected) setSocketConnected(true);
 
     return () => {
-      // FIX: Only remove listeners, DON'T disconnect socket
-      // Socket should stay connected across the entire app session
       if (socket) {
         socket.off("connect", onConnect);
         socket.off("disconnect", onDisconnect);
       }
-      // REMOVED: socketService.disconnect(); <-- This was causing premature disconnection
     };
   }, []);
 
@@ -157,16 +154,15 @@ export default function Messaging() {
 
     socketService.sendMessage(conversationId, newMessage);
     setNewMessage("");
-    // Message will appear via message:new from server
   };
 
   return (
     <div className="messaging">
-      <div className="chat-layout">
+      {/* chat-open class drives the slide panel on mobile */}
+      <div className={`chat-layout ${conversationId ? "chat-open" : ""}`}>
         <div className="chat-sidebar">
           <div className="sidebar-header">
             <h3>Messages</h3>
-
           </div>
 
           <div className="conv-list">
@@ -208,13 +204,22 @@ export default function Messaging() {
 
         <div className="chat-main">
           {loading ? (
-        <div className="mentorship-loading">
-          <Loader className="loading-spinner" />
-          <p>Loading chat...</p>
-        </div>
+            <div className="mentorship-loading">
+              <Loader className="loading-spinner" />
+              <p>Loading chat...</p>
+            </div>
           ) : conversationId ? (
             <>
               <div className="chat-header">
+                {/* Back button — only visible on mobile via CSS */}
+                <button
+                  className="back-btn"
+                  onClick={() => navigate("/modules/messaging")}
+                  aria-label="Back to conversations"
+                >
+                  ←
+                </button>
+
                 {activeChatUser ? (
                   <div className="header-content">
                     <div className="header-avatar">

@@ -2,10 +2,11 @@
   background: #f9fafb;
   min-height: 100vh;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-   padding: 24px 32px;
+  padding: 24px 32px;
   margin: 0;
   box-sizing: border-box;
 }
+
 .mentorship-loading,
 .mentorship-error {
   display: flex;
@@ -15,12 +16,14 @@
   min-height: 60vh;
   gap: 1rem;
 }
+
 .loading-spinner {
   width: 48px;
   height: 48px;
-  color:#d4af37;
+  color: #d4af37;
   animation: spin 1s linear infinite;
 }
+
 /* Header Section */
 .mentorship-hero {
   background: #1a1a1a;
@@ -56,7 +59,7 @@
   max-width: 1200px;
   margin: 0 auto;
   animation: fadeInUp 0.6s ease-out 0.5s both;
-  padding: 24px 24px ;
+  padding: 24px 24px;
 }
 
 /* Search and Filter Section */
@@ -69,8 +72,11 @@
   flex-wrap: wrap;
 }
 
+/* FIXED: added flex: 1 and position: relative */
 .search-box {
-  min-width: 250px;
+  flex: 1;
+  min-width: 200px;
+  position: relative;
 }
 
 .search-icon {
@@ -82,8 +88,8 @@
 }
 
 .search-input {
-   width: 100%;
-  box-sizing: border-box; 
+  width: 100%;
+  box-sizing: border-box;
   padding: 1rem 1rem 0.875rem 3rem;
   border: 2px solid #e2e8f0;
   border-radius: 10px;
@@ -135,7 +141,7 @@
   margin-bottom: 3rem;
 }
 
-/* Opportunity Card */
+/* Opportunity Card — FIXED: added flex-direction: column */
 .opportunity-card {
   background: white;
   border-radius: 16px;
@@ -144,6 +150,7 @@
   transition: all 0.3s ease;
   border: 2px solid transparent;
   display: flex;
+  flex-direction: column;
   position: relative;
 }
 
@@ -153,16 +160,18 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Card Header */
+/* Card Header — FIXED: flex-direction: column */
 .card-header {
   padding: 1rem 1rem 0.75rem;
   display: flex;
+  flex-direction: column;
   align-items: stretch;
 }
 
 .card-meta {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .badge {
@@ -174,6 +183,8 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+  background: #e6bb2f;
+  color: #090808;
 }
 
 .mentorship-posted-date {
@@ -182,11 +193,6 @@
   font-size: 0.75rem;
   color: #94a3b8;
   white-space: nowrap;
-}
-
-.badge {
-  background: #e6bb2f;
-  color: #090808;
 }
 
 .job-title {
@@ -259,15 +265,13 @@
 }
 
 .mentorship-skill-tag {
-  background: #e6bb2f;        /* yellow */
-  color: #705656; 
+  background: #e6bb2f;
+  color: #705656;
   padding: 6px 14px;
   border-radius: 12px;
   font-size: 0.80rem;
   font-weight: 500;
 }
-
-
 
 .card-footer {
   display: flex;
@@ -353,7 +357,7 @@
   font-size: 1rem;
 }
 
-/* --- HERO BUTTON (Offer Mentorship) --- */
+/* Hero Button */
 .create-mentorship-btn-hero {
   margin-top: 24px;
   padding: 12px 24px;
@@ -377,7 +381,7 @@
   box-shadow: 0 4px 12px rgba(212, 170, 40, 0.3);
 }
 
-/* --- MODAL OVERLAY & STRUCTURE --- */
+/* Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -418,7 +422,7 @@
   color: #6c757d;
 }
 
-/* --- FORM GRID & GROUPS --- */
+/* Form */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -454,7 +458,7 @@
   box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.1);
 }
 
-/* --- MODAL FOOTER & BUTTONS --- */
+/* Modal Footer */
 .modal-footer {
   margin-top: 30px;
   display: flex;
@@ -511,8 +515,6 @@
   z-index: 10;
 }
 
-
-
 .mentorship-delete-btn:hover {
   background: #ef4444;
   color: white;
@@ -538,33 +540,58 @@
   animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .events-loader-container p {
   color: #6b7280;
   font-size: 1rem;
 }
 
-/* --- KEYFRAMES --- */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.apply-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
+/* Mentorship status buttons */
+.btn-primary.mentorship-accepted {
+  background: #d7c15e;
+  color: rgb(16, 12, 12);
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.btn-primary.applied {
+  background: #1d1f23;
+  color: white;
+  cursor: not-allowed;
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .mentorship {
+    padding: 20px 24px;
+  }
+
+  .main-title {
+    font-size: 2.4rem;
+  }
+
   .opportunities-grid {
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -573,8 +600,8 @@
     padding: 16px;
   }
 
-  .mentorship-container {
-    padding: 1rem;
+  .mentorship-hero {
+    padding: 24px 16px;
   }
 
   .main-title {
@@ -585,12 +612,17 @@
     font-size: 1rem;
   }
 
-  .mentorship--section {
+  .mentorship-container {
+    padding: 16px 0;
+  }
+
+  .mentorship-search-filter-section {
     flex-direction: column;
   }
 
   .search-box {
-    min-width: 100%;
+    min-width: unset;
+    width: 100%;
   }
 
   .filters {
@@ -602,8 +634,10 @@
     width: 100%;
   }
 
+  /* 2 columns on tablet portrait */
   .opportunities-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 
   .card-actions {
@@ -636,40 +670,38 @@
 }
 
 @media (max-width: 480px) {
+  .mentorship {
+    padding: 12px;
+  }
+
+  .mentorship-hero {
+    padding: 20px 12px;
+  }
+
   .main-title {
     font-size: 1.75rem;
   }
 
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .mentorship-container {
+    padding: 12px 0;
+  }
+
+  /* Single column on mobile */
+  .opportunities-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
   .job-title {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
 
   .create-mentorship-btn-hero {
     padding: 10px 20px;
     font-size: 0.9rem;
   }
-}
-
-.apply-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-top: 10px;
-  font-family: inherit;
-  resize: vertical;
-}
-
-/* Mentorship accepted button */
-.btn-primary.mentorship-accepted {
-  background: #d7c15e;
-  color: rgb(16, 12, 12);
-  cursor: not-allowed;
-  opacity: 0.9;
-}
-
-.btn-primary.applied {
-  background: #1d1f23;
-  color: white;
-  cursor: not-allowed;
 }
