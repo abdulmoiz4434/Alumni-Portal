@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { Loader } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
 import API from '../../../api/axios';
 import './CareerInsights.css';
@@ -72,6 +73,7 @@ const TrendingUpIcon = () => (
 const CareerInsights = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchInsights = async () => {
@@ -84,6 +86,7 @@ const CareerInsights = () => {
         console.error("Error loading career insights:", err);
       } finally {
         setLoading(false);
+        setError(null);
       }
     };
     fetchInsights();
@@ -91,9 +94,23 @@ const CareerInsights = () => {
 
   if (loading) {
     return (
-      <div className="career-loader">
-        <div className="spinner" />
-        <p>Loading Career Data...</p>
+      <div className="career-insights">
+        <div className="career-insight-loading">
+          <Loader className="loading-spinner" />
+          <p>Loading career data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="career-insights">
+        <div className="career-insights-error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
       </div>
     );
   }

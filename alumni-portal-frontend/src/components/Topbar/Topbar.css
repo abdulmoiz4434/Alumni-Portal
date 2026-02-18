@@ -89,18 +89,18 @@
   position: absolute;
   top: 1px;
   right: 1px;
-  background: #ef4444;
-  color: white;
+  background: #e6bb2f;
+  color: rgb(21, 19, 19);
   border-radius: 50%;
-  min-width: 12px;
-  height: 12px;
+  min-width: 13px;
+  height: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
   font-weight: 700;
   padding: 1px;
-  border: 2px solid white;
+  border: 2px solid rgb(255, 255, 255);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 

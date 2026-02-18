@@ -1,20 +1,31 @@
 import { useState, useEffect } from "react";
-import { User, Calendar, Trash2, Plus, Send, CheckCircle, Users } from "lucide-react";
+import {
+  User,
+  Calendar,
+  Trash2,
+  Plus,
+  Send,
+  CheckCircle,
+  Users,
+  Search,
+  Loader,
+} from "lucide-react";
 import API from "../../../api/axios";
 import "./Mentorship.css";
 
 export default function Mentorship() {
   const [mentorships, setMentorships] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
   const [filterField, setFilterField] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   // Modal States
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
-  
+
   // Application State - UPDATED to track by alumnus ID instead of mentorship ID
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [applyMessage, setApplyMessage] = useState("");
@@ -57,6 +68,7 @@ export default function Mentorship() {
       console.error("Error fetching mentorships:", err);
     } finally {
       setLoading(false);
+      setError(null);
     }
   };
 
@@ -74,16 +86,20 @@ export default function Mentorship() {
 
   // UPDATED: Handle sending the mentorship application
   const handleApplySubmit = async () => {
-    if (!applyMessage.trim()) return alert("Please enter a message for the mentor.");
+    if (!applyMessage.trim())
+      return alert("Please enter a message for the mentor.");
 
     try {
       const res = await API.post("/mentorship/apply", {
         alumnusId: selectedMentor.postedBy._id,
-        message: applyMessage
+        message: applyMessage,
       });
 
       if (res.data.success) {
-        setPendingApplications([...pendingApplications, selectedMentor.postedBy._id]);
+        setPendingApplications([
+          ...pendingApplications,
+          selectedMentor.postedBy._id,
+        ]);
         alert("Application sent! The mentor will be notified.");
         setShowApplyModal(false);
         setApplyMessage("");
@@ -142,7 +158,13 @@ export default function Mentorship() {
 
       if (res.data.success) {
         alert("Mentorship posted successfully!");
-        setNewMentorshipForm({ title: "", field: "", duration: "", description: "", skills: "" });
+        setNewMentorshipForm({
+          title: "",
+          field: "",
+          duration: "",
+          description: "",
+          skills: "",
+        });
         setShowOfferModal(false);
         fetchMentorships();
       }
@@ -151,16 +173,41 @@ export default function Mentorship() {
     }
   };
 
-  if (loading) return <div className="events-loader-container"><div className="spinner"></div><p>Loading...</p></div>;
+  if (loading) {
+    return (
+      <div className="mentorship">
+        <div className="mentorship-loading">
+          <Loader className="loading-spinner" />
+          <p>Loading mentorships...</p>
+        </div>
+      </div>
+    );
+  }
 
+  // Error state
+  if (error) {
+    return (
+      <div className="mentorship">
+        <div className="mentorship-error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="mentorship">
       <div className="mentorship-hero">
         <div className="mentorship-hero-content">
           <h1 className="main-title">Mentorship Program</h1>
-          <p className="subtitle">Connect with experienced alumni who are ready to guide you.</p>
+          <p className="subtitle">
+            Connect with experienced alumni who are ready to guide you.
+          </p>
           {userRole === "alumni" && (
-            <button className="create-mentorship-btn-hero" onClick={() => setShowOfferModal(true)}>
+            <button
+              className="create-mentorship-btn-hero"
+              onClick={() => setShowOfferModal(true)}
+            >
               <Plus size={20} /> Offer Mentorship
             </button>
           )}
@@ -168,11 +215,12 @@ export default function Mentorship() {
       </div>
 
       <div className="mentorship-container">
-        <div className="search-filter-section">
+        <div className="mentorship-search-filter-section">
           <div className="search-box">
+            <Search size={22} className="search-icon" />
             <input
               type="text"
-              placeholder="Search by title, mentor, or skills..."
+              placeholder="Search by title or mentor"
               className="search-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -180,9 +228,15 @@ export default function Mentorship() {
           </div>
 
           <div className="filters">
-            <select className="filter-select" value={filterField} onChange={(e) => setFilterField(e.target.value)}>
+            <select
+              className="filter-select"
+              value={filterField}
+              onChange={(e) => setFilterField(e.target.value)}
+            >
               {fields.map((field) => (
-                <option key={field} value={field}>{field}</option>
+                <option key={field} value={field}>
+                  {field}
+                </option>
               ))}
             </select>
           </div>
@@ -193,11 +247,14 @@ export default function Mentorship() {
             const alumnusId = mentorship.postedBy._id || mentorship.postedBy;
             const isApplied = pendingApplications.includes(alumnusId);
             const isAccepted = acceptedMentors.includes(alumnusId);
-            
+
             return (
               <div key={mentorship._id} className="opportunity-card">
                 {canDeleteMentorship(mentorship.postedBy) && (
-                  <button className="mentorship-delete-btn" onClick={() => handleDelete(mentorship._id)}>
+                  <button
+                    className="mentorship-delete-btn"
+                    onClick={() => handleDelete(mentorship._id)}
+                  >
                     <Trash2 size={18} />
                   </button>
                 )}
@@ -205,54 +262,60 @@ export default function Mentorship() {
                 <div className="card-header">
                   <div className="card-meta">
                     <span className="badge">{mentorship.field}</span>
-                    <span className="posted-date">{new Date(mentorship.createdAt).toLocaleDateString()}</span>
+                    <span className="mentorship-posted-date">
+                      {new Date(mentorship.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                   <h2 className="job-title">{mentorship.title}</h2>
-                  <p className="company-name"><User size={18} /> {mentorship.postedByName}</p>
+                  <p className="company-name">
+                    <User size={18} /> {mentorship.postedByName}
+                  </p>
                 </div>
 
                 <div className="card-body">
                   <div className="info-row">
-                    <span className="info-item"><Calendar size={20} /> {mentorship.duration}</span>
+                    <span className="info-item">
+                      <Calendar size={20} /> {mentorship.duration}
+                    </span>
                   </div>
                   <p className="description">{mentorship.description}</p>
-                  
+
                   {mentorship.skills?.length > 0 && (
                     <div className="skills-container">
                       {mentorship.skills.map((skill, index) => (
-                        <span key={index} className="skill-tag">{skill}</span>
+                        <span key={index} className="mentorship-skill-tag">
+                          {skill}
+                        </span>
                       ))}
                     </div>
                   )}
 
-                  <div className="card-actions">
-                    {userRole === "student" && (
-                      <>
-                        {isAccepted ? (
-                          <button className="btn-primary mentorship-accepted" disabled>
-                            <Users size={18} /> Mentorship Active
-                          </button>
-                        ) : isApplied ? (
-                          <button className="btn-primary applied" disabled>
-                            <CheckCircle size={18} /> Applied
-                          </button>
-                        ) : (
-                          <button
-                            className="btn-primary"
-                            onClick={() => {
-                              setSelectedMentor(mentorship);
-                              setShowApplyModal(true);
-                            }}
-                          >
-                            Apply for Mentorship
-                          </button>
-                        )}
-                      </>
-                    )}
-                    {userRole === "alumni" && userId === alumnusId && (
-                      <span className="own-post-tag">Your Offering</span>
-                    )}
-                  </div>
+                  {userRole === "student" && (
+                    <div className="card-actions">
+                      {isAccepted ? (
+                        <button
+                          className="btn-primary mentorship-accepted"
+                          disabled
+                        >
+                          <Users size={18} /> Mentorship Active
+                        </button>
+                      ) : isApplied ? (
+                        <button className="btn-primary applied" disabled>
+                          <CheckCircle size={18} /> Applied
+                        </button>
+                      ) : (
+                        <button
+                          className="btn-primary"
+                          onClick={() => {
+                            setSelectedMentor(mentorship);
+                            setShowApplyModal(true);
+                          }}
+                        >
+                          Apply for Mentorship
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -266,10 +329,17 @@ export default function Mentorship() {
           <div className="event-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Apply to {selectedMentor?.postedByName}</h2>
-              <button onClick={() => setShowApplyModal(false)} className="close-modal-btn">×</button>
+              <button
+                onClick={() => setShowApplyModal(false)}
+                className="close-modal-btn"
+              >
+                ×
+              </button>
             </div>
             <div className="modal-body">
-              <label>Introduce yourself and explain why you're seeking mentorship:</label>
+              <label>
+                Introduce yourself and explain why you're seeking mentorship:
+              </label>
               <textarea
                 className="apply-textarea"
                 rows="5"
@@ -279,7 +349,12 @@ export default function Mentorship() {
               />
             </div>
             <div className="modal-footer">
-              <button className="event-btn-cancel" onClick={() => setShowApplyModal(false)}>Cancel</button>
+              <button
+                className="event-btn-cancel"
+                onClick={() => setShowApplyModal(false)}
+              >
+                Cancel
+              </button>
               <button className="event-btn-submit" onClick={handleApplySubmit}>
                 <Send size={18} /> Send Application
               </button>
@@ -294,33 +369,82 @@ export default function Mentorship() {
           <div className="event-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Offer Mentorship</h2>
-              <button onClick={() => setShowOfferModal(false)} className="close-modal-btn">×</button>
+              <button
+                onClick={() => setShowOfferModal(false)}
+                className="close-modal-btn"
+              >
+                ×
+              </button>
             </div>
 
-            <form className="form-grid" onSubmit={(e) => { e.preventDefault(); handleOfferSubmit(); }}>
+            <form
+              className="form-grid"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleOfferSubmit();
+              }}
+            >
               <div className="form-group">
                 <label>Mentorship Title *</label>
-                <input type="text" name="title" value={newMentorshipForm.title} onChange={handleNewFormChange} required />
+                <input
+                  type="text"
+                  name="title"
+                  value={newMentorshipForm.title}
+                  onChange={handleNewFormChange}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Field *</label>
-                <input type="text" name="field" value={newMentorshipForm.field} onChange={handleNewFormChange} required />
+                <input
+                  type="text"
+                  name="field"
+                  value={newMentorshipForm.field}
+                  onChange={handleNewFormChange}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Duration *</label>
-                <input type="text" name="duration" value={newMentorshipForm.duration} onChange={handleNewFormChange} required />
+                <input
+                  type="text"
+                  name="duration"
+                  value={newMentorshipForm.duration}
+                  onChange={handleNewFormChange}
+                  required
+                />
               </div>
               <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                 <label>Description *</label>
-                <textarea name="description" value={newMentorshipForm.description} onChange={handleNewFormChange} rows="4" required />
+                <textarea
+                  name="description"
+                  value={newMentorshipForm.description}
+                  onChange={handleNewFormChange}
+                  rows="4"
+                  required
+                />
               </div>
               <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                 <label>Skills (comma separated) *</label>
-                <input type="text" name="skills" value={newMentorshipForm.skills} onChange={handleNewFormChange} required />
+                <input
+                  type="text"
+                  name="skills"
+                  value={newMentorshipForm.skills}
+                  onChange={handleNewFormChange}
+                  required
+                />
               </div>
               <div className="modal-footer" style={{ gridColumn: "1 / -1" }}>
-                <button type="button" className="event-btn-cancel" onClick={() => setShowOfferModal(false)}>Cancel</button>
-                <button type="submit" className="event-btn-submit">Post Mentorship</button>
+                <button
+                  type="button"
+                  className="event-btn-cancel"
+                  onClick={() => setShowOfferModal(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="event-btn-submit">
+                  Post Mentorship
+                </button>
               </div>
             </form>
           </div>

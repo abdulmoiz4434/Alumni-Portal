@@ -3,11 +3,11 @@ import API from "../../../api/axios"; // Updated to use your custom instance
 import {
   Search,
   Building2,
-  Clock,
   MapPin,
   Info,
   Briefcase,
   Plus,
+  Loader,
   Trash2,
   X
 } from "lucide-react";
@@ -17,6 +17,7 @@ export default function Jobs() {
   // 1. Data State
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,6 +68,7 @@ export default function Jobs() {
       console.error("Error fetching jobs:", err);
     } finally {
       setLoading(false);
+      setError(null);
     }
   };
 
@@ -131,13 +133,24 @@ export default function Jobs() {
 
   if (loading) {
     return (
-      <div className="events-loader-container">
-        <div className="spinner"></div>
-        <p>Loading opportunities...</p>
+      <div className="jobs">
+        <div className="jobs-loading">
+          <Loader className="loading-spinner" />
+          <p>Loading opportunities...</p>
+        </div>
       </div>
     );
   }
-
+  if (error) {
+    return (
+      <div className="jobs">
+        <div className="jobs-error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="jobs">
       <div className="jobs-hero">
@@ -154,7 +167,7 @@ export default function Jobs() {
       </div>
 
       <div className="jobs-container">
-        <div className="search-filter-section">
+        <div className="jobs-search-filter-section">
           <div className="search-box">
             <Search size={22} className="search-icon" />
             <input
@@ -200,7 +213,7 @@ export default function Jobs() {
                 <div className="card-header">
                   <div className="card-meta">
                     <span className={`badge ${item.category}`}>{item.category}</span>
-                    <span className="posted-date">{new Date(item.createdAt).toLocaleDateString()}</span>
+                    <span className="job-posted-date">{new Date(item.createdAt).toLocaleDateString()}</span>
                   </div>
                   <h2 className="job-title">{item.title}</h2>
                   <p className="company-name"><Building2 size={18} /> {item.company}</p>

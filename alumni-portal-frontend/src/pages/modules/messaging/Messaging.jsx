@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../../api/axios";
+import {Loader} from  "lucide-react";
 import * as socketService from "../../../services/socketService";
 import "./Messaging.css";
 
@@ -165,11 +166,7 @@ export default function Messaging() {
         <div className="chat-sidebar">
           <div className="sidebar-header">
             <h3>Messages</h3>
-            {socketConnected && (
-              <span className="socket-status" title="Connected">
-                ●
-              </span>
-            )}
+
           </div>
 
           <div className="conv-list">
@@ -211,7 +208,10 @@ export default function Messaging() {
 
         <div className="chat-main">
           {loading ? (
-            <h4>Loading chat...</h4>
+        <div className="mentorship-loading">
+          <Loader className="loading-spinner" />
+          <p>Loading chat...</p>
+        </div>
           ) : conversationId ? (
             <>
               <div className="chat-header">

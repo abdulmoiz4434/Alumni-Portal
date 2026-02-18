@@ -1,12 +1,26 @@
 .mentorship {
-  min-height: 100vh;
   background: #f9fafb;
-  padding: 24px 32px;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+   padding: 24px 32px;
   margin: 0;
   box-sizing: border-box;
-  animation: fadeInUp 0.6s ease-out;
 }
-
+.mentorship-loading,
+.mentorship-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+}
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  color:#d4af37;
+  animation: spin 1s linear infinite;
+}
 /* Header Section */
 .mentorship-hero {
   background: #1a1a1a;
@@ -22,31 +36,32 @@
 }
 
 .main-title {
-  font-family: Georgia, serif;
   font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  line-height: 1.1;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #e6bb2f;
   animation: fadeInUp 0.6s ease-out;
 }
 
 .subtitle {
   font-size: 1.15rem;
-  font-weight: normal;
+  max-width: 680px;
+  margin: 0 auto;
   line-height: 1.6;
-  color: #e0e0e0;
+  color: #ffffff;
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
 .mentorship-container {
-  animation: fadeInUp 0.6s ease-out 0.5s both;
   max-width: 1200px;
-  padding: 24px 24px;
+  margin: 0 auto;
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+  padding: 24px 24px ;
 }
 
 /* Search and Filter Section */
-.search-filter-section {
-  background-color: #dff083;
+.mentorship-search-filter-section {
+  background: #1a1a1a;
   padding: 20px;
   border-radius: 12px;
   display: flex;
@@ -55,9 +70,7 @@
 }
 
 .search-box {
-  flex: 1;
-  min-width: 300px;
-  position: relative;
+  min-width: 250px;
 }
 
 .search-icon {
@@ -162,7 +175,7 @@
   letter-spacing: 0.4px;
 }
 
-.posted-date {
+.mentorship-posted-date {
   display: inline-flex;
   align-items: center;
   font-size: 0.75rem;
@@ -244,20 +257,16 @@
   margin-bottom: 0.75rem;
 }
 
-.skill-tag {
-  display: inline-block;
-  background: #f1f5f9;
-  color: #475569;
-  border-radius: 6px;
+.mentorship-skill-tag {
+  background: #e6bb2f;        /* yellow */
+  color: #705656; 
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 0.80rem;
   font-weight: 500;
-  transition: all 0.2s ease;
-  font-size: 0.75rem;
-  padding: 0.3rem 0.6rem;
 }
 
-.skill-tag:hover {
-  background: #e2e8f0;
-}
+
 
 .card-footer {
   display: flex;
@@ -485,31 +494,27 @@
 /* Delete Button */
 .mentorship-delete-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(220, 53, 69, 0.9);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  top: 10px;
+  right: 82px;
+  width: 32px;
+  height: 32px;
+  background: #fee;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+  border-radius: 6px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  transition: all 0.2s ease;
   z-index: 10;
-  transition: all 0.3s ease;
-  opacity: 0;
-  visibility: hidden;
 }
 
-.opportunity-card:hover .mentorship-delete-btn {
-  opacity: 1;
-  visibility: visible;
-}
+
 
 .mentorship-delete-btn:hover {
-  background: #dc3545;
+  background: #ef4444;
+  color: white;
   transform: scale(1.1);
 }
 
@@ -579,7 +584,7 @@
     font-size: 1rem;
   }
 
-  .search-filter-section {
+  .mentorship--section {
     flex-direction: column;
   }
 
@@ -654,27 +659,16 @@
   resize: vertical;
 }
 
-.btn-primary.applied {
-  background-color: #27ae60;
-  cursor: default;
-}
-
-.own-post-tag {
-  color: #666;
-  font-style: italic;
-  font-size: 0.9rem;
-}
-
 /* Mentorship accepted button */
 .btn-primary.mentorship-accepted {
-  background: #10b981;
-  color: white;
+  background: #d7c15e;
+  color: rgb(16, 12, 12);
   cursor: not-allowed;
   opacity: 0.9;
 }
 
 .btn-primary.applied {
-  background: #94a3b8;
+  background: #1d1f23;
   color: white;
   cursor: not-allowed;
 }

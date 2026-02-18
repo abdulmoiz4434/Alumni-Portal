@@ -60,7 +60,7 @@ export default function Topbar() {
           onClick={handleNotificationClick}
           title="Notifications"
         >
-          <FiBell size={22} />
+          <FiBell size={26} />
           {notificationCount > 0 && (
             <span className="notification-badge">
               {notificationCount > 9 ? "9+" : notificationCount}

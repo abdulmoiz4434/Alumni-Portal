@@ -6,7 +6,21 @@
   box-sizing: border-box;
     animation: fadeInUp 0.6s ease-out;
 }
-
+.jobs-loading,
+.jobs-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+}
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  color:#d4af37;
+  animation: spin 1s linear infinite;
+}
 /* Header Section */
 .jobs-hero {
   background: #1a1a1a;
@@ -59,8 +73,8 @@
 }
 
 /* Search and Filter Section */
-.search-filter-section {
-  background-color: #dff083;
+.jobs-search-filter-section {
+  background: #1a1a1a;
   padding: 20px;
   border-radius: 12px;
   display: flex;
@@ -186,9 +200,10 @@
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
-.posted-date {
+.job-posted-date {
   display: inline-flex;
   align-items: center;
+  gap: 1.3rem;
   font-size: 0.75rem;
   color: #94a3b8;
   white-space: nowrap;
@@ -199,14 +214,7 @@
   color: #090808;
 }
 
-.posted-date {
-  display: flex;
-  align-items: center;
-  gap: 1.3rem;
-  font-size: 0.75rem;
-  color: #94a3b8;
-  white-space: nowrap;
-}
+
 
 .job-title {
   width: 100%;
@@ -278,27 +286,6 @@
   font-weight: 600;
   color: #64748b;
   margin-bottom: 0.5rem;
-}
-
-.skills-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.skill-tag {
-  display: inline-block;
-  background: #f1f5f9;
-  color: #475569;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-size: 0.75rem;
-  padding: 0.3rem 0.6rem;
-}
-
-.skill-tag:hover {
-  background: #e2e8f0;
 }
 
 .card-footer {
@@ -376,7 +363,10 @@
   background: white;
   border-radius: 16px;
 }
-
+.contact-email-section{
+  display: inline-flex;
+  gap: 0.5rem;
+}
 .no-results svg {
   margin-bottom: 1.5rem;
 }
@@ -420,7 +410,7 @@
     width: 100%;
   }
 
-  .search-filter-section {
+  .jobs-search-filter-section {
     flex-direction: column;
   }
 
@@ -614,36 +604,31 @@
 /* Admin Delete Button */
 .job-delete-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(220, 53, 69, 0.9);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  top: 10px;
+  right: 82px;
+  width: 32px;
+  height: 32px;
+  background: #fee;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+  border-radius: 6px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  transition: all 0.2s ease;
   z-index: 10;
-  transition: all 0.3s ease;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.opportunity-card:hover .job-delete-btn {
-  opacity: 1;
-  visibility: visible;
 }
 
 .job-delete-btn:hover {
-  background: #dc3545;
+  background: #ef4444;
+  color: white;
   transform: scale(1.1);
 }
 
 .contact-label {
-  color: #475569;
+  color: #0f1011;
+  font-weight: bold;
   font-size: 1rem;
   line-height: 1.45;
   margin-bottom: 0.75rem;

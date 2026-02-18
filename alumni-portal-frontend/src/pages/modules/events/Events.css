@@ -5,7 +5,21 @@
   margin: 0;
   box-sizing: border-box;
 }
-
+.events-loading,
+.events-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+}
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  color:#d4af37;
+  animation: spin 1s linear infinite;
+}
 /* Header Section */
 .events-hero {
   background: #1a1a1a;
@@ -78,8 +92,8 @@
 }
 
 /* Filters Section */
-.events-filters-section {
-  background-color: #dff083;
+.events-search-filters-section {
+  background: #1a1a1a;
   padding: 20px;
   border-radius: 12px;
   display: flex;
@@ -414,33 +428,27 @@
 /* Admin Delete Button */
 /* Admin Delete Button */
 .event-delete-btn {
-  position: absolute;
-  top: 16px;
-  right: 120px;
-  background: rgba(239, 68, 68, 0.9);
-  color: white;
-  border: none;
-  border-radius: 50%;
+   position: absolute;
+  top: 13px;
+  right: 122px;
   width: 32px;
   height: 32px;
+  background: #fee;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+  border-radius: 6px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all 0.3s ease;
-  opacity: 0;              /* ADD THIS */
-  visibility: hidden;      /* ADD THIS */
-}
-
-.event-card:hover .event-delete-btn {
-  opacity: 1;
-  visibility: visible;
+  transition: all 0.2s ease;
+  z-index: 10;   /* ADD THIS */
 }
 
 .event-delete-btn:hover {
   background: #ef4444;
-  transform: scale(1.15);
+  color: white;
+  transform: scale(1.1);
 }
 
 /* Loader Styles */

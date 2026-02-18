@@ -113,15 +113,15 @@ const Footer = () => {
             <ul className="footer-contact">
               <li>
                 <Mail size={16} />
-                <a href="mailto:alumni@university.edu">alumni@university.edu</a>
+                <a href="mailto:alumni@university.edu">USP.edu.pk</a>
               </li>
               <li>
                 <Phone size={16} />
-                <a href="tel:+92-XXX-XXXXXXX">+92-XXX-XXXXXXX</a>
+                <a href="tel:+92 304 7177684">+92 304 7177684</a>
               </li>
               <li>
                 <MapPin size={16} />
-                <span>University Campus, City, Pakistan</span>
+                <span>USP, Multan, Pakistan</span>
               </li>
             </ul>
           </div>

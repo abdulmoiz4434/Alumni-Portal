@@ -12,7 +12,7 @@ import {
   FaTimesCircle,
   FaPlus,
 } from "react-icons/fa";
-import { Trash2 } from "lucide-react";
+import { Trash2 , Loader} from "lucide-react";
 import API from "../../../api/axios";
 import "./Events.css";
 
@@ -20,6 +20,7 @@ export default function Events() {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState("");
 
   // Create Event States
@@ -88,6 +89,8 @@ export default function Events() {
       console.error("Error fetching events:", err);
     } finally {
       setLoading(false);
+      setError(null);
+
     }
   };
 
@@ -186,9 +189,23 @@ export default function Events() {
 
   if (loading) {
     return (
-      <div className="events-loader-container">
-        <div className="spinner"></div>
-        <p>Loading events...</p>
+      <div className="events">
+        <div className="events-loading">
+          <Loader className="loading-spinner" />
+          <p>Loading events data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="events">
+        <div className="events-error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
       </div>
     );
   }
@@ -210,7 +227,7 @@ export default function Events() {
       </div>
 
       <div className="events-container">
-        <div className="events-filters-section">
+        <div className="events-search-filters-section">
           <div className="events-search-box">
             <FaSearch className="events-search-icon" />
             <input

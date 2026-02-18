@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Search, UserPlus, CheckCircle, MessageCircle, Trash2 } from "lucide-react";
+import { Search, UserPlus, CheckCircle, MessageCircle, Trash2,User,Loader } from "lucide-react";
 import API from "../../../api/axios";
 import "./Directory.css";
 
 export default function Directory() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
   const [sentRequests, setSentRequests] = useState([]);
@@ -33,6 +34,7 @@ export default function Directory() {
         console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
+         setError(null);
       }
     };
     fetchData();
@@ -91,8 +93,27 @@ export default function Directory() {
     return matchesFilter && matchesSearch;
   });
 
-  if (loading) return <div className="directory-loader">Loading community...</div>;
+if (loading) {
+  return (
+    <div className="directory">
+      <div className="directory-loading">
+        <Loader className="loading-spinner" />
+        <p>Loading directory...</p>
+      </div>
+    </div>
+  );
+}
 
+  if (error) {
+    return (
+      <div className="directory">
+        <div className="directory-error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="directory">
       <div className="directory-hero">
@@ -106,7 +127,7 @@ export default function Directory() {
 
       <div className="directory-container">
         <div className="directory-controls">
-          <div className="search-filter-section">
+          <div className="directory-search-filter-section ">
             <div className="search-box">
               <Search size={22} className="search-icon" />
               <input
@@ -161,7 +182,7 @@ export default function Directory() {
                         <img src={user.profilePicture} alt={user.fullName} className="directory-avatar" />
                       ) : (
                         <div className="directory-avatar-placeholder">
-                          {user.fullName.charAt(0).toUpperCase()}
+                            <User size={40} />
                         </div>
                       )}
                     </div>

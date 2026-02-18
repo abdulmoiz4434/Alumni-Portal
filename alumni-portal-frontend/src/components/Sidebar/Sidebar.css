@@ -21,8 +21,7 @@
 }
 
 /* Shared styles for links & buttons */
-.sidebar-nav a,
-.sidebar-nav button {
+.sidebar-nav a {
   color: #d1d5db;                 /* neutral light gray */
   text-decoration: none;
   padding: 10px 14px;
@@ -43,8 +42,7 @@
 }
 
 /* Hollow circle indicator */
-.sidebar-nav a::before,
-.sidebar-nav button::before {
+.sidebar-nav a::before {
   content: "○";
   font-size: 22px;
   font-weight: 700;
@@ -53,14 +51,12 @@
 }
 
 /* Hover state */
-.sidebar-nav a:hover,
-.sidebar-nav button:hover {
+.sidebar-nav a:hover {
   background-color: #27272a;      /* subtle dark hover */
   color: #ffffff;
 }
 
-.sidebar-nav a:hover::before,
-.sidebar-nav button:hover::before {
+.sidebar-nav a:hover::before{
   color: #ffffff;
 }
 
@@ -73,6 +69,28 @@
 .sidebar-nav a.active::before {
   color: #dbde06;                 /* accent color (green) */
 }
+/* Logout button - distinct style */
+.logout-btn {
+  background: #e6bb2f;
+  color: #000000;
+  font-weight: 600;
+  font-size: larger;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 12px;            /* small spacing from previous link */
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  justify-content:center ;
+  gap: 8px;
+}
+
+.logout-btn:hover {
+  background-color: #a81414;   /* darker red on hover */
+  color: #fff;
+}
+
 
 .menu-btn {
   display: none;
