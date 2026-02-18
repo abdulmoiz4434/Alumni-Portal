@@ -17,13 +17,13 @@
 .loading-spinner {
   width: 48px;
   height: 48px;
-  color:#d4af37;
+  color: #d4af37;
   animation: spin 1s linear infinite;
 }
 /* Header Section */
 .events-hero {
   background: #1a1a1a;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
   border-radius: 15px;
   color: #fff;
@@ -99,8 +99,6 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 20px;
-  margin-right: 10px;
 }
 
 .events-search-box {
@@ -119,7 +117,8 @@
 }
 
 .events-search-input {
-  width: 85%;
+  width: 100%;
+  box-sizing: border-box;
   padding: 1rem 1rem 0.875rem 3rem;
   border: 2px solid #e2e8f0;
   border-radius: 10px;
@@ -234,9 +233,18 @@
   z-index: 2;
 }
 
-.status-upcoming { background: #28a745; color: #ffffff; }
-.status-today { background: #e6bb2f; color: #1a1a1a; }
-.status-past { background: #6c757d; color: #ffffff; }
+.status-upcoming {
+  background: #28a745;
+  color: #ffffff;
+}
+.status-today {
+  background: #e6bb2f;
+  color: #1a1a1a;
+}
+.status-past {
+  background: #6c757d;
+  color: #ffffff;
+}
 
 /* Content Details */
 .event-content {
@@ -316,7 +324,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -333,7 +341,7 @@
   overflow-y: auto;
   padding: 30px;
   position: relative;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .modal-header {
@@ -370,8 +378,8 @@
   font-size: 14px;
 }
 
-.form-group input, 
-.form-group select, 
+.form-group input,
+.form-group select,
 .form-group textarea {
   padding: 12px;
   border: 1px solid #ddd;
@@ -428,7 +436,7 @@
 /* Admin Delete Button */
 /* Admin Delete Button */
 .event-delete-btn {
-   position: absolute;
+  position: absolute;
   top: 13px;
   right: 122px;
   width: 32px;
@@ -442,7 +450,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  z-index: 10;   /* ADD THIS */
+  z-index: 10; /* ADD THIS */
 }
 
 .event-delete-btn:hover {
@@ -487,12 +495,30 @@
 }
 
 @media (max-width: 768px) {
-  .events-title { font-size: 32px; }
-  .events-subtitle { font-size: 16px; }
-  .form-grid, .events-grid { grid-template-columns: 1fr; }
-  .event-image-container { height: 200px; }
+  .events-title {
+    font-size: 32px;
+  }
+  .events-subtitle {
+    font-size: 16px;
+  }
+    .events-search-box {
+    min-width: 0; 
+  }
+
+  .form-grid,
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+  .event-image-container {
+    height: 200px;
+  }
 }
 
 @media (max-width: 480px) {
-  .event-delete-btn { right: 110px; width: 28px; height: 28px; }
+  .event-delete-btn {
+    right: 110px;
+    width: 28px;
+    height: 28px;
+  }
+
 }

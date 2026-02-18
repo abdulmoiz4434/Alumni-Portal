@@ -201,27 +201,21 @@ const CareerInsights = () => {
       </div>
 
       {/* Stats */}
-      <div className="stats-grid">
-        <div className="stat-card">
+      <div className="career-insights-stats-grid ">
+        <div className="career-insights-stat-card ">
           <div className="stat-icon"><UsersIcon /></div>
-          <div>
             <p className="stat-label">Total Alumni</p>
             <p className="stat-value">{data?.totalContributors?.toLocaleString()}</p>
-          </div>
         </div>
-        <div className="stat-card">
+        <div className="career-insights-stat-card">
           <div className="stat-icon"><BriefcaseIcon /></div>
-          <div>
             <p className="stat-label">Unique Roles</p>
             <p className="stat-value">{data?.jobTitles?.length}</p>
-          </div>
         </div>
-        <div className="stat-card">
+        <div className="career-insights-stat-card">
           <div className="stat-icon"><BuildingIcon /></div>
-          <div>
             <p className="stat-label">Companies</p>
             <p className="stat-value">{data?.companies?.length}</p>
-          </div>
         </div>
       </div>
 

@@ -42,7 +42,9 @@ body {
   background-color: var(--color-off-white);
   color: var(--color-black);
 }
-
+h1{
+  margin: 0;
+}
 .dashboard {
   min-height: 100vh;
   background-color: var(--color-off-white);
@@ -67,7 +69,6 @@ body {
   z-index: 1;
   transition: opacity 1s ease-in-out;
 }
-
 /* Dimming overlay on the image */
 .header-dim-overlay {
   position: absolute;
@@ -145,9 +146,8 @@ body {
 .stat-card {
   background: var(--color-white);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
+  padding: 10px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   text-align: center;
   gap: var(--spacing-md);
@@ -155,9 +155,6 @@ body {
   transition: all 0.3s ease;
   cursor: pointer;
   border: 2px solid transparent;
-  animation: fadeInUp 0.5s ease-out;
-  animation-fill-mode: both;
-  min-height: 180px;
 }
 
 @keyframes fadeInUp {
@@ -172,7 +169,6 @@ body {
 }
 
 .stat-card:hover {
-  transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-gold);
 }
@@ -196,9 +192,8 @@ body {
 
 .stat-content {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
+  gap: 0.7rem;
+  align-items: center;
 }
 
 .stat-value {

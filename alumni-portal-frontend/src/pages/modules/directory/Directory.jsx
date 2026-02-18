@@ -127,30 +127,31 @@ if (loading) {
 
       <div className="directory-container">
         <div className="directory-controls">
-          <div className="directory-search-filter-section ">
-            <div className="search-box">
-              <Search size={22} className="search-icon" />
-              <input
-                type="text"
-                placeholder="Search by name or department..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-            </div>
+<div className="directory-search-filter-section">
+  <div className="search-box">
+    <Search size={22} className="search-icon" />
+    <input
+      type="text"
+      placeholder="Search by name or department..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="search-input"
+    />
+  </div>
 
-            <div className="filters">
-              {["all", "alumni", "student"].map((type) => (
-                <button
-                  key={type}
-                  className={`filter-btn ${filter === type ? "active" : ""}`}
-                  onClick={() => setFilter(type)}
-                >
-                  {type === "all" ? "All Members" : type.charAt(0).toUpperCase() + type.slice(1)}
-                </button>
-              ))}
-            </div>
-          </div>
+  <div className="filters">
+    {["all", "alumni", "student"].map((type) => (
+      <button
+        key={type}
+        className={`filter-btn ${filter === type ? "active" : ""}`}
+        onClick={() => setFilter(type)}
+      >
+        {type === "all" ? "All Members" : type.charAt(0).toUpperCase() + type.slice(1)}
+      </button>
+    ))}
+  </div>
+</div>
+
         </div>
 
         <div className="results-info">
