@@ -55,7 +55,7 @@
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
-/* Hero Button Wrapper */
+/* Hero Button */
 .hero-add-button-wrapper {
   margin-top: 24px;
   animation: fadeInUp 0.6s ease-out 0.4s both;
@@ -82,7 +82,7 @@
   box-shadow: 0 4px 12px rgba(212, 170, 40, 0.3);
 }
 
-/* --- Stories Grid --- */
+/* ─── Stories Container ─── */
 .success-stories-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -90,12 +90,12 @@
   animation: fadeInUp 0.6s ease-out 0.5s both;
 }
 
+/* ─── Stories Grid ─── */
 .success-stories-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  /* FIX: Prevents other cards in the row from stretching when one expands */
-  align-items: start; 
+  align-items: start;
 }
 
 /* ─── Loader ─── */
@@ -123,7 +123,7 @@
 .no-results {
   text-align: center;
   padding: 80px 0;
-  grid-column: 1 / -1; /* Centers the no-results message across the grid */
+  grid-column: 1 / -1;
 }
 
 .no-results-icon {
@@ -480,18 +480,101 @@
   to { transform: rotate(360deg); }
 }
 
-/* ─── Responsive ─── */
+/* ========== RESPONSIVE ========== */
 @media (max-width: 1200px) {
   .success-stories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .success-stories {
+    padding: 20px 24px;
+  }
+
+  .success-stories-hero {
+    padding: 28px;
+  }
+
+  .success-stories-title {
+    font-size: 2.4rem;
+  }
+
+  .success-stories-container {
+    padding: 28px 16px;
+  }
+
+  .success-stories-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .success-stories-title { font-size: 2rem; }
-  .success-stories-grid { grid-template-columns: 1fr; }
-  .success-stories { padding: 1rem; }
+  .success-stories {
+    padding: 16px;
+  }
+
+  .success-stories-hero {
+    padding: 24px 16px;
+  }
+
+  .success-stories-title {
+    font-size: 2rem;
+  }
+
+  .success-stories-subtitle {
+    font-size: 1rem;
+  }
+
   .success-stories-container {
-    padding: 32px 16px;
+    padding: 20px 0;
+  }
+
+  /* 2 columns on tablet portrait */
+  .success-stories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .modal-content {
+    padding: 20px;
+    width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .success-stories {
+    padding: 12px;
+  }
+
+  .success-stories-hero {
+    padding: 20px 12px;
+  }
+
+  .success-stories-title {
+    font-size: 1.75rem;
+    margin-bottom: 12px;
+  }
+
+  .success-stories-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .success-stories-container {
+    padding: 16px 0;
+  }
+
+  /* Single column on mobile */
+  .success-stories-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .story-card {
+    padding: 16px;
+  }
+
+  .modal-title {
+    font-size: 1.2rem;
   }
 }

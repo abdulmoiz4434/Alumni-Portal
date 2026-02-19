@@ -213,7 +213,7 @@ export default function Messaging() {
               <div className="chat-header">
                 {/* Back button — only visible on mobile via CSS */}
                 <button
-                  className="back-btn"
+                  className="messaging-back-btn"
                   onClick={() => navigate("/modules/messaging")}
                   aria-label="Back to conversations"
                 >

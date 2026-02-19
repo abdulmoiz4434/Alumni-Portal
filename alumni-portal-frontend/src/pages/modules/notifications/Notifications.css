@@ -18,6 +18,7 @@
 .notifications-header p {
   color: #64748b;
 }
+
 .req-avatar-wrapper {
   width: 60px;
   height: 60px;
@@ -43,15 +44,15 @@
 }
 
 /* Back Button */
-.back-btn {
+.notifications-back-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: #f1f5f9;
+  background-color: #e6bb2f;
   border: none;
   border-radius: 6px;
-  color: #64748b;
+  color: #1a1a1a;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -83,10 +84,11 @@
   color: #64748b;
   position: relative;
   transition: all 0.3s;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
-  color: #e6bb2f; /* Your Gold Color */
+  color: #e6bb2f;
 }
 
 .tab-btn.active::after {
@@ -105,7 +107,7 @@
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -114,7 +116,7 @@
 }
 
 .request-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border-color: #e2e8f0;
 }
 
@@ -123,18 +125,13 @@
   gap: 16px;
   align-items: flex-start;
   flex: 1;
-}
-
-.req-avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .req-details {
   flex: 1;
+  min-width: 0;
 }
 
 .req-details h3 {
@@ -158,6 +155,9 @@
   margin-top: 12px !important;
   color: #856404;
   font-size: 0.9rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 /* Student Details Section */
@@ -206,8 +206,8 @@
 }
 
 .notification-skill-tag {
-  background: #e6bb2f;        /* yellow */
-  color: #705656; 
+  background: #e6bb2f;
+  color: #705656;
   padding: 6px 14px;
   border-radius: 12px;
   font-size: 0.80rem;
@@ -235,23 +235,23 @@
   white-space: nowrap;
 }
 
-.btn-accept { 
-  background: #e6bb2f; 
-  color: #1a1a1a; 
+.btn-accept {
+  background: #e6bb2f;
+  color: #1a1a1a;
 }
 
-.btn-reject { 
-  background: #f1f5f9; 
-  color: #64748b; 
+.btn-reject {
+  background: #f1f5f9;
+  color: #64748b;
 }
 
-.btn-accept:hover { 
+.btn-accept:hover {
   background: #d4aa2a;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(230, 187, 47, 0.3);
 }
 
-.btn-reject:hover { 
+.btn-reject:hover {
   background: #e2e8f0;
   color: #475569;
 }
@@ -294,11 +294,48 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Design */
+@media (max-width: 375px) {
+  .notifications-tabs {
+    flex-direction: column;
+    border-bottom: none;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  .tab-btn {
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .tab-btn.active {
+    background: #1a1a1a;
+    color: #e6bb2f;
+  }
+
+  .tab-btn.active::after {
+    display: none;
+  }
+}
+
+/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
+  .notifications-page {
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+
+  .notifications-header h1 {
+    font-size: 1.6rem;
+  }
+
   .request-card {
     flex-direction: column;
     align-items: stretch;
+    padding: 16px;
   }
 
   .req-actions {
@@ -309,13 +346,79 @@
 
   .notifications-tabs {
     overflow-x: auto;
+    gap: 8px;
   }
 
   .tab-btn {
-    white-space: nowrap;
+    font-size: 0.9rem;
+    padding: 10px 14px;
   }
 
   .detail-label {
     min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notifications-page {
+    margin: 12px auto;
+    padding: 0 12px;
+  }
+
+  .notifications-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .notifications-header p {
+    font-size: 0.85rem;
+  }
+
+  .request-card {
+    padding: 12px;
+  }
+
+  .req-avatar-wrapper {
+    width: 48px;
+    height: 48px;
+  }
+
+  .req-details h3 {
+    font-size: 1rem;
+  }
+
+  .req-role {
+    font-size: 0.8rem;
+  }
+
+  /* Stack accept/decline buttons full width */
+  .req-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-accept,
+  .btn-reject {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .tab-btn {
+    font-size: 0.82rem;
+    padding: 8px 10px;
+    gap: 5px;
+  }
+
+  .notifications-tabs {
+    gap: 4px;
+  }
+
+  .detail-label {
+    min-width: 70px;
+    font-size: 0.82rem;
+  }
+
+  .detail-value {
+    font-size: 0.82rem;
   }
 }
