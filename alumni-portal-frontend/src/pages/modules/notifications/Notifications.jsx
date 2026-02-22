@@ -66,7 +66,7 @@ export default function Notifications() {
   return (
     <div className="notifications-page">
       <div className="notifications-header">
-        <button className="back-btn" onClick={() => navigate(-1)}>
+        <button className="notifications-back-btn" onClick={() => navigate(-1)}>
           <FiArrowLeft /> Back
         </button>
         <h1>Notifications Center</h1>
