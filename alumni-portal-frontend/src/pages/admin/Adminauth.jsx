@@ -29,7 +29,6 @@ export default function AdminAuth() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,18 +129,7 @@ export default function AdminAuth() {
               )}
             </div>
 
-            <div className="admin-remember-container">
-              <label className="admin-remember-label">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="admin-remember-checkbox"
-                  disabled={isLoading}
-                />
-                <span>Remember Me</span>
-              </label>
-            </div>
+
 
             <button
               type="submit"

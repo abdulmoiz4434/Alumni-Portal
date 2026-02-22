@@ -217,7 +217,7 @@ h1 {
   border-color: rgba(212, 175, 55, 0.3);
 }
 
-.card-header {
+.dashboard-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -259,7 +259,6 @@ h1 {
 .view-all-btn:hover {
   background: #d4af37;
   color: #ffffff;
-  transform: translateX(4px);
 }
 
 .btn-icon {
@@ -287,7 +286,6 @@ h1 {
 .event-item:hover {
   background: #f5f5f5;
   border-color: #d4af37;
-  transform: translateX(4px);
 }
 
 .event-date-badge {

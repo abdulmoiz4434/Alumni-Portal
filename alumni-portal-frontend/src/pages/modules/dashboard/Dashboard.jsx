@@ -130,7 +130,6 @@ const Dashboard = () => {
             <div
               key={stat.label}
               className={"stat-card"}
-              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="stat-icon-wrapper">
                 <stat.icon className="stat-icon" />
@@ -151,7 +150,7 @@ const Dashboard = () => {
         <div className="left-column">
           {/* Upcoming Events */}
           <section className="content-card">
-            <div className="card-header">
+            <div className="dashboard-card-header">
               <h2 className="card-title">
                 <Calendar className="title-icon" />
                 Upcoming Events
@@ -209,7 +208,7 @@ const Dashboard = () => {
 
           {/* Recent Jobs */}
           <section className="content-card">
-            <div className="card-header">
+            <div className="dashboard-card-header">
               <h2 className="card-title">
                 <Briefcase className="title-icon" />
                 Recent Job Postings

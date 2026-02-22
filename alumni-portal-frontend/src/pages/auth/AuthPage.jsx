@@ -29,13 +29,11 @@ export default function AuthPage() {
   // Login
   const [studentEmail, setStudentEmail] = useState("");
   const [studentPassword, setStudentPassword] = useState("");
-  const [studentRememberMe, setStudentRememberMe] = useState(false);
   const [showStudentPassword, setShowStudentPassword] = useState(false);
   const [studentLoginError, setStudentLoginError] = useState(false);
 
   const [alumniEmail, setAlumniEmail] = useState("");
   const [alumniPassword, setAlumniPassword] = useState("");
-  const [alumniRememberMe, setAlumniRememberMe] = useState(false);
   const [showAlumniPassword, setShowAlumniPassword] = useState(false);
   const [alumniLoginError, setAlumniLoginError] = useState(false);
 
@@ -265,17 +263,7 @@ export default function AuthPage() {
               )}
             </div>
 
-            <div className="remember-forgot-container">
-              <label className="remember-me-label">
-                <input
-                  type="checkbox"
-                  checked={studentRememberMe}
-                  onChange={(e) => setStudentRememberMe(e.target.checked)}
-                  className="remember-me-checkbox"
-                />
-                <span>Remember Me</span>
-              </label>
-
+            <div className="forgot-container">
               <a href="#" className="forgot-password-link">
                 Forgot Password?
               </a>
@@ -347,22 +335,11 @@ export default function AuthPage() {
               )}
             </div>
 
-            <div className="remember-forgot-container">
-              <label className="remember-me-label">
-                <input
-                  type="checkbox"
-                  checked={alumniRememberMe}
-                  onChange={(e) => setAlumniRememberMe(e.target.checked)}
-                  className="remember-me-checkbox"
-                />
-                <span>Remember Me</span>
-              </label>
-
+            <div className="forgot-container">
               <a href="#" className="forgot-password-link">
                 Forgot Password?
               </a>
             </div>
-
             <button type="submit" className="auth-button Alumni-sign-in-button">
               Sign In
             </button>
@@ -426,7 +403,7 @@ export default function AuthPage() {
               />
               <input
                 className="auth-input"
-                placeholder="Registration Number"
+                placeholder="Registration Number  (e.g. BSCS-021....)"
                 required
                 value={studentRegNo}
                 onChange={(e) => setStudentRegNo(e.target.value)}
@@ -445,7 +422,7 @@ export default function AuthPage() {
 
               <input
                 className="auth-input"
-                placeholder="Department"
+                placeholder="Department  (e.g. Computer Science)"
                 required
                 value={studentRegDepartment}
                 onChange={(e) => setStudentRegDepartment(e.target.value)}
@@ -488,7 +465,7 @@ export default function AuthPage() {
                   className="auth-input"
                   type="tel"
                   required
-                  placeholder="Batch No"
+                  placeholder="Batch No  (e.g. 2022)"
                   value={studentRegBatchNo}
                   onChange={(e) => setStudentRegBatchNo(e.target.value)}
                 />
@@ -538,7 +515,7 @@ export default function AuthPage() {
                   className="auth-input"
                   type="number"
                   required
-                  placeholder="Semester"
+                  placeholder="Semester  (e.g. 5)"
                   value={studentRegSemester}
                   onChange={(e) => setStudentRegSemester(e.target.value)}
                 />
@@ -589,7 +566,7 @@ export default function AuthPage() {
               />
               <input
                 className="auth-input"
-                placeholder="Registration Number"
+                placeholder="Registration Number,  (e.g. BSCS-021....)"
                 required
                 value={alumniRegNo}
                 onChange={(e) => setAlumniRegNo(e.target.value)}
@@ -610,7 +587,7 @@ export default function AuthPage() {
                 className="auth-input"
                 type="text"
                 required
-                placeholder="Graduation Year"
+                placeholder="Graduation Year,  (e.g. 2024)"
                 value={alumniRegGradYear}
                 onChange={(e) => setAlumniRegGradYear(e.target.value)}
               />
@@ -652,7 +629,7 @@ export default function AuthPage() {
                   className="auth-input"
                   type="text"
                   required
-                  placeholder="Department"
+                  placeholder="Department,  (e.g. Computer Science)"
                   value={alumniRegDepartment}
                   onChange={(e) => setAlumniRegDepartment(e.target.value)}
                 />
@@ -702,7 +679,7 @@ export default function AuthPage() {
                   className="auth-input"
                   type="tel"
                   required
-                  placeholder="Contact Number"
+                  placeholder="Contact Number  (e.g. +923001234567)"
                   value={alumniRegContactNo}
                   onChange={(e) => setAlumniRegContactNo(e.target.value)}
                 />

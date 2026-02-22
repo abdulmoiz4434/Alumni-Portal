@@ -66,7 +66,7 @@ function StoryCard({ story, user, onDelete, index }) {
             className="read-more-btn" 
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            {isExpanded ? "Show Less" : "Read More →"}
+            {isExpanded ? "Show Less" : "Read More"}
           </button>
         )}
       </div>

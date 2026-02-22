@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2.5rem 2rem;
+  padding: 2rem;
   text-align: center;
 }
 
@@ -151,44 +151,6 @@
   pointer-events: none;
 }
 
-/* Remember Me Container */
-.admin-remember-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-}
-
-.admin-remember-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  color: white;
-  font-size: 0.875rem;
-  user-select: none;
-}
-
-.admin-remember-checkbox {
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
-  accent-color: #e6bb2f;
-}
-
-.admin-remember-checkbox:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.admin-remember-label span {
-  font-weight: 500;
-}
-
-.admin-remember-label:hover span {
-  color: #c5cacd;
-}
-
 /* Admin Button */
 .admin-button {
   width: 100%;
@@ -248,7 +210,7 @@
   }
 
   .admin-auth-panel {
-    padding: 2rem 1.5rem;
+    padding: 2rem;
   }
 
   .admin-logo {
@@ -283,14 +245,7 @@
     padding: 0.75rem 1.25rem;
   }
 
-  .admin-remember-label {
-    font-size: 0.8rem;
-  }
-
-  .admin-remember-checkbox {
-    width: 0.875rem;
-    height: 0.875rem;
-  }
+ 
 
   .back-to-home {
     font-size: 0.8rem;

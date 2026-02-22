@@ -232,7 +232,8 @@
 .read-more-btn {
   background: none;
   border: none;
-  color: var(--ss-blue);
+    color: gray;
+
   font-weight: 600;
   cursor: pointer;
   padding: 0;
@@ -242,8 +243,8 @@
 }
 
 .read-more-btn:hover {
-  color: var(--ss-blue-hover);
-  text-decoration: underline;
+    color: rgb(56, 56, 56);
+
 }
 
 /* ─── Card Footer ─── */

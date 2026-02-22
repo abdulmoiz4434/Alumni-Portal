@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { FiBell } from "react-icons/fi";
 import API from "../../api/axios";
 import "./Topbar.css";
@@ -41,14 +41,14 @@ export default function Topbar() {
 
   return (
     <header className="topbar">
-      <div className="topbar-left">
+      <Link to="/modules" className="topbar-left">
         <img
           src="/Round-Logo-USP.png"
           alt="University Logo"
           className="topbar-logo-img"
         />
         <h2 className="topbar-logo">Alumni Portal</h2>
-      </div>
+      </Link>
 
       <div className="topbar-welcome">
         Alumni Portal of University of Southern Punjab, Multan
