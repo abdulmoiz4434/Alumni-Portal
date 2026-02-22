@@ -19,7 +19,15 @@ export default function Notifications() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isStudent = user.role === "student";
+  const isAdmin = user.role === "admin";
+
   useEffect(() => {
+    if (isAdmin) {
+      navigate(-1);
+      return;
+    }
     fetchRequests();
   }, [activeTab]);
 
@@ -58,7 +66,7 @@ export default function Notifications() {
   return (
     <div className="notifications-page">
       <div className="notifications-header">
-        <button className="notifications-back-btn" onClick={() => navigate(-1)}>
+        <button className="back-btn" onClick={() => navigate(-1)}>
           <FiArrowLeft /> Back
         </button>
         <h1>Notifications Center</h1>
@@ -72,12 +80,15 @@ export default function Notifications() {
         >
           <FiUserPlus /> Connection Requests
         </button>
-        <button
-          className={`tab-btn ${activeTab === "mentorship" ? "active" : ""}`}
-          onClick={() => setActiveTab("mentorship")}
-        >
-          <FiBookOpen /> Mentorship Requests
-        </button>
+
+        {!isStudent && (
+          <button
+            className={`tab-btn ${activeTab === "mentorship" ? "active" : ""}`}
+            onClick={() => setActiveTab("mentorship")}
+          >
+            <FiBookOpen /> Mentorship Requests
+          </button>
+        )}
       </div>
 
       <div className="notifications-list">
@@ -118,7 +129,6 @@ export default function Notifications() {
                         : "wants to connect"}
                     </p>
 
-                    {/* MENTORSHIP REQUEST - SHOW STUDENT DETAILS */}
                     {isMentorship && studentProfile && (
                       <div className="student-details">
                         <div className="detail-row">

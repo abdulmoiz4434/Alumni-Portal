@@ -8,19 +8,26 @@ export default function Topbar() {
   const navigate = useNavigate();
   const [notificationCount, setNotificationCount] = useState(0);
 
+  // Get user role from localStorage
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user.role === "admin";
+
   useEffect(() => {
-  fetchNotificationCount();
+    // Optimization: If Admin, don't even start the fetch cycle
+    if (isAdmin) return;
 
-  const interval = setInterval(fetchNotificationCount, 30000);
+    fetchNotificationCount();
 
-  const handleUpdate = () => fetchNotificationCount();
-  window.addEventListener('notificationUpdate', handleUpdate);
-  
-  return () => {
-    clearInterval(interval);
-    window.removeEventListener('notificationUpdate', handleUpdate);
-  };
-}, []);
+    const interval = setInterval(fetchNotificationCount, 30000);
+
+    const handleUpdate = () => fetchNotificationCount();
+    window.addEventListener('notificationUpdate', handleUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('notificationUpdate', handleUpdate);
+    };
+  }, [isAdmin]); // Re-run if role changes
 
   const fetchNotificationCount = async () => {
     try {
@@ -35,7 +42,6 @@ export default function Topbar() {
 
   const handleNotificationClick = () => {
     navigate("/modules/notifications");
-    // Optionally refresh count after navigating
     setTimeout(fetchNotificationCount, 1000);
   };
 
@@ -55,18 +61,21 @@ export default function Topbar() {
       </div>
 
       <div className="topbar-right">
-        <button 
-          className="notification-btn" 
-          onClick={handleNotificationClick}
-          title="Notifications"
-        >
-          <FiBell size={26} />
-          {notificationCount > 0 && (
-            <span className="notification-badge">
-              {notificationCount > 9 ? "9+" : notificationCount}
-            </span>
-          )}
-        </button>
+        {/* RBAC: Only show the notification button if NOT an admin */}
+        {!isAdmin && (
+          <button 
+            className="notification-btn" 
+            onClick={handleNotificationClick}
+            title="Notifications"
+          >
+            <FiBell size={26} />
+            {notificationCount > 0 && (
+              <span className="notification-badge">
+                {notificationCount > 9 ? "9+" : notificationCount}
+              </span>
+            )}
+          </button>
+        )}
       </div>
     </header>
   );

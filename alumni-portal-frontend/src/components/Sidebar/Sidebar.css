@@ -71,8 +71,8 @@
 }
 /* Logout button - distinct style */
 .logout-btn {
-  background: #e6bb2f;
-  color: #000000;
+  background: #323235;
+  color: white;
   font-weight: 600;
   font-size: larger;
   padding: 10px 14px;
@@ -87,8 +87,8 @@
 }
 
 .logout-btn:hover {
-  background-color: #a81414;   /* darker red on hover */
-  color: #fff;
+  background-color: #e6bb2f;   /* darker red on hover */
+  color: black;
 }
 
 

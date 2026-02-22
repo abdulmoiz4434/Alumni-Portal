@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../../api/axios";
-import {Loader} from  "lucide-react";
+import { Loader } from "lucide-react";
 import * as socketService from "../../../services/socketService";
 import "./Messaging.css";
 
@@ -119,7 +119,6 @@ export default function Messaging() {
         setLoading(false);
       } catch (err) {
         console.error("Error initializing chat", err);
-        console.error("Error response:", err.response?.data);
         setLoading(false);
       }
     };
@@ -158,7 +157,6 @@ export default function Messaging() {
 
   return (
     <div className="messaging">
-      {/* chat-open class drives the slide panel on mobile */}
       <div className={`chat-layout ${conversationId ? "chat-open" : ""}`}>
         <div className="chat-sidebar">
           <div className="sidebar-header">
@@ -168,15 +166,15 @@ export default function Messaging() {
           <div className="conv-list">
             {conversations.length > 0 ? (
               conversations.map((conv) => {
+                // Improved identification logic for the other user
                 const otherParticipant = conv.participants?.find(
-                  (p) =>
-                    (p._id || p.id || p).toString() !==
-                    currentUserId?.toString(),
+                  (p) => (p._id || p.id || p).toString() !== currentUserId?.toString()
                 );
-                const displayName =
-                  otherParticipant?.fullName || "Unknown User";
+                
+                const displayName = otherParticipant?.fullName || "Unknown User";
                 const displayInitial = displayName.charAt(0).toUpperCase();
                 const convId = conv._id || conv.id;
+                const profilePic = otherParticipant?.profilePicture;
 
                 return (
                   <div
@@ -184,7 +182,22 @@ export default function Messaging() {
                     className={`conv-item ${conversationId === convId ? "active" : ""}`}
                     onClick={() => navigate(`/modules/messaging/${convId}`)}
                   >
-                    <div className="conv-avatar">{displayInitial}</div>
+                    <div className="conv-avatar">
+                      {profilePic ? (
+                        <img 
+                          src={profilePic} 
+                          alt={displayName} 
+                          className="sidebar-avatar-img"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerText = displayInitial;
+                          }}
+                        />
+                      ) : (
+                        displayInitial
+                      )}
+                    </div>
+
                     <div className="conv-info">
                       <div className="conv-info-top">
                         <h4>{displayName}</h4>
@@ -211,7 +224,6 @@ export default function Messaging() {
           ) : conversationId ? (
             <>
               <div className="chat-header">
-                {/* Back button — only visible on mobile via CSS */}
                 <button
                   className="messaging-back-btn"
                   onClick={() => navigate("/modules/messaging")}
@@ -230,8 +242,7 @@ export default function Messaging() {
                         />
                       ) : (
                         <span>
-                          {activeChatUser.fullName?.charAt(0).toUpperCase() ||
-                            "?"}
+                          {activeChatUser.fullName?.charAt(0).toUpperCase() || "?"}
                         </span>
                       )}
                     </div>
@@ -247,10 +258,8 @@ export default function Messaging() {
 
               <div className="chat-messages">
                 {messages.map((m, i) => {
-                  const senderId =
-                    m.sender_id || m.sender?._id || m.sender?.id || m.sender;
-                  const isMe =
-                    senderId?.toString() === currentUserId?.toString();
+                  const senderId = m.sender_id || m.sender?._id || m.sender?.id || m.sender;
+                  const isMe = senderId?.toString() === currentUserId?.toString();
 
                   return (
                     <div
@@ -260,9 +269,7 @@ export default function Messaging() {
                       <div className="msg-bubble">
                         <p>{m.content}</p>
                         <span className="msg-time">
-                          {new Date(
-                            m.created_at || m.createdAt,
-                          ).toLocaleTimeString([], {
+                          {new Date(m.created_at || m.createdAt).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}

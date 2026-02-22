@@ -64,9 +64,6 @@ async function getMessages(conversationId, userId) {
   return enriched;
 }
 
-/**
- * Find or create a conversation between two users.
- */
 async function getOrCreateConversation(user1Id, user2Id) {
   const id1 = mongoose.Types.ObjectId.isValid(user1Id) ? user1Id : new mongoose.Types.ObjectId(user1Id);
   const id2 = mongoose.Types.ObjectId.isValid(user2Id) ? user2Id : new mongoose.Types.ObjectId(user2Id);
@@ -74,15 +71,24 @@ async function getOrCreateConversation(user1Id, user2Id) {
   let conversation = await Conversation.findOne({
     participants: { $all: [id1, id2] },
     $expr: { $eq: [{ $size: "$participants" }, 2] }
-  });
+  }).lean();
 
   if (!conversation) {
     conversation = await Conversation.create({
       participants: [id1, id2]
     });
+    conversation = conversation.toObject();
   }
 
-  return conversation;
+  const participantDetails = await Promise.all(
+    conversation.participants.map((pid) => getUserById(pid))
+  );
+
+  return {
+    ...conversation,
+    id: conversation._id.toString(),
+    participants: participantDetails
+  };
 }
 
 /**
