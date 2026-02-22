@@ -219,7 +219,7 @@ export default function Profile() {
               ? roleData?.batch || "N/A"
               : roleData?.graduationYear || "N/A",
           department: roleData?.department || "N/A",
-          about: roleData?.about || "No bio added yet.",
+          about: roleData?.about || "",
           company: roleData?.company || "",
           jobTitle: roleData?.jobTitle || "",
           skills: Array.isArray(roleData?.skills)
@@ -394,7 +394,7 @@ export default function Profile() {
                 <div className="profile-metadata">
                   <div className="profile-metadata-item">
                     <span className="profile-metadata-label">
-                      {profile.role === "student" ? "Batch" : "Grad Year"}
+                      {profile.role === "student" ? "Batch" : "Graduation Year"}
                     </span>
                     <span className="profile-metadata-value">{profile.batch}</span>
                   </div>
@@ -450,7 +450,7 @@ export default function Profile() {
                 className="profile-textarea"
               />
             ) : (
-              <p className="profile-text">{profile.about}</p>
+              <p className="profile-text">{profile.about || "No bio added yet."}</p>
             )}
           </motion.div>
 

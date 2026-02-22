@@ -7,8 +7,6 @@
   flex-shrink: 0;
   height: 100%;
   overflow: hidden;
-
-  /* mobile animation */
   transition: transform 0.3s ease;
 }
 
@@ -101,10 +99,14 @@
 
   background: #191a1b;
   color: white;
-  border: none;
-  border-radius: 8px;
   padding: 8px;
   cursor: pointer;
+}
+
+.menu-class {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
 }
 
 .sidebar-overlay {
@@ -125,8 +127,11 @@
     z-index: 1000;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    padding: 66px 16px 20px 16px; /* add top padding to leave space for X */
+    padding-top: 66px;
     box-sizing: border-box;
+    .menu-usp {
+      display: none;
+    }
   }
 
   .sidebar.open {
@@ -146,4 +151,12 @@
     padding: 8px;
     cursor: pointer;
   }
+
+  .menu-btn-text {
+  font-size: 2rem;
+  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  color: #d4af37;
+}
+
 }

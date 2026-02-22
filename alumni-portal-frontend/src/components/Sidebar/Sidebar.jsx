@@ -31,9 +31,12 @@ export default function Sidebar() {
 
   return (
     <>
-      <button className="menu-btn" onClick={() => setIsOpen(true)}>
-        <Menu size={26} />
-      </button>
+   <button className="menu-btn" onClick={() => setIsOpen(true)}>
+    <div className="menu-class">
+      <Menu size={26} />
+      {isOpen && <span className="menu-btn-text">USP</span>}
+    </div>
+    </button>
 
       {isOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 

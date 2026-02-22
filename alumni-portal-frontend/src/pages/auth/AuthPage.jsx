@@ -8,18 +8,34 @@ import "./AuthPage.css";
 
 // ─── Password Policy Validator ───────────────────────────────────────────────
 const PASSWORD_RULES = [
-  { id: "length",    label: "At least 8 characters",       test: (p) => p.length >= 8 },
-  { id: "uppercase", label: "At least one uppercase letter", test: (p) => /[A-Z]/.test(p) },
-  { id: "lowercase", label: "At least one lowercase letter", test: (p) => /[a-z]/.test(p) },
-  { id: "number",    label: "At least one number",          test: (p) => /[0-9]/.test(p) },
-  { id: "special",   label: "At least one special character (!@#$...)", test: (p) => /[^A-Za-z0-9]/.test(p) },
+  { id: "length", label: "At least 8 characters", test: (p) => p.length >= 8 },
+  {
+    id: "uppercase",
+    label: "At least one uppercase letter",
+    test: (p) => /[A-Z]/.test(p),
+  },
+  {
+    id: "lowercase",
+    label: "At least one lowercase letter",
+    test: (p) => /[a-z]/.test(p),
+  },
+  { id: "number", label: "At least one number", test: (p) => /[0-9]/.test(p) },
+  {
+    id: "special",
+    label: "At least one special character (!@#$...)",
+    test: (p) => /[^A-Za-z0-9]/.test(p),
+  },
 ];
 
 const validatePassword = (password) => {
-  return PASSWORD_RULES.map((rule) => ({ ...rule, passed: rule.test(password) }));
+  return PASSWORD_RULES.map((rule) => ({
+    ...rule,
+    passed: rule.test(password),
+  }));
 };
 
-const isPasswordValid = (password) => validatePassword(password).every((r) => r.passed);
+const isPasswordValid = (password) =>
+  validatePassword(password).every((r) => r.passed);
 
 const getPasswordError = (password) => {
   const failed = validatePassword(password).find((r) => !r.passed);
@@ -28,8 +44,6 @@ const getPasswordError = (password) => {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const isEmailValid = (email) => EMAIL_REGEX.test(email);
-
-
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function AuthPage() {
@@ -68,9 +82,11 @@ export default function AuthPage() {
   const [studentRegEmail, setStudentRegEmail] = useState("");
   const [studentRegEmailError, setStudentRegEmailError] = useState("");
   const [studentRegPassword, setStudentRegPassword] = useState("");
-  const [studentRegConfirmPassword, setStudentRegConfirmPassword] = useState("");
+  const [studentRegConfirmPassword, setStudentRegConfirmPassword] =
+    useState("");
   const [showStudentRegPassword, setShowStudentRegPassword] = useState(false);
-  const [showStudentRegConfirmPassword, setShowStudentRegConfirmPassword] = useState(false);
+  const [showStudentRegConfirmPassword, setShowStudentRegConfirmPassword] =
+    useState(false);
   const [studentPasswordMismatch, setStudentPasswordMismatch] = useState(false);
   const [studentPasswordError, setStudentPasswordError] = useState("");
 
@@ -85,12 +101,19 @@ export default function AuthPage() {
   const [alumniRegPassword, setAlumniRegPassword] = useState("");
   const [alumniRegConfirmPassword, setAlumniRegConfirmPassword] = useState("");
   const [showAlumniRegPassword, setShowAlumniRegPassword] = useState(false);
-  const [showAlumniRegConfirmPassword, setShowAlumniRegConfirmPassword] = useState(false);
+  const [showAlumniRegConfirmPassword, setShowAlumniRegConfirmPassword] =
+    useState(false);
   const [alumniPasswordMismatch, setAlumniPasswordMismatch] = useState(false);
   const [alumniPasswordError, setAlumniPasswordError] = useState("");
 
-  const openStudentRegistration = () => { setRegistrationType("student"); setShowRegistration(true); };
-  const openAlumniRegistration = () => { setRegistrationType("alumni"); setShowRegistration(true); };
+  const openStudentRegistration = () => {
+    setRegistrationType("student");
+    setShowRegistration(true);
+  };
+  const openAlumniRegistration = () => {
+    setRegistrationType("alumni");
+    setShowRegistration(true);
+  };
 
   // ─── Login Handlers ───────────────────────────────────────────────────────
   const handleStudentLogin = async (e) => {
@@ -168,7 +191,11 @@ export default function AuthPage() {
         window.location.href = "/modules";
       }
     } catch (err) {
-      const msg = err.response?.data?.message || (err.response ? "Registration failed" : "Cannot reach server. Is the backend running on the correct port?");
+      const msg =
+        err.response?.data?.message ||
+        (err.response
+          ? "Registration failed"
+          : "Cannot reach server. Is the backend running on the correct port?");
       alert(msg);
     }
   };
@@ -214,7 +241,11 @@ export default function AuthPage() {
         window.location.href = "/modules";
       }
     } catch (err) {
-      const msg = err.response?.data?.message || (err.response ? "Registration failed" : "Cannot reach server. Is the backend running on the correct port?");
+      const msg =
+        err.response?.data?.message ||
+        (err.response
+          ? "Registration failed"
+          : "Cannot reach server. Is the backend running on the correct port?");
       alert(msg);
     }
   };
@@ -225,33 +256,66 @@ export default function AuthPage() {
       <div className={`auth-container ${showRegistration ? "slide-up" : ""}`}>
         {/* MOBILE TOGGLE BAR */}
         <div className="mobile-auth-toggle">
-          <button className={isStudent ? "active" : ""} onClick={() => setIsStudent(true)}>Student Login</button>
-          <button className={!isStudent ? "active" : ""} onClick={() => setIsStudent(false)}>Alumni Login</button>
+          <button
+            className={isStudent ? "active" : ""}
+            onClick={() => setIsStudent(true)}
+          >
+            Student Login
+          </button>
+          <button
+            className={!isStudent ? "active" : ""}
+            onClick={() => setIsStudent(false)}
+          >
+            Alumni Login
+          </button>
         </div>
 
         {/* STUDENT LOGIN */}
-        <div className={`auth-panel student-sign-in-panel ${isStudent ? "active" : "hidden-left"}`}>
+        <div
+          className={`auth-panel student-sign-in-panel ${isStudent ? "active" : "hidden-left"}`}
+        >
           <h2 className="login-form-panel-title">Student Login</h2>
           <form className="auth-form" onSubmit={handleStudentLogin}>
             <input
-              type="email" required placeholder="Enter Email"
+              type="email"
+              required
+              placeholder="Enter Email"
               value={studentEmail}
-              onChange={(e) => { setStudentEmail(e.target.value); setStudentLoginError(false); }}
+              onChange={(e) => {
+                setStudentEmail(e.target.value);
+                setStudentLoginError(false);
+              }}
               className={`auth-input ${studentLoginError ? "input-error" : ""}`}
             />
             <div className="password-field-container">
               <div className="password-input-wrapper">
                 <input
-                  type={showStudentPassword ? "text" : "password"} required placeholder="Enter Password"
+                  type={showStudentPassword ? "text" : "password"}
+                  required
+                  placeholder="Enter Password"
                   value={studentPassword}
-                  onChange={(e) => { setStudentPassword(e.target.value); setStudentLoginError(false); }}
+                  onChange={(e) => {
+                    setStudentPassword(e.target.value);
+                    setStudentLoginError(false);
+                  }}
                   className={`auth-input ${studentLoginError ? "input-error" : ""}`}
                 />
-                <button type="button" className="password-toggle-btn" onClick={() => setShowStudentPassword(!showStudentPassword)} aria-label="Toggle password visibility">
-                  {showStudentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowStudentPassword(!showStudentPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  {showStudentPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
-              {studentLoginError && <p className="error-message">Invalid email or password</p>}
+              {studentLoginError && (
+                <p className="error-message">Invalid email or password</p>
+              )}
             </div>
 
             <div className="forgot-container">
@@ -260,35 +324,65 @@ export default function AuthPage() {
               </a>
             </div>
             <div className="auth-button-container">
-              <button type="submit" className="auth-button student-sign-in-button">Sign In</button>
+              <button
+                type="submit"
+                className="auth-button student-sign-in-button"
+              >
+                Sign In
+              </button>
             </div>
-            <p className="register-link" onClick={openStudentRegistration}>Register as Student</p>
+            <p className="register-link" onClick={openStudentRegistration}>
+              Register as Student
+            </p>
           </form>
         </div>
 
         {/* ALUMNI LOGIN */}
-        <div className={`auth-panel Alumni-sign-in-panel ${isStudent ? "hidden-right" : "active"}`}>
+        <div
+          className={`auth-panel Alumni-sign-in-panel ${isStudent ? "hidden-right" : "active"}`}
+        >
           <h2 className="login-form-panel-title">Alumni Login</h2>
           <form className="auth-form" onSubmit={handleAlumniLogin}>
             <input
-              type="email" required placeholder="Enter Email"
+              type="email"
+              required
+              placeholder="Enter Email"
               value={alumniEmail}
-              onChange={(e) => { setAlumniEmail(e.target.value); setAlumniLoginError(false); }}
+              onChange={(e) => {
+                setAlumniEmail(e.target.value);
+                setAlumniLoginError(false);
+              }}
               className={`auth-input ${alumniLoginError ? "input-error" : ""}`}
             />
             <div className="password-field-container">
               <div className="password-input-wrapper">
                 <input
-                  type={showAlumniPassword ? "text" : "password"} required placeholder="Enter Password"
+                  type={showAlumniPassword ? "text" : "password"}
+                  required
+                  placeholder="Enter Password"
                   value={alumniPassword}
-                  onChange={(e) => { setAlumniPassword(e.target.value); setAlumniLoginError(false); }}
+                  onChange={(e) => {
+                    setAlumniPassword(e.target.value);
+                    setAlumniLoginError(false);
+                  }}
                   className={`auth-input ${alumniLoginError ? "input-error" : ""}`}
                 />
-                <button type="button" className="password-toggle-btn" onClick={() => setShowAlumniPassword(!showAlumniPassword)} aria-label="Toggle password visibility">
-                  {showAlumniPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowAlumniPassword(!showAlumniPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  {showAlumniPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
-              {alumniLoginError && <p className="error-message">Invalid email or password</p>}
+              {alumniLoginError && (
+                <p className="error-message">Invalid email or password</p>
+              )}
             </div>
 
             <div className="forgot-container">
@@ -307,21 +401,37 @@ export default function AuthPage() {
         </div>
 
         {/* TOGGLE PANEL */}
-        <div className={`auth-panel middle-panel ${isStudent ? "middle-right" : "middle-left"}`}>
-          <img src="/Round-Logo-USP.png" alt="University Logo" className="middle-panel-logo" />
-          <button onClick={() => setIsStudent(!isStudent)} className="toggle-button">
+        <div
+          className={`auth-panel middle-panel ${isStudent ? "middle-right" : "middle-left"}`}
+        >
+          <img
+            src="/Round-Logo-USP.png"
+            alt="University Logo"
+            className="middle-panel-logo"
+          />
+          <button
+            onClick={() => setIsStudent(!isStudent)}
+            className="toggle-button"
+          >
             {isStudent ? "Alumni Login" : "Student Login"}
           </button>
         </div>
       </div>
 
       {/* STUDENT REGISTRATION */}
-      <div className={`registration-container ${showRegistration && registrationType === "student" ? "slide-up-active" : ""}`}>
-        <form className="registration-panel" onSubmit={handleStudentRegistration}>
+      <div
+        className={`registration-container ${showRegistration && registrationType === "student" ? "slide-up-active" : ""}`}
+      >
+        <form
+          className="registration-panel"
+          onSubmit={handleStudentRegistration}
+        >
           <div className="registration-monogram">
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
-          <h2 className="registration-form-panel-title">Student Registration</h2>
+          <h2 className="registration-form-panel-title">
+            Student Registration
+          </h2>
           <div className="registration-form">
             <div className="form-row">
               <input
@@ -341,33 +451,30 @@ export default function AuthPage() {
               />
             </div>
             <div className="form-row">
-              <input
-                className="auth-input"
-                placeholder="Email"
-                type="email"
-                required
-                value={studentRegEmail}
-                onChange={(e) => setStudentRegEmail(e.target.value)}
-              />
-
-              <input
-                className="auth-input"
-                placeholder="Department  (e.g. Computer Science)"
-                required
-                value={studentRegDepartment}
-                onChange={(e) => setStudentRegDepartment(e.target.value)}
-              />
               <div className="form-field-wrapper">
                 <input
                   className={`auth-input ${studentRegEmailError ? "input-error" : ""}`}
-                  placeholder="Email" type="email" required
+                  placeholder="Email"
+                  type="email"
+                  required
                   value={studentRegEmail}
-                  onChange={(e) => { setStudentRegEmail(e.target.value); setStudentRegEmailError(""); }}
+                  onChange={(e) => {
+                    setStudentRegEmail(e.target.value);
+                    setStudentRegEmailError("");
+                  }}
                 />
-                {studentRegEmailError && <p className="error-message">{studentRegEmailError}</p>}
+                {studentRegEmailError && (
+                  <p className="error-message">{studentRegEmailError}</p>
+                )}
               </div>
               <div className="form-field-wrapper">
-                <input className="auth-input" placeholder="Department" required value={studentRegDepartment} onChange={(e) => setStudentRegDepartment(e.target.value)} />
+                <input
+                  className="auth-input"
+                  placeholder="Department  (e.g. Computer Science)"
+                  required
+                  value={studentRegDepartment}
+                  onChange={(e) => setStudentRegDepartment(e.target.value)}
+                />
               </div>
             </div>
             <div className="form-row">
@@ -375,15 +482,34 @@ export default function AuthPage() {
                 <div className="password-input-wrapper">
                   <input
                     className={`auth-input ${studentPasswordError ? "input-error" : ""}`}
-                    type={showStudentRegPassword ? "text" : "password"} required placeholder="Password"
+                    type={showStudentRegPassword ? "text" : "password"}
+                    required
+                    placeholder="Password"
                     value={studentRegPassword}
-                    onChange={(e) => { setStudentRegPassword(e.target.value); setStudentPasswordMismatch(false); setStudentPasswordError(""); }}
+                    onChange={(e) => {
+                      setStudentRegPassword(e.target.value);
+                      setStudentPasswordMismatch(false);
+                      setStudentPasswordError("");
+                    }}
                   />
-                  <button type="button" className="password-toggle-btn" onClick={() => setShowStudentRegPassword(!showStudentRegPassword)} aria-label="Toggle password visibility">
-                    {showStudentRegPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() =>
+                      setShowStudentRegPassword(!showStudentRegPassword)
+                    }
+                    aria-label="Toggle password visibility"
+                  >
+                    {showStudentRegPassword ? (
+                      <EyeOff size={20} />
+                    ) : (
+                      <Eye size={20} />
+                    )}
                   </button>
                 </div>
-                {studentPasswordError && <p className="error-message">{studentPasswordError}</p>}
+                {studentPasswordError && (
+                  <p className="error-message">{studentPasswordError}</p>
+                )}
               </div>
               <div className="form-field-wrapper">
                 <input
@@ -402,15 +528,35 @@ export default function AuthPage() {
                   <div className="password-input-wrapper">
                     <input
                       className={`auth-input ${studentPasswordMismatch ? "input-error" : ""}`}
-                      type={showStudentRegConfirmPassword ? "text" : "password"} required placeholder="Confirm Password"
+                      type={showStudentRegConfirmPassword ? "text" : "password"}
+                      required
+                      placeholder="Confirm Password"
                       value={studentRegConfirmPassword}
-                      onChange={(e) => { setStudentRegConfirmPassword(e.target.value); setStudentPasswordMismatch(false); }}
+                      onChange={(e) => {
+                        setStudentRegConfirmPassword(e.target.value);
+                        setStudentPasswordMismatch(false);
+                      }}
                     />
-                    <button type="button" className="password-toggle-btn" onClick={() => setShowStudentRegConfirmPassword(!showStudentRegConfirmPassword)} aria-label="Toggle password visibility">
-                      {showStudentRegConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() =>
+                        setShowStudentRegConfirmPassword(
+                          !showStudentRegConfirmPassword,
+                        )
+                      }
+                      aria-label="Toggle password visibility"
+                    >
+                      {showStudentRegConfirmPassword ? (
+                        <EyeOff size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
                     </button>
                   </div>
-                  {studentPasswordMismatch && <p className="error-message">Passwords do not match</p>}
+                  {studentPasswordMismatch && (
+                    <p className="error-message">Passwords do not match</p>
+                  )}
                 </div>
               </div>
               <div className="form-field-wrapper">
@@ -424,14 +570,26 @@ export default function AuthPage() {
                 />
               </div>
             </div>
-            <button type="submit" className="auth-button registration-button">Register</button>
-            <p className="back-to-login-link" onClick={() => setShowRegistration(false)}>Back to Login</p>
+            <button type="submit" className="auth-button registration-button">
+              Register
+            </button>
+            <p
+              className="back-to-login-link"
+              onClick={() => setShowRegistration(false)}
+            >
+              Back to Login
+            </p>
           </div>
         </form>
       </div>
 
-      <div className={`registration-container ${showRegistration && registrationType === "alumni" ? "slide-up-active" : ""}`}>
-        <form className="registration-panel" onSubmit={handleAlumniRegistration}>
+      <div
+        className={`registration-container ${showRegistration && registrationType === "alumni" ? "slide-up-active" : ""}`}
+      >
+        <form
+          className="registration-panel"
+          onSubmit={handleAlumniRegistration}
+        >
           <div className="registration-monogram">
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
@@ -455,34 +613,31 @@ export default function AuthPage() {
               />
             </div>
             <div className="form-row">
-              <input
-                className="auth-input"
-                placeholder="Email"
-                type="email"
-                required
-                value={alumniRegEmail}
-                onChange={(e) => setAlumniRegEmail(e.target.value)}
-              />
-
-              <input
-                className="auth-input"
-                type="text"
-                required
-                placeholder="Graduation Year,  (e.g. 2024)"
-                value={alumniRegGradYear}
-                onChange={(e) => setAlumniRegGradYear(e.target.value)}
-              />
               <div className="form-field-wrapper">
                 <input
                   className={`auth-input ${alumniRegEmailError ? "input-error" : ""}`}
-                  placeholder="Email" type="email" required
+                  placeholder="Email"
+                  type="email"
+                  required
                   value={alumniRegEmail}
-                  onChange={(e) => { setAlumniRegEmail(e.target.value); setAlumniRegEmailError(""); }}
+                  onChange={(e) => {
+                    setAlumniRegEmail(e.target.value);
+                    setAlumniRegEmailError("");
+                  }}
                 />
-                {alumniRegEmailError && <p className="error-message">{alumniRegEmailError}</p>}
+                {alumniRegEmailError && (
+                  <p className="error-message">{alumniRegEmailError}</p>
+                )}
               </div>
               <div className="form-field-wrapper">
-                <input className="auth-input" type="text" required placeholder="Graduation Year" value={alumniRegGradYear} onChange={(e) => setAlumniRegGradYear(e.target.value)} />
+                <input
+                  className="auth-input"
+                  type="text"
+                  required
+                  placeholder="Graduation Year,  (e.g. 2024)"
+                  value={alumniRegGradYear}
+                  onChange={(e) => setAlumniRegGradYear(e.target.value)}
+                />
               </div>
             </div>
             <div className="form-row">
@@ -490,15 +645,34 @@ export default function AuthPage() {
                 <div className="password-input-wrapper">
                   <input
                     className={`auth-input ${alumniPasswordError ? "input-error" : ""}`}
-                    type={showAlumniRegPassword ? "text" : "password"} required placeholder="Password"
+                    type={showAlumniRegPassword ? "text" : "password"}
+                    required
+                    placeholder="Password"
                     value={alumniRegPassword}
-                    onChange={(e) => { setAlumniRegPassword(e.target.value); setAlumniPasswordMismatch(false); setAlumniPasswordError(""); }}
+                    onChange={(e) => {
+                      setAlumniRegPassword(e.target.value);
+                      setAlumniPasswordMismatch(false);
+                      setAlumniPasswordError("");
+                    }}
                   />
-                  <button type="button" className="password-toggle-btn" onClick={() => setShowAlumniRegPassword(!showAlumniRegPassword)} aria-label="Toggle password visibility">
-                    {showAlumniRegPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() =>
+                      setShowAlumniRegPassword(!showAlumniRegPassword)
+                    }
+                    aria-label="Toggle password visibility"
+                  >
+                    {showAlumniRegPassword ? (
+                      <EyeOff size={20} />
+                    ) : (
+                      <Eye size={20} />
+                    )}
                   </button>
                 </div>
-                {alumniPasswordError && <p className="error-message">{alumniPasswordError}</p>}
+                {alumniPasswordError && (
+                  <p className="error-message">{alumniPasswordError}</p>
+                )}
               </div>
               <div className="form-field-wrapper">
                 <input
@@ -517,15 +691,35 @@ export default function AuthPage() {
                   <div className="password-input-wrapper">
                     <input
                       className={`auth-input ${alumniPasswordMismatch ? "input-error" : ""}`}
-                      type={showAlumniRegConfirmPassword ? "text" : "password"} required placeholder="Confirm Password"
+                      type={showAlumniRegConfirmPassword ? "text" : "password"}
+                      required
+                      placeholder="Confirm Password"
                       value={alumniRegConfirmPassword}
-                      onChange={(e) => { setAlumniRegConfirmPassword(e.target.value); setAlumniPasswordMismatch(false); }}
+                      onChange={(e) => {
+                        setAlumniRegConfirmPassword(e.target.value);
+                        setAlumniPasswordMismatch(false);
+                      }}
                     />
-                    <button type="button" className="password-toggle-btn" onClick={() => setShowAlumniRegConfirmPassword(!showAlumniRegConfirmPassword)} aria-label="Toggle password visibility">
-                      {showAlumniRegConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() =>
+                        setShowAlumniRegConfirmPassword(
+                          !showAlumniRegConfirmPassword,
+                        )
+                      }
+                      aria-label="Toggle password visibility"
+                    >
+                      {showAlumniRegConfirmPassword ? (
+                        <EyeOff size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
                     </button>
                   </div>
-                  {alumniPasswordMismatch && <p className="error-message">Passwords do not match</p>}
+                  {alumniPasswordMismatch && (
+                    <p className="error-message">Passwords do not match</p>
+                  )}
                 </div>
               </div>
               <div className="form-field-wrapper">
@@ -539,8 +733,15 @@ export default function AuthPage() {
                 />
               </div>
             </div>
-            <button type="submit" className="auth-button registration-button">Register</button>
-            <p className="back-to-login-link" onClick={() => setShowRegistration(false)}>Back to Login</p>
+            <button type="submit" className="auth-button registration-button">
+              Register
+            </button>
+            <p
+              className="back-to-login-link"
+              onClick={() => setShowRegistration(false)}
+            >
+              Back to Login
+            </p>
           </div>
         </form>
       </div>
