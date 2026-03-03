@@ -265,9 +265,31 @@
   font-weight: 500;
 }
 
-.profile-text { color: #495057; }
-.profile-value { color: #495057; padding: 8px 0; }
-.profile-link { color: #d4aa28; text-decoration: none; padding: 8px 0; transition: color 0.2s ease; }
+.profile-text { 
+  color: #495057;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.profile-value { 
+  color: #495057; 
+  padding: 8px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.profile-link { 
+  color: #d4aa28; 
+  text-decoration: none; 
+  padding: 8px 0; 
+  transition: color 0.2s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
 .profile-link:hover { color: #1a1a1a; text-decoration: underline; }
 
 /* Inputs */
@@ -410,4 +432,12 @@
   .profile-section-title { font-size: 16px; }
 
   .profile-input, .profile-textarea { font-size: 14px; padding: 10px 12px; }
+
+  .profile-text,
+  .profile-value,
+  .profile-link {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
 }
