@@ -20,34 +20,42 @@ function App() {
       <Routes>
         <Route path="/" element={<AuthPage />} />
         <Route path="/admin" element={<AdminAuth />} />
-        <Route path="/modules" element={<Layout />}>
+        
+        <Route
+          path="/modules"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Dashboard />} />
-          
-          <Route 
-            path="profile" 
-            element={
-              <ProtectedRoute allowedRoles={["student", "alumni"]}>
-                <Profile />
-              </ProtectedRoute>
-            } 
-          />
 
-          <Route 
-            path="messaging/:conversationId?" 
+          <Route path="profile" element={<Profile />} />
+
+          <Route path="events" element={<Events />} />
+
+          <Route path="jobs" element={<Jobs />} />
+
+          <Route path="mentorship" element={<Mentorship />} />
+
+          <Route path="stories" element={<SuccessStories />} />
+
+          <Route path="careerInsights" element={<CareerInsights />} />
+
+          <Route path="directory" element={<Directory />} />
+
+          <Route path="notifications" element={<Notifications />} />
+
+          {/* Messaging & Profile restricted to students and alumni only (not admin) */}
+          <Route
+            path="messaging/:conversationId?"
             element={
               <ProtectedRoute allowedRoles={["student", "alumni"]}>
                 <Messaging />
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route path="events" element={<Events />} />
-          <Route path="jobs" element={<Jobs />} />
-          <Route path="mentorship" element={<Mentorship />} />
-          <Route path="stories" element={<SuccessStories />} />
-          <Route path="careerInsights" element={<CareerInsights />} />
-          <Route path="directory" element={<Directory />} />
-          <Route path="notifications" element={<Notifications />} />
         </Route>
       </Routes>
     </Router>

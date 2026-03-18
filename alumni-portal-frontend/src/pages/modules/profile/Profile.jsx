@@ -9,12 +9,13 @@ import {
   Save,
   Briefcase,
   GraduationCap,
-  Loader}
-   from "lucide-react";
+  Loader,
+} from "lucide-react";
+import { Toast, useToast } from "./Toast";
 import "./Profile.css";
 
 // Avatar Component
-function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading }) {
+function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading, addToast }) {
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -27,11 +28,11 @@ function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading }) {
       "image/webp",
     ];
     if (!allowedTypes.includes(file.type)) {
-      alert("Please upload a valid image file (JPG, PNG, GIF, or WEBP)");
+      addToast("Please upload a valid image file (JPG, PNG, GIF, or WEBP)", "warning");
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      alert("Image size should not exceed 5MB");
+      addToast("Image size should not exceed 5MB", "warning");
       return;
     }
     await onImageUpload(file);
@@ -77,11 +78,7 @@ function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading }) {
               exit={{ opacity: 0 }}
               className="profile-avatar-overlay"
             >
-              {uploading ? (
-                <div className="upload-spinner" />
-              ) : (
-                <Upload size={24} />
-              )}
+              {uploading ? <div className="upload-spinner" /> : <Upload size={24} />}
             </motion.div>
           )}
         </AnimatePresence>
@@ -98,11 +95,7 @@ function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading }) {
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? (
-              <div className="upload-spinner-small" />
-            ) : (
-              <Upload size={14} />
-            )}
+            {uploading ? <div className="upload-spinner-small" /> : <Upload size={14} />}
           </motion.button>
         )}
       </AnimatePresence>
@@ -184,6 +177,8 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const { toasts, addToast, removeToast } = useToast();
+
   const [profile, setProfile] = useState({
     name: "",
     role: "",
@@ -242,7 +237,7 @@ export default function Profile() {
         setOriginalProfile(profileData);
       } catch (err) {
         console.error("Error fetching profile:", err);
-        alert("Failed to load profile data.");
+        addToast("Failed to load profile data.", "error");
       } finally {
         setLoading(false);
         setError(null);
@@ -269,11 +264,11 @@ export default function Profile() {
           ...prev,
           avatar: res.data.data.profilePicture,
         }));
-        alert("Profile picture updated successfully!");
+        addToast("Profile picture updated successfully!", "success");
       }
     } catch (err) {
       console.error("Upload Error:", err);
-      alert("Failed to upload image.");
+      addToast("Failed to upload image.", "error");
     } finally {
       setUploadingImage(false);
     }
@@ -310,13 +305,13 @@ export default function Profile() {
       const res = await API.put("/auth/update-profile", payload);
 
       if (res.data.success) {
-        alert("Profile updated successfully!");
+        addToast("Profile updated successfully!", "success");
         setOriginalProfile(profile);
         setIsEditing(false);
       }
     } catch (err) {
       console.error("Update Error:", err);
-      alert("Update failed.");
+      addToast("Update failed. Please try again.", "error");
     }
   };
 
@@ -355,7 +350,6 @@ export default function Profile() {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="profile">
@@ -366,8 +360,12 @@ export default function Profile() {
       </div>
     );
   }
+
   return (
     <div className="profile">
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} removeToast={removeToast} />
+
       <div className="profile-container">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <motion.div className="profile-card profile-header-card">
@@ -378,6 +376,7 @@ export default function Profile() {
                 isEditing={isEditing}
                 onImageUpload={handleImageUpload}
                 uploading={uploadingImage}
+                addToast={addToast}
               />
               <div className="profile-header-info">
                 <div className="profile-title-row">

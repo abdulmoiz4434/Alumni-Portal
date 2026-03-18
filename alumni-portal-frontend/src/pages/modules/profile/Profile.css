@@ -399,6 +399,123 @@
   gap: 12px;
 }
 
+.toast-container {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  min-width: 280px;
+  max-width: 380px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Types */
+.toast-success {
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+}
+
+.toast-success .toast-icon {
+  color: #e6bb2f;
+}
+
+.toast-success .toast-progress {
+  background: #e6bb2f;
+}
+
+.toast-error {
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+}
+
+.toast-error .toast-icon {
+  color: #ff5c5c;
+}
+
+.toast-error .toast-progress {
+  background: #ff5c5c;
+}
+
+.toast-warning {
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+}
+
+.toast-warning .toast-icon {
+  color: #f0a500;
+}
+
+.toast-warning .toast-progress {
+  background: #f0a500;
+}
+
+/* Icon */
+.toast-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Message */
+.toast-message {
+  flex: 1;
+  line-height: 1.4;
+  color: #f0f0f0;
+}
+
+/* Close button */
+.toast-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.toast-close:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Progress bar */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: left;
+  border-radius: 0 0 12px 12px;
+}
+
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 1024px) {
   .profile-container {
@@ -513,5 +630,17 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     word-break: break-word;
+  }
+
+  .toast-container {
+    bottom: 16px;
+    right: 12px;
+    left: 12px;
+  }
+
+  .toast {
+    min-width: unset;
+    max-width: 100%;
+    width: 100%;
   }
 }

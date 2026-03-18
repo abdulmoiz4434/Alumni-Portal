@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import API from "../../../api/axios"; // Updated to use your custom instance
+import API from "../../../api/axios";
 import {
   Search,
   Building2,
@@ -11,7 +11,27 @@ import {
   Trash2,
   X
 } from "lucide-react";
+import { Toast, useToast } from "../Profile/Toast";
 import "./Jobs.css";
+
+// Confirm Dialog Component
+function ConfirmDialog({ message, onConfirm, onCancel }) {
+  return (
+    <div className="confirm-overlay">
+      <div className="confirm-dialog">
+        <p className="confirm-message">{message}</p>
+        <div className="confirm-actions">
+          <button className="confirm-btn confirm-cancel" onClick={onCancel}>
+            Cancel
+          </button>
+          <button className="confirm-btn confirm-delete" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Jobs() {
   // 1. Data State
@@ -21,6 +41,8 @@ export default function Jobs() {
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState(null); // { id }
+  const { toasts, addToast, removeToast } = useToast();
 
   // 2. Form State
   const [formData, setFormData] = useState({
@@ -51,7 +73,7 @@ export default function Jobs() {
       const res = await API.get("/auth/me");
       const { user } = res.data.data;
       setUserRole(user.role);
-      setUserId(user.id); // API returns 'id' not '_id'
+      setUserId(user.id);
     } catch (err) {
       console.error("Error fetching user profile:", err);
     }
@@ -74,42 +96,44 @@ export default function Jobs() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     try {
       const res = await API.post("/jobs", formData);
-      
       if (res.data.success) {
-        alert("Opportunity posted successfully!");
+        addToast("Opportunity posted successfully!", "success");
         setIsModalOpen(false);
-        setFormData({ 
-          category: "job", title: "", company: "", location: "", 
-          salary: "", jobType: "full-time", description: "", 
-          deadline: "", requirements: "", contactEmail: "" 
+        setFormData({
+          category: "job", title: "", company: "", location: "",
+          salary: "", jobType: "full-time", description: "",
+          deadline: "", requirements: "", contactEmail: ""
         });
-        fetchJobs(); // Refresh the list
+        fetchJobs();
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to post job");
+      addToast(err.response?.data?.message || "Failed to post opportunity.", "error");
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      try {
-        const res = await API.delete(`/jobs/${id}`);
-        if (res.data.success) {
-          alert("Job removed successfully");
-          setOpportunities(opportunities.filter(op => op._id !== id));
-        }
-      } catch (err) {
-        alert(err.response?.data?.message || "Failed to delete");
+  const handleDelete = (id) => {
+    setConfirmDialog({ id });
+  };
+
+  const confirmDelete = async () => {
+    const { id } = confirmDialog;
+    setConfirmDialog(null);
+    try {
+      const res = await API.delete(`/jobs/${id}`);
+      if (res.data.success) {
+        setOpportunities((prev) => prev.filter((op) => op._id !== id));
+        addToast("Opportunity removed successfully.", "success");
       }
+    } catch (err) {
+      addToast(err.response?.data?.message || "Failed to delete opportunity.", "error");
     }
   };
 
   const canDeleteJob = (postedBy) => {
-    if (userRole === "admin") return true; // Admin can delete any job
-    if (userRole === "alumni" && userId === postedBy._id) return true; // Alumni can only delete their own
+    if (userRole === "admin") return true;
+    if (userRole === "alumni" && userId === postedBy._id) return true;
     return false;
   };
 
@@ -141,6 +165,7 @@ export default function Jobs() {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="jobs">
@@ -151,8 +176,21 @@ export default function Jobs() {
       </div>
     );
   }
+
   return (
     <div className="jobs">
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} removeToast={removeToast} />
+
+      {/* Confirm Dialog */}
+      {confirmDialog && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this opportunity? This action cannot be undone."
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmDialog(null)}
+        />
+      )}
+
       <div className="jobs-hero">
         <div className="jobs-hero-content">
           <h1 className="main-title">Career Opportunities</h1>
@@ -180,14 +218,22 @@ export default function Jobs() {
           </div>
 
           <div className="filters">
-            <select value={filterLocation} onChange={(e) => setFilterLocation(e.target.value)} className="filter-select">
+            <select
+              value={filterLocation}
+              onChange={(e) => setFilterLocation(e.target.value)}
+              className="filter-select"
+            >
               <option value="all">All Locations</option>
               <option value="remote">Remote</option>
               <option value="lahore">Lahore</option>
               <option value="karachi">Karachi</option>
             </select>
 
-            <select value={activeTab} onChange={(e) => setActiveTab(e.target.value)} className="tab-select">
+            <select
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value)}
+              className="tab-select"
+            >
               <option value="all">All Opportunities</option>
               <option value="jobs">Jobs</option>
               <option value="internships">Internships</option>
@@ -205,7 +251,10 @@ export default function Jobs() {
             filteredOpportunities.map((item) => (
               <div key={item._id} className={`opportunity-card ${item.category}`}>
                 {canDeleteJob(item.postedBy) && (
-                  <button className="job-delete-btn" onClick={() => handleDelete(item._id)}>
+                  <button
+                    className="job-delete-btn"
+                    onClick={() => handleDelete(item._id)}
+                  >
                     <Trash2 size={18} />
                   </button>
                 )}
@@ -213,16 +262,23 @@ export default function Jobs() {
                 <div className="card-header">
                   <div className="card-meta">
                     <span className={`badge ${item.category}`}>{item.category}</span>
-                    <span className="job-posted-date">{new Date(item.createdAt).toLocaleDateString()}</span>
+                    <span className="job-posted-date">
+                      {new Date(item.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                   <h2 className="job-title">{item.title}</h2>
-                  <p className="company-name"><Building2 size={18} /> {item.company}</p>
+                  <p className="company-name">
+                    <Building2 size={18} /> {item.company}
+                  </p>
                 </div>
 
                 <div className="card-body">
                   <div className="info-row">
                     <span className="info-item"><MapPin size={20} /> {item.location}</span>
-                    <span className="info-item"><Briefcase size={20} /> {item.category.charAt(0).toUpperCase() + item.category.slice(1)}</span>
+                    <span className="info-item">
+                      <Briefcase size={20} />
+                      {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
+                    </span>
                   </div>
                   <p className="description">{item.description}</p>
                   <div className="card-footer">
@@ -235,7 +291,7 @@ export default function Jobs() {
                   <div className="contact-email-section">
                     <p className="contact-label">Send CV to:</p>
                     {item.contactEmail ? (
-                      <p href={`mailto:${item.contactEmail}`} className="email-link">{item.contactEmail}</p>
+                      <p className="email-link">{item.contactEmail}</p>
                     ) : (
                       <p className="email-missing">Email not provided</p>
                     )}
@@ -247,52 +303,102 @@ export default function Jobs() {
         </div>
       </div>
 
+      {/* Post Opportunity Modal */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="event-modal">
             <div className="modal-header">
               <h2>Post New Opportunity</h2>
-              <button onClick={() => setIsModalOpen(false)} className="close-modal-btn"><X size={24} /></button>
+              <button onClick={() => setIsModalOpen(false)} className="close-modal-btn">
+                <X size={24} />
+              </button>
             </div>
             <form className="form-grid" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Type</label>
-                <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="filter-select">
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="filter-select"
+                >
                   <option value="job">Job</option>
                   <option value="internship">Internship</option>
                 </select>
               </div>
               <div className="form-group">
                 <label>Job Title</label>
-                <input required type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
+                <input
+                  required
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label>Company</label>
-                <input required type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} />
+                <input
+                  required
+                  type="text"
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label>Location</label>
-                <input required type="text" value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} />
+                <input
+                  required
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label>Salary/Stipend</label>
-                <input type="text" value={formData.salary} onChange={(e) => setFormData({...formData, salary: e.target.value})} />
+                <input
+                  type="text"
+                  value={formData.salary}
+                  onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label>Deadline</label>
-                <input required type="date" value={formData.deadline} onChange={(e) => setFormData({...formData, deadline: e.target.value})} />
+                <input
+                  required
+                  type="date"
+                  value={formData.deadline}
+                  onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label>Contact Email</label>
-                <input required type="email" value={formData.contactEmail} onChange={(e) => setFormData({...formData, contactEmail: e.target.value})} placeholder="email@example.com" />
+                <input
+                  required
+                  type="email"
+                  value={formData.contactEmail}
+                  onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+                  placeholder="email@example.com"
+                />
               </div>
               <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                 <label>Description</label>
-                <textarea required rows="4" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})}></textarea>
+                <textarea
+                  required
+                  rows="4"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                ></textarea>
               </div>
               <div className="modal-footer" style={{ gridColumn: "1 / -1" }}>
-                <button type="button" className="event-btn-cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button type="submit" className="event-btn-submit">Post Opportunity</button>
+                <button
+                  type="button"
+                  className="event-btn-cancel"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="event-btn-submit">
+                  Post Opportunity
+                </button>
               </div>
             </form>
           </div>

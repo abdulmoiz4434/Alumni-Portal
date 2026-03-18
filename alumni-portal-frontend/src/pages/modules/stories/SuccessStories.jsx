@@ -6,48 +6,60 @@ import {
   FiCalendar, 
   FiBookOpen, 
   FiX 
-} from "react-icons/fi"; // Feather icons for a clean, modern look
-import { FaQuoteLeft } from "react-icons/fa"; // Font Awesome for the decorative quote
-import API from "../../../api/axios"; 
+} from "react-icons/fi";
+import { FaQuoteLeft } from "react-icons/fa";
+import API from "../../../api/axios";
+import { Toast, useToast } from "../Profile/Toast";
 import "./SuccessStories.css";
 
-// --- Sub-component for individual cards ---
+// Confirm Dialog Component
+function ConfirmDialog({ message, onConfirm, onCancel }) {
+  return (
+    <div className="confirm-overlay">
+      <div className="confirm-dialog">
+        <p className="confirm-message">{message}</p>
+        <div className="confirm-actions">
+          <button className="confirm-btn confirm-cancel" onClick={onCancel}>
+            Cancel
+          </button>
+          <button className="confirm-btn confirm-delete" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Story Card Component
 function StoryCard({ story, user, onDelete, index }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const maxLength = 200;
 
   const shouldShowReadMore = story.content.length > maxLength;
-  const contentToShow = isExpanded 
-    ? story.content 
+  const contentToShow = isExpanded
+    ? story.content
     : `${story.content.substring(0, maxLength)}...`;
 
-  // --- BULLETPROOF ID COMPARISON ---
-  // 1. Get current logged-in user's ID (check both _id and id)
   const currentUserId = user?._id || user?.id;
-
-  // 2. Get the author's ID from the populated alumnus object
   const storyAlumnusId = story.alumnus?._id || story.alumnus?.id || story.alumnus;
-
-  // 3. Compare as strings and handle potential undefined values
-  const isOwner = 
-    currentUserId && 
-    storyAlumnusId && 
+  const isOwner =
+    currentUserId &&
+    storyAlumnusId &&
     String(currentUserId) === String(storyAlumnusId);
-
   const isAdmin = user?.role === "admin";
   const canDelete = isOwner || isAdmin;
-  // ---------------------------------
 
   return (
-    <article 
+    <article
       className="story-card"
       style={{ animationDelay: `${index * 80}ms` }}
     >
       <div className="story-accent-bar" />
 
       {canDelete && (
-        <button 
-          className="story-delete-btn" 
+        <button
+          className="story-delete-btn"
           onClick={() => onDelete(story._id)}
           title="Delete Story"
         >
@@ -62,8 +74,8 @@ function StoryCard({ story, user, onDelete, index }) {
           {shouldShowReadMore ? contentToShow : story.content}
         </p>
         {shouldShowReadMore && (
-          <button 
-            className="read-more-btn" 
+          <button
+            className="read-more-btn"
             onClick={() => setIsExpanded(!isExpanded)}
           >
             {isExpanded ? "Show Less" : "Read More"}
@@ -83,7 +95,9 @@ function StoryCard({ story, user, onDelete, index }) {
             )}
           </div>
           <div className="story-card-info">
-            <h3 className="story-name">{story.alumnus?.fullName || "Anonymous Alumni"}</h3>
+            <h3 className="story-name">
+              {story.alumnus?.fullName || "Anonymous Alumni"}
+            </h3>
             <p className="story-meta">
               {story.title}
               {story.alumnus?.batch && ` · Class of ${story.alumnus.batch}`}
@@ -91,7 +105,7 @@ function StoryCard({ story, user, onDelete, index }) {
           </div>
         </div>
         <div className="story-date">
-          <FiCalendar size={12} style={{ marginRight: '4px' }} />
+          <FiCalendar size={12} style={{ marginRight: "4px" }} />
           {new Date(story.createdAt).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
@@ -103,7 +117,7 @@ function StoryCard({ story, user, onDelete, index }) {
   );
 }
 
-// --- Sub-component for Add Story Modal ---
+// Add Story Modal Component
 function AddStoryModal({ onClose, newStory, onChange, onSubmit }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -142,7 +156,9 @@ function AddStoryModal({ onClose, newStory, onChange, onSubmit }) {
         </div>
 
         <div className="modal-footer">
-          <button className="modal-button modal-button-cancel" onClick={onClose}>Cancel</button>
+          <button className="modal-button modal-button-cancel" onClick={onClose}>
+            Cancel
+          </button>
           <button
             className="modal-button modal-button-submit"
             onClick={onSubmit}
@@ -156,14 +172,15 @@ function AddStoryModal({ onClose, newStory, onChange, onSubmit }) {
   );
 }
 
-// --- Main Component ---
+// Main Component
 export default function SuccessStories() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddStoryModal, setShowAddStoryModal] = useState(false);
-  
-  const user = JSON.parse(localStorage.getItem("user")); 
+  const [confirmDialog, setConfirmDialog] = useState(null); // { storyId }
+  const { toasts, addToast, removeToast } = useToast();
 
+  const user = JSON.parse(localStorage.getItem("user"));
   const [newStory, setNewStory] = useState({ title: "", story: "" });
 
   useEffect(() => {
@@ -173,7 +190,7 @@ export default function SuccessStories() {
   const fetchStories = async () => {
     try {
       setLoading(true);
-      const response = await API.get("/stories"); 
+      const response = await API.get("/stories");
       if (response.data.success) {
         setStories(response.data.data);
       }
@@ -195,28 +212,32 @@ export default function SuccessStories() {
         setStories((prev) => [response.data.data, ...prev]);
         setNewStory({ title: "", story: "" });
         setShowAddStoryModal(false);
+        addToast("Your story has been shared successfully!", "success");
       }
     } catch (error) {
       console.error("Error adding story:", error);
-      alert(error.response?.data?.message || "Failed to submit story");
+      addToast(error.response?.data?.message || "Failed to submit story.", "error");
     }
   };
 
-  const handleDeleteStory = async (storyId) => {
-  if (!window.confirm("Are you sure you want to delete this story?")) return;
+  const handleDeleteStory = (storyId) => {
+    setConfirmDialog({ storyId });
+  };
 
-  try {
-    const response = await API.delete(`/stories/${storyId}`);
-    if (response.data.success) {
-      setStories((prev) => prev.filter(s => s._id !== storyId));
+  const confirmDelete = async () => {
+    const { storyId } = confirmDialog;
+    setConfirmDialog(null);
+    try {
+      const response = await API.delete(`/stories/${storyId}`);
+      if (response.data.success) {
+        setStories((prev) => prev.filter((s) => s._id !== storyId));
+        addToast("Story deleted successfully.", "success");
+      }
+    } catch (error) {
+      console.error("Full Error Object:", error);
+      addToast(error.response?.data?.message || "Could not delete the story.", "error");
     }
-  } catch (error) {
-    console.error("Full Error Object:", error);
-    // This will tell you if it's a 401 (Auth), 404 (Not Found), or 500 (Server Error)
-    const errorMsg = error.response?.data?.message || "Could not delete the story.";
-    alert(`Error: ${errorMsg}`); 
-  }
-};
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -225,16 +246,31 @@ export default function SuccessStories() {
 
   return (
     <div className="success-stories">
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} removeToast={removeToast} />
+
+      {/* Confirm Dialog */}
+      {confirmDialog && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this story? This action cannot be undone."
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmDialog(null)}
+        />
+      )}
+
       <div className="success-stories-hero">
         <div className="success-stories-hero-content">
           <h1 className="success-stories-title">Alumni Success Stories</h1>
           <p className="success-stories-subtitle">
             Inspiring journeys of our graduates making an impact around the world
           </p>
-          
+
           {user?.role === "alumni" && (
             <div className="hero-add-button-wrapper">
-              <button className="add-story-button" onClick={() => setShowAddStoryModal(true)}>
+              <button
+                className="add-story-button"
+                onClick={() => setShowAddStoryModal(true)}
+              >
                 <FiPlus size={20} />
                 Share Your Journey
               </button>
@@ -252,10 +288,10 @@ export default function SuccessStories() {
         ) : stories.length > 0 ? (
           <div className="success-stories-grid">
             {stories.map((story, i) => (
-              <StoryCard 
-                key={story._id} 
-                story={story} 
-                user={user} 
+              <StoryCard
+                key={story._id}
+                story={story}
+                user={user}
                 onDelete={handleDeleteStory}
                 index={i}
               />

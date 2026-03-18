@@ -82,11 +82,9 @@ export default function AuthPage() {
   const [studentRegEmail, setStudentRegEmail] = useState("");
   const [studentRegEmailError, setStudentRegEmailError] = useState("");
   const [studentRegPassword, setStudentRegPassword] = useState("");
-  const [studentRegConfirmPassword, setStudentRegConfirmPassword] =
-    useState("");
+  const [studentRegConfirmPassword, setStudentRegConfirmPassword] = useState("");
   const [showStudentRegPassword, setShowStudentRegPassword] = useState(false);
-  const [showStudentRegConfirmPassword, setShowStudentRegConfirmPassword] =
-    useState(false);
+  const [showStudentRegConfirmPassword, setShowStudentRegConfirmPassword] = useState(false);
   const [studentPasswordMismatch, setStudentPasswordMismatch] = useState(false);
   const [studentPasswordError, setStudentPasswordError] = useState("");
 
@@ -101,8 +99,7 @@ export default function AuthPage() {
   const [alumniRegPassword, setAlumniRegPassword] = useState("");
   const [alumniRegConfirmPassword, setAlumniRegConfirmPassword] = useState("");
   const [showAlumniRegPassword, setShowAlumniRegPassword] = useState(false);
-  const [showAlumniRegConfirmPassword, setShowAlumniRegConfirmPassword] =
-    useState(false);
+  const [showAlumniRegConfirmPassword, setShowAlumniRegConfirmPassword] = useState(false);
   const [alumniPasswordMismatch, setAlumniPasswordMismatch] = useState(false);
   const [alumniPasswordError, setAlumniPasswordError] = useState("");
 
@@ -118,7 +115,7 @@ export default function AuthPage() {
   // ─── Login Handlers ───────────────────────────────────────────────────────
   const handleStudentLogin = async (e) => {
     e.preventDefault();
-    if (!studentEmail || !studentPassword) return alert("Missing fields");
+    if (!studentEmail || !studentPassword) return;
     try {
       setStudentLoginError(false);
       socketService.disconnect();
@@ -135,7 +132,7 @@ export default function AuthPage() {
 
   const handleAlumniLogin = async (e) => {
     e.preventDefault();
-    if (!alumniEmail || !alumniPassword) return alert("Missing fields");
+    if (!alumniEmail || !alumniPassword) return;
     try {
       setAlumniLoginError(false);
       socketService.disconnect();
@@ -154,19 +151,14 @@ export default function AuthPage() {
   const handleStudentRegistration = async (e) => {
     e.preventDefault();
 
-    // Email format check
     if (!isEmailValid(studentRegEmail)) {
       setStudentRegEmailError("Please enter a valid email address");
       return;
     }
-
-    // Password complexity check
     if (!isPasswordValid(studentRegPassword)) {
       setStudentPasswordError(getPasswordError(studentRegPassword));
       return;
     }
-
-    // Confirm password check
     if (studentRegPassword !== studentRegConfirmPassword) {
       setStudentPasswordMismatch(true);
       return;
@@ -203,19 +195,14 @@ export default function AuthPage() {
   const handleAlumniRegistration = async (e) => {
     e.preventDefault();
 
-    // Email format check
     if (!isEmailValid(alumniRegEmail)) {
       setAlumniRegEmailError("Please enter a valid email address");
       return;
     }
-
-    // Password complexity check
     if (!isPasswordValid(alumniRegPassword)) {
       setAlumniPasswordError(getPasswordError(alumniRegPassword));
       return;
     }
-
-    // Confirm password check
     if (alumniRegPassword !== alumniRegConfirmPassword) {
       setAlumniPasswordMismatch(true);
       return;
@@ -250,10 +237,20 @@ export default function AuthPage() {
     }
   };
 
+  // Determine which panels are active for inert/tabindex control
+  const studentRegActive = showRegistration && registrationType === "student";
+  const alumniRegActive = showRegistration && registrationType === "alumni";
+  const loginVisible = !showRegistration;
+
   return (
     <main className="auth-main">
+
       {/* LOGIN CONTAINER */}
-      <div className={`auth-container ${showRegistration ? "slide-up" : ""}`}>
+      <div
+        className={`auth-container ${showRegistration ? "slide-up" : ""}`}
+        // When registration is shown, prevent tabbing into hidden login fields
+        inert={showRegistration ? "" : undefined}
+      >
         {/* MOBILE TOGGLE BAR */}
         <div className="mobile-auth-toggle">
           <button
@@ -273,6 +270,8 @@ export default function AuthPage() {
         {/* STUDENT LOGIN */}
         <div
           className={`auth-panel student-sign-in-panel ${isStudent ? "active" : "hidden-left"}`}
+          // Prevent tabbing into the hidden alumni panel
+          inert={!isStudent ? "" : undefined}
         >
           <h2 className="login-form-panel-title">Student Login</h2>
           <form className="auth-form" onSubmit={handleStudentLogin}>
@@ -306,11 +305,7 @@ export default function AuthPage() {
                   onClick={() => setShowStudentPassword(!showStudentPassword)}
                   aria-label="Toggle password visibility"
                 >
-                  {showStudentPassword ? (
-                    <EyeOff size={20} />
-                  ) : (
-                    <Eye size={20} />
-                  )}
+                  {showStudentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
               {studentLoginError && (
@@ -318,16 +313,8 @@ export default function AuthPage() {
               )}
             </div>
 
-            <div className="forgot-container">
-              <a href="#" className="forgot-password-link">
-                Forgot Password?
-              </a>
-            </div>
             <div className="auth-button-container">
-              <button
-                type="submit"
-                className="auth-button student-sign-in-button"
-              >
+              <button type="submit" className="auth-button student-sign-in-button">
                 Sign In
               </button>
             </div>
@@ -340,6 +327,7 @@ export default function AuthPage() {
         {/* ALUMNI LOGIN */}
         <div
           className={`auth-panel Alumni-sign-in-panel ${isStudent ? "hidden-right" : "active"}`}
+          inert={isStudent ? "" : undefined}
         >
           <h2 className="login-form-panel-title">Alumni Login</h2>
           <form className="auth-form" onSubmit={handleAlumniLogin}>
@@ -373,11 +361,7 @@ export default function AuthPage() {
                   onClick={() => setShowAlumniPassword(!showAlumniPassword)}
                   aria-label="Toggle password visibility"
                 >
-                  {showAlumniPassword ? (
-                    <EyeOff size={20} />
-                  ) : (
-                    <Eye size={20} />
-                  )}
+                  {showAlumniPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
               {alumniLoginError && (
@@ -385,15 +369,9 @@ export default function AuthPage() {
               )}
             </div>
 
-            <div className="forgot-container">
-              <a href="#" className="forgot-password-link">
-                Forgot Password?
-              </a>
-            </div>
             <button type="submit" className="auth-button Alumni-sign-in-button">
               Sign In
             </button>
-
             <p className="register-link" onClick={openAlumniRegistration}>
               Register as Alumni
             </p>
@@ -420,18 +398,14 @@ export default function AuthPage() {
 
       {/* STUDENT REGISTRATION */}
       <div
-        className={`registration-container ${showRegistration && registrationType === "student" ? "slide-up-active" : ""}`}
+        className={`registration-container ${studentRegActive ? "slide-up-active" : ""}`}
+        inert={!studentRegActive ? "" : undefined}
       >
-        <form
-          className="registration-panel"
-          onSubmit={handleStudentRegistration}
-        >
+        <form className="registration-panel" onSubmit={handleStudentRegistration}>
           <div className="registration-monogram">
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
-          <h2 className="registration-form-panel-title">
-            Student Registration
-          </h2>
+          <h2 className="registration-form-panel-title">Student Registration</h2>
           <div className="registration-form">
             <div className="form-row">
               <input
@@ -495,16 +469,10 @@ export default function AuthPage() {
                   <button
                     type="button"
                     className="password-toggle-btn"
-                    onClick={() =>
-                      setShowStudentRegPassword(!showStudentRegPassword)
-                    }
+                    onClick={() => setShowStudentRegPassword(!showStudentRegPassword)}
                     aria-label="Toggle password visibility"
                   >
-                    {showStudentRegPassword ? (
-                      <EyeOff size={20} />
-                    ) : (
-                      <Eye size={20} />
-                    )}
+                    {showStudentRegPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
                 {studentPasswordError && (
@@ -540,18 +508,10 @@ export default function AuthPage() {
                     <button
                       type="button"
                       className="password-toggle-btn"
-                      onClick={() =>
-                        setShowStudentRegConfirmPassword(
-                          !showStudentRegConfirmPassword,
-                        )
-                      }
+                      onClick={() => setShowStudentRegConfirmPassword(!showStudentRegConfirmPassword)}
                       aria-label="Toggle password visibility"
                     >
-                      {showStudentRegConfirmPassword ? (
-                        <EyeOff size={20} />
-                      ) : (
-                        <Eye size={20} />
-                      )}
+                      {showStudentRegConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                   {studentPasswordMismatch && (
@@ -573,23 +533,23 @@ export default function AuthPage() {
             <button type="submit" className="auth-button registration-button">
               Register
             </button>
-            <p
+            <button
+              type="button"
               className="back-to-login-link"
               onClick={() => setShowRegistration(false)}
             >
               Back to Login
-            </p>
+            </button>
           </div>
         </form>
       </div>
 
+      {/* ALUMNI REGISTRATION */}
       <div
-        className={`registration-container ${showRegistration && registrationType === "alumni" ? "slide-up-active" : ""}`}
+        className={`registration-container ${alumniRegActive ? "slide-up-active" : ""}`}
+        inert={!alumniRegActive ? "" : undefined}
       >
-        <form
-          className="registration-panel"
-          onSubmit={handleAlumniRegistration}
-        >
+        <form className="registration-panel" onSubmit={handleAlumniRegistration}>
           <div className="registration-monogram">
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
@@ -658,16 +618,10 @@ export default function AuthPage() {
                   <button
                     type="button"
                     className="password-toggle-btn"
-                    onClick={() =>
-                      setShowAlumniRegPassword(!showAlumniRegPassword)
-                    }
+                    onClick={() => setShowAlumniRegPassword(!showAlumniRegPassword)}
                     aria-label="Toggle password visibility"
                   >
-                    {showAlumniRegPassword ? (
-                      <EyeOff size={20} />
-                    ) : (
-                      <Eye size={20} />
-                    )}
+                    {showAlumniRegPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
                 {alumniPasswordError && (
@@ -703,18 +657,10 @@ export default function AuthPage() {
                     <button
                       type="button"
                       className="password-toggle-btn"
-                      onClick={() =>
-                        setShowAlumniRegConfirmPassword(
-                          !showAlumniRegConfirmPassword,
-                        )
-                      }
+                      onClick={() => setShowAlumniRegConfirmPassword(!showAlumniRegConfirmPassword)}
                       aria-label="Toggle password visibility"
                     >
-                      {showAlumniRegConfirmPassword ? (
-                        <EyeOff size={20} />
-                      ) : (
-                        <Eye size={20} />
-                      )}
+                      {showAlumniRegConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                   {alumniPasswordMismatch && (
@@ -736,12 +682,13 @@ export default function AuthPage() {
             <button type="submit" className="auth-button registration-button">
               Register
             </button>
-            <p
+            <button
+              type="button"
               className="back-to-login-link"
               onClick={() => setShowRegistration(false)}
             >
               Back to Login
-            </p>
+            </button>
           </div>
         </form>
       </div>

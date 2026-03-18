@@ -11,6 +11,7 @@ import {
 import { User } from "lucide-react";
 
 import API from "../../../api/axios";
+import { Toast, useToast } from "../Profile/Toast";
 import "./Notifications.css";
 
 export default function Notifications() {
@@ -18,6 +19,7 @@ export default function Notifications() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { toasts, addToast, removeToast } = useToast();
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isStudent = user.role === "student";
@@ -57,14 +59,21 @@ export default function Notifications() {
       await API.patch(endpoint);
       setRequests((prev) => prev.filter((req) => req._id !== requestId));
       window.dispatchEvent(new Event("notificationUpdate"));
+      addToast(
+        action === "accept" ? "Request accepted successfully!" : "Request declined.",
+        action === "accept" ? "success" : "warning"
+      );
     } catch (error) {
       console.error("Action Error:", error);
-      alert("Action failed. Please try again.");
+      addToast("Action failed. Please try again.", "error");
     }
   };
 
   return (
     <div className="notifications-page">
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} removeToast={removeToast} />
+
       <div className="notifications-header">
         <button className="notifications-back-btn" onClick={() => navigate(-1)}>
           <FiArrowLeft /> Back

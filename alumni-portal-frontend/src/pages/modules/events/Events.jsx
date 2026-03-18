@@ -12,9 +12,29 @@ import {
   FaTimesCircle,
   FaPlus,
 } from "react-icons/fa";
-import { Trash2 , Loader} from "lucide-react";
+import { Trash2, Loader } from "lucide-react";
 import API from "../../../api/axios";
+import { Toast, useToast } from "../Profile/Toast";
 import "./Events.css";
+
+// Confirm Dialog Component
+function ConfirmDialog({ message, onConfirm, onCancel }) {
+  return (
+    <div className="confirm-overlay">
+      <div className="confirm-dialog">
+        <p className="confirm-message">{message}</p>
+        <div className="confirm-actions">
+          <button className="confirm-btn confirm-cancel" onClick={onCancel}>
+            Cancel
+          </button>
+          <button className="confirm-btn confirm-delete" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Events() {
   const [events, setEvents] = useState([]);
@@ -22,6 +42,8 @@ export default function Events() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState("");
+  const [confirmDialog, setConfirmDialog] = useState(null); // { eventId }
+  const { toasts, addToast, removeToast } = useToast();
 
   // Create Event States
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -90,7 +112,6 @@ export default function Events() {
     } finally {
       setLoading(false);
       setError(null);
-
     }
   };
 
@@ -104,7 +125,9 @@ export default function Events() {
     }
     if (selectedAudience !== "all") {
       filtered = filtered.filter(
-        (event) => event.targetAudience === selectedAudience || event.targetAudience === "all"
+        (event) =>
+          event.targetAudience === selectedAudience ||
+          event.targetAudience === "all"
       );
     }
     if (searchQuery) {
@@ -121,11 +144,9 @@ export default function Events() {
   const handleCreateEvent = async (e) => {
     e.preventDefault();
     const data = new FormData();
-    
     Object.keys(newEvent).forEach((key) => {
       data.append(key, newEvent[key]);
     });
-    
     if (imageFile) {
       data.append("image", imageFile);
     }
@@ -135,32 +156,36 @@ export default function Events() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.data.success) {
-        alert("Event created successfully!");
+        addToast("Event created successfully!", "success");
         setShowCreateModal(false);
         setNewEvent({
-          title: "", description: "", category: "Workshop", date: "", 
-          time: "", venue: "", targetAudience: "all", capacity: "", 
-          organizer: "", contactEmail: ""
+          title: "", description: "", category: "Workshop", date: "",
+          time: "", venue: "", targetAudience: "all", capacity: "",
+          organizer: "", contactEmail: "",
         });
         setImageFile(null);
         fetchEvents();
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to create event");
+      addToast(err.response?.data?.message || "Failed to create event.", "error");
     }
   };
 
-  const handleDeleteEvent = async (eventId) => {
-    if (window.confirm("Are you sure you want to delete this event? This action cannot be undone.")) {
-      try {
-        const res = await API.delete(`/events/${eventId}`);
-        if (res.data.success) {
-          alert("Event deleted successfully!");
-          fetchEvents();
-        }
-      } catch (err) {
-        alert(err.response?.data?.message || "Failed to delete event");
+  const handleDeleteEvent = (eventId) => {
+    setConfirmDialog({ eventId });
+  };
+
+  const confirmDelete = async () => {
+    const { eventId } = confirmDialog;
+    setConfirmDialog(null);
+    try {
+      const res = await API.delete(`/events/${eventId}`);
+      if (res.data.success) {
+        addToast("Event deleted successfully!", "success");
+        fetchEvents();
       }
+    } catch (err) {
+      addToast(err.response?.data?.message || "Failed to delete event.", "error");
     }
   };
 
@@ -198,7 +223,6 @@ export default function Events() {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="events">
@@ -212,6 +236,18 @@ export default function Events() {
 
   return (
     <div className="events">
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} removeToast={removeToast} />
+
+      {/* Confirm Dialog */}
+      {confirmDialog && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this event? This action cannot be undone."
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmDialog(null)}
+        />
+      )}
+
       <div className="events-hero">
         <div className="events-hero-content">
           <h1 className="events-title">University Events</h1>
@@ -219,7 +255,10 @@ export default function Events() {
             Discover upcoming events, workshops, and networking opportunities
           </p>
           {userRole === "admin" && (
-            <button className="create-event-btn-hero" onClick={() => setShowCreateModal(true)}>
+            <button
+              className="create-event-btn-hero"
+              onClick={() => setShowCreateModal(true)}
+            >
               <FaPlus /> Create New Event
             </button>
           )}
@@ -286,7 +325,11 @@ export default function Events() {
                 <div className="event-image-container">
                   {event.image ? (
                     <img
-                      src={event.image.startsWith("http") ? event.image : `http://localhost:5000${event.image}`}
+                      src={
+                        event.image.startsWith("http")
+                          ? event.image
+                          : `http://localhost:5000${event.image}`
+                      }
                       alt={event.title}
                       className="event-image"
                     />
@@ -296,10 +339,10 @@ export default function Events() {
                     </div>
                   )}
                   <div className="event-category-badge">{event.category}</div>
-                  
+
                   {userRole === "admin" && (
-                    <button 
-                      className="event-delete-btn" 
+                    <button
+                      className="event-delete-btn"
                       onClick={() => handleDeleteEvent(event._id)}
                       title="Delete Event"
                     >
@@ -308,7 +351,11 @@ export default function Events() {
                   )}
 
                   <div className={`event-status-badge ${getStatusColor(event.date)}`}>
-                    {isPast(parseISO(event.date)) ? "Completed" : isToday(parseISO(event.date)) ? "Today" : "Upcoming"}
+                    {isPast(parseISO(event.date))
+                      ? "Completed"
+                      : isToday(parseISO(event.date))
+                      ? "Today"
+                      : "Upcoming"}
                   </div>
                 </div>
 
@@ -319,7 +366,9 @@ export default function Events() {
                     <span>{getAudienceLabel(event.targetAudience)}</span>
                   </div>
                   <p className="event-description">
-                    {event.description.length > 120 ? `${event.description.substring(0, 120)}...` : event.description}
+                    {event.description.length > 120
+                      ? `${event.description.substring(0, 120)}...`
+                      : event.description}
                   </p>
 
                   <div className="event-details">
@@ -351,42 +400,77 @@ export default function Events() {
         </div>
       </div>
 
+      {/* Create Event Modal */}
       {showCreateModal && (
         <div className="modal-overlay">
           <div className="event-modal">
             <div className="modal-header">
               <h2>Create New Event</h2>
-              <button className="close-modal-btn" onClick={() => setShowCreateModal(false)}><FaTimesCircle /></button>
+              <button
+                className="close-modal-btn"
+                onClick={() => setShowCreateModal(false)}
+              >
+                <FaTimesCircle />
+              </button>
             </div>
             <form onSubmit={handleCreateEvent} className="event-form-content">
               <div className="form-grid">
                 <div className="form-group">
                   <label>Event Title</label>
-                  <input type="text" required value={newEvent.title} onChange={(e) => setNewEvent({...newEvent, title: e.target.value})} />
+                  <input
+                    type="text"
+                    required
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Category</label>
-                  <select value={newEvent.category} onChange={(e) => setNewEvent({...newEvent, category: e.target.value})}>
-                    {categories.filter(c => c !== "All").map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
+                  <select
+                    value={newEvent.category}
+                    onChange={(e) => setNewEvent({ ...newEvent, category: e.target.value })}
+                  >
+                    {categories
+                      .filter((c) => c !== "All")
+                      .map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
                   </select>
                 </div>
                 <div className="form-group">
                   <label>Date</label>
-                  <input type="date" required value={newEvent.date} onChange={(e) => setNewEvent({...newEvent, date: e.target.value})} />
+                  <input
+                    type="date"
+                    required
+                    value={newEvent.date}
+                    onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Time</label>
-                  <input type="text" placeholder="e.g. 10:00 AM" required value={newEvent.time} onChange={(e) => setNewEvent({...newEvent, time: e.target.value})} />
+                  <input
+                    type="text"
+                    placeholder="e.g. 10:00 AM"
+                    required
+                    value={newEvent.time}
+                    onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Venue</label>
-                  <input type="text" required value={newEvent.venue} onChange={(e) => setNewEvent({...newEvent, venue: e.target.value})} />
+                  <input
+                    type="text"
+                    required
+                    value={newEvent.venue}
+                    onChange={(e) => setNewEvent({ ...newEvent, venue: e.target.value })}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Target Audience</label>
-                  <select value={newEvent.targetAudience} onChange={(e) => setNewEvent({...newEvent, targetAudience: e.target.value})}>
+                  <select
+                    value={newEvent.targetAudience}
+                    onChange={(e) => setNewEvent({ ...newEvent, targetAudience: e.target.value })}
+                  >
                     <option value="all">All Audiences</option>
                     <option value="students">Students Only</option>
                     <option value="alumni">Alumni Only</option>
@@ -394,28 +478,60 @@ export default function Events() {
                 </div>
                 <div className="form-group">
                   <label>Capacity</label>
-                  <input type="number" placeholder="Unlimited if empty" value={newEvent.capacity} onChange={(e) => setNewEvent({...newEvent, capacity: e.target.value})} />
+                  <input
+                    type="number"
+                    placeholder="Unlimited if empty"
+                    value={newEvent.capacity}
+                    onChange={(e) => setNewEvent({ ...newEvent, capacity: e.target.value })}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Organizer</label>
-                  <input type="text" required value={newEvent.organizer} onChange={(e) => setNewEvent({...newEvent, organizer: e.target.value})} />
+                  <input
+                    type="text"
+                    required
+                    value={newEvent.organizer}
+                    onChange={(e) => setNewEvent({ ...newEvent, organizer: e.target.value })}
+                  />
                 </div>
                 <div className="form-group" style={{ gridColumn: "span 2" }}>
                   <label>Contact Email</label>
-                  <input type="email" required value={newEvent.contactEmail} onChange={(e) => setNewEvent({...newEvent, contactEmail: e.target.value})} />
+                  <input
+                    type="email"
+                    required
+                    value={newEvent.contactEmail}
+                    onChange={(e) => setNewEvent({ ...newEvent, contactEmail: e.target.value })}
+                  />
                 </div>
                 <div className="form-group" style={{ gridColumn: "span 2" }}>
                   <label>Event Image</label>
-                  <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files[0])}
+                  />
                 </div>
                 <div className="form-group" style={{ gridColumn: "span 2" }}>
                   <label>Description</label>
-                  <textarea required rows="4" value={newEvent.description} onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}></textarea>
+                  <textarea
+                    required
+                    rows="4"
+                    value={newEvent.description}
+                    onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                  ></textarea>
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="event-btn-cancel" onClick={() => setShowCreateModal(false)}>Cancel</button>
-                <button type="submit" className="event-btn-submit">Publish Event</button>
+                <button
+                  type="button"
+                  className="event-btn-cancel"
+                  onClick={() => setShowCreateModal(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="event-btn-submit">
+                  Publish Event
+                </button>
               </div>
             </form>
           </div>

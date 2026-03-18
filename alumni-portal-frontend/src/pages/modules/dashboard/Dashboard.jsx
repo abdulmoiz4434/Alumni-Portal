@@ -13,27 +13,35 @@ import {
 import { getDashboardStats, getDashboardData } from "../../../api/dashboard";
 import "./Dashboard.css";
 
+const getRoleSubtitle = (role) => {
+  switch (role) {
+    case "alumni":
+      return "Give back and grow your network. Connect with students, mentor emerging talent, and explore alumni events.";
+    case "admin":
+      return "Manage your alumni network efficiently. Oversee users, events, and mentorship programs in one place.";
+    default:
+      return "Stay connected with your alumni network. Explore connections, events, and mentorships at a glance.";
+  }
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userName = currentUser?.fullName || "User";
+  const userRole = currentUser?.role || "student";
 
-  // State management
   const [stats, setStats] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch dashboard data on mount
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Fetch stats and data in parallel
         const [statsRes, dataRes] = await Promise.all([
           getDashboardStats(),
           getDashboardData(),
@@ -52,29 +60,27 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // Format stats for display - FIXED TRENDS
   const formattedStats = stats
     ? [
         {
           label: "Upcoming Events",
           value: stats.upcomingEvents?.toString() || "0",
           icon: Calendar,
-          trend: stats.upcomingEventsThisWeek 
-            ? `+${stats.upcomingEventsThisWeek} this week` 
+          trend: stats.upcomingEventsThisWeek
+            ? `+${stats.upcomingEventsThisWeek} this week`
             : "0 this week",
         },
         {
           label: "Job Openings",
           value: stats.jobOpenings?.toString() || "0",
           icon: Briefcase,
-          trend: stats.recentJobsCount 
-            ? `+${stats.recentJobsCount} new` 
+          trend: stats.recentJobsCount
+            ? `+${stats.recentJobsCount} new`
             : "0 new",
         },
       ]
     : [];
 
-  // Loading state
   if (loading) {
     return (
       <div className="dashboard">
@@ -86,7 +92,6 @@ const Dashboard = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="dashboard">
@@ -102,23 +107,18 @@ const Dashboard = () => {
     <div className="dashboard">
       {/* Header Section */}
       <header className="dashboard-header">
-        {/* Background Image */}
         <img
           src="Cover-Alumni.jpg"
           alt="Header Background"
           className="header-bg"
         />
-
-        {/* Dimming overlay */}
         <div className="header-dim-overlay"></div>
-
-        {/* Left-side info panel */}
         <div className="header-left-panel">
           <h1 className="welcome-title">
             Welcome, <span>{userName}</span>
           </h1>
           <p className="welcome-subtitle">
-            Stay connected with your alumni network. Explore connections, events, and mentorships at a glance.
+            {getRoleSubtitle(userRole)}
           </p>
         </div>
       </header>
@@ -126,11 +126,8 @@ const Dashboard = () => {
       {/* Stats Grid */}
       <section className="stats-section">
         <div className="stats-grid">
-          {formattedStats.map((stat, index) => (
-            <div
-              key={stat.label}
-              className={"stat-card"}
-            >
+          {formattedStats.map((stat) => (
+            <div key={stat.label} className="stat-card">
               <div className="stat-icon-wrapper">
                 <stat.icon className="stat-icon" />
               </div>
@@ -223,7 +220,6 @@ const Dashboard = () => {
             <div className="jobs-list">
               {dashboardData?.recentJobs?.length > 0 ? (
                 dashboardData.recentJobs.map((job) => {
-                  // FIXED: Use createdAt instead of postedDate
                   const postedDate = new Date(job.createdAt);
                   const daysAgo = Math.floor(
                     (Date.now() - postedDate) / (1000 * 60 * 60 * 24)
@@ -248,7 +244,8 @@ const Dashboard = () => {
                             <MapPin className="meta-icon" /> {job.location}
                           </span>
                           <span className="job-type-badge">
-                            {job.category.charAt(0).toUpperCase() + job.category.slice(1) || "Full-time"}
+                            {job.category.charAt(0).toUpperCase() +
+                              job.category.slice(1) || "Full-time"}
                           </span>
                         </div>
                       </div>
@@ -266,6 +263,7 @@ const Dashboard = () => {
           </section>
         </div>
 
+        {/* Right Column */}
         <div className="right-column">
           <section className="content-card quick-stats-card">
             <h2 className="card-title">

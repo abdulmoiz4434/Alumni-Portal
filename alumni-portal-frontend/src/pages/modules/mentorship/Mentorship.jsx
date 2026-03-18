@@ -11,7 +11,27 @@ import {
   Loader,
 } from "lucide-react";
 import API from "../../../api/axios";
+import { Toast, useToast } from "../Profile/Toast";
 import "./Mentorship.css";
+
+// Confirm Dialog Component
+function ConfirmDialog({ message, onConfirm, onCancel }) {
+  return (
+    <div className="confirm-overlay">
+      <div className="confirm-dialog">
+        <p className="confirm-message">{message}</p>
+        <div className="confirm-actions">
+          <button className="confirm-btn confirm-cancel" onClick={onCancel}>
+            Cancel
+          </button>
+          <button className="confirm-btn confirm-delete" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Mentorship() {
   const [mentorships, setMentorships] = useState([]);
@@ -21,16 +41,18 @@ export default function Mentorship() {
   const [userId, setUserId] = useState("");
   const [filterField, setFilterField] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  const [confirmDialog, setConfirmDialog] = useState(null); // { id }
+  const { toasts, addToast, removeToast } = useToast();
 
   // Modal States
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
 
-  // Application State - UPDATED to track by alumnus ID instead of mentorship ID
+  // Application State
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [applyMessage, setApplyMessage] = useState("");
-  const [pendingApplications, setPendingApplications] = useState([]); // Alumnus IDs with pending apps
-  const [acceptedMentors, setAcceptedMentors] = useState([]); // Alumnus IDs who accepted
+  const [pendingApplications, setPendingApplications] = useState([]);
+  const [acceptedMentors, setAcceptedMentors] = useState([]);
 
   const [newMentorshipForm, setNewMentorshipForm] = useState({
     title: "",
@@ -43,7 +65,7 @@ export default function Mentorship() {
   useEffect(() => {
     fetchUserProfile();
     fetchMentorships();
-    fetchMentorshipStatus(); // ADD THIS
+    fetchMentorshipStatus();
   }, []);
 
   const fetchUserProfile = async () => {
@@ -72,7 +94,6 @@ export default function Mentorship() {
     }
   };
 
-  // NEW: Fetch mentorship application status
   const fetchMentorshipStatus = async () => {
     try {
       const res = await API.get("/mentorship/status");
@@ -84,10 +105,11 @@ export default function Mentorship() {
     }
   };
 
-  // UPDATED: Handle sending the mentorship application
   const handleApplySubmit = async () => {
-    if (!applyMessage.trim())
-      return alert("Please enter a message for the mentor.");
+    if (!applyMessage.trim()) {
+      addToast("Please enter a message for the mentor.", "warning");
+      return;
+    }
 
     try {
       const res = await API.post("/mentorship/apply", {
@@ -96,30 +118,31 @@ export default function Mentorship() {
       });
 
       if (res.data.success) {
-        setPendingApplications([
-          ...pendingApplications,
-          selectedMentor.postedBy._id,
-        ]);
-        alert("Application sent! The mentor will be notified.");
+        setPendingApplications([...pendingApplications, selectedMentor.postedBy._id]);
+        addToast("Application sent! The mentor will be notified.", "success");
         setShowApplyModal(false);
         setApplyMessage("");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to send application");
+      addToast(err.response?.data?.message || "Failed to send application.", "error");
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this mentorship?")) {
-      try {
-        const res = await API.delete(`/mentorship/${id}`);
-        if (res.data.success) {
-          alert("Mentorship removed successfully");
-          setMentorships(mentorships.filter((m) => m._id !== id));
-        }
-      } catch (err) {
-        alert(err.response?.data?.message || "Failed to delete");
+  const handleDelete = (id) => {
+    setConfirmDialog({ id });
+  };
+
+  const confirmDelete = async () => {
+    const { id } = confirmDialog;
+    setConfirmDialog(null);
+    try {
+      const res = await API.delete(`/mentorship/${id}`);
+      if (res.data.success) {
+        setMentorships((prev) => prev.filter((m) => m._id !== id));
+        addToast("Mentorship removed successfully.", "success");
       }
+    } catch (err) {
+      addToast(err.response?.data?.message || "Failed to delete mentorship.", "error");
     }
   };
 
@@ -140,7 +163,6 @@ export default function Mentorship() {
       m.title.toLowerCase().includes(search) ||
       m.postedByName.toLowerCase().includes(search) ||
       m.description.toLowerCase().includes(search);
-
     return matchesField && matchesSearch;
   });
 
@@ -157,7 +179,7 @@ export default function Mentorship() {
       });
 
       if (res.data.success) {
-        alert("Mentorship posted successfully!");
+        addToast("Mentorship posted successfully!", "success");
         setNewMentorshipForm({
           title: "",
           field: "",
@@ -169,7 +191,7 @@ export default function Mentorship() {
         fetchMentorships();
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to post mentorship");
+      addToast(err.response?.data?.message || "Failed to post mentorship.", "error");
     }
   };
 
@@ -184,7 +206,6 @@ export default function Mentorship() {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="mentorship">
@@ -195,8 +216,21 @@ export default function Mentorship() {
       </div>
     );
   }
+
   return (
     <div className="mentorship">
+      {/* Toast Notifications */}
+      <Toast toasts={toasts} removeToast={removeToast} />
+
+      {/* Confirm Dialog */}
+      {confirmDialog && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this mentorship? This action cannot be undone."
+          onConfirm={confirmDelete}
+          onCancel={() => setConfirmDialog(null)}
+        />
+      )}
+
       <div className="mentorship-hero">
         <div className="mentorship-hero-content">
           <h1 className="main-title">Mentorship Program</h1>
@@ -293,10 +327,7 @@ export default function Mentorship() {
                   {userRole === "student" && (
                     <div className="card-actions">
                       {isAccepted ? (
-                        <button
-                          className="btn-primary mentorship-accepted"
-                          disabled
-                        >
+                        <button className="btn-primary mentorship-accepted" disabled>
                           <Users size={18} /> Mentorship Active
                         </button>
                       ) : isApplied ? (
@@ -376,7 +407,6 @@ export default function Mentorship() {
                 ×
               </button>
             </div>
-
             <form
               className="form-grid"
               onSubmit={(e) => {
