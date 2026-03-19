@@ -1,11 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-/**
- * Socket.IO authentication middleware.
- * Expects token in handshake.auth.token or handshake.query.token.
- * Attaches decoded user to socket.user; rejects connection if invalid.
- */
 async function socketAuth(socket, next) {
   const token =
     socket.handshake.auth?.token ||

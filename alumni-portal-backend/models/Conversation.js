@@ -26,11 +26,6 @@ const conversationSchema = new mongoose.Schema(
 conversationSchema.index({ participants: 1 });
 conversationSchema.index({ lastMessageAt: -1 });
 
-/**
- * Update last message metadata when a new message is sent.
- * @param {ObjectId} conversationId - Conversation _id
- * @param {Object} message - Message doc with content, senderId
- */
 conversationSchema.statics.updateLastMessage = async function (conversationId, message) {
   return this.findByIdAndUpdate(
     conversationId,

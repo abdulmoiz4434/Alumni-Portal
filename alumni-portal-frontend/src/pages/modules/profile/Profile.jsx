@@ -237,10 +237,10 @@ export default function Profile() {
         setOriginalProfile(profileData);
       } catch (err) {
         console.error("Error fetching profile:", err);
+        setError(err.response?.data?.message || "Failed to load profile data.");
         addToast("Failed to load profile data.", "error");
       } finally {
         setLoading(false);
-        setError(null);
       }
     };
     fetchProfile();

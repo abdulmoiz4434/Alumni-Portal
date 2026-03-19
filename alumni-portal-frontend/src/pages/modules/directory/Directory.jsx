@@ -31,7 +31,7 @@ export default function Directory() {
   const [filter, setFilter] = useState("all");
   const [sentRequests, setSentRequests] = useState([]);
   const [connectedUsers, setConnectedUsers] = useState([]);
-  const [confirmDialog, setConfirmDialog] = useState(null); // { userId, userName }
+  const [confirmDialog, setConfirmDialog] = useState(null);
   const { toasts, addToast, removeToast } = useToast();
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -55,10 +55,10 @@ export default function Directory() {
         }
       } catch (err) {
         console.error("Error fetching data:", err);
+        setError(err.response?.data?.message || "Failed to load directory data.");
         addToast("Failed to load directory data.", "error");
       } finally {
         setLoading(false);
-        setError(null);
       }
     };
     fetchData();
@@ -66,12 +66,6 @@ export default function Directory() {
 
   const handleConnectRequest = async (targetUserId) => {
     try {
-      const targetUser = users.find((u) => u._id === targetUserId);
-      if (targetUser?.role === "admin") {
-        addToast("Cannot connect with admin users.", "warning");
-        return;
-      }
-
       const res = await API.post("/connections/send", {
         receiverId: targetUserId,
       });
@@ -109,9 +103,7 @@ export default function Directory() {
   };
 
   const filteredUsers = users.filter((user) => {
-    const isSelf = user._id === currentUserId;
-    if (isSelf) return false;
-    if (user.role === "admin") return false;
+    if (user._id === currentUserId) return false;
 
     const matchesFilter = filter === "all" || user.role === filter;
     const search = searchTerm.toLowerCase();
@@ -168,32 +160,30 @@ export default function Directory() {
       </div>
 
       <div className="directory-container">
-        <div className="directory-controls">
-          <div className="directory-search-filter-section">
-            <div className="search-box">
-              <Search size={22} className="search-icon" />
-              <input
-                type="text"
-                placeholder="Search by name or department..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-            </div>
+        <div className="directory-search-filter-section">
+          <div className="search-box">
+            <Search size={22} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search by name or department..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
 
-            <div className="filters">
-              {["all", "alumni", "student"].map((type) => (
-                <button
-                  key={type}
-                  className={`filter-btn ${filter === type ? "active" : ""}`}
-                  onClick={() => setFilter(type)}
-                >
-                  {type === "all"
-                    ? "All Members"
-                    : type.charAt(0).toUpperCase() + type.slice(1)}
-                </button>
-              ))}
-            </div>
+          <div className="filters">
+            {["all", "alumni", "student"].map((type) => (
+              <button
+                key={type}
+                className={`filter-btn ${filter === type ? "active" : ""}`}
+                onClick={() => setFilter(type)}
+              >
+                {type === "all"
+                  ? "All Members"
+                  : type.charAt(0).toUpperCase() + type.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
 

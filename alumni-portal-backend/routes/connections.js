@@ -1,22 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  getRequests, 
-  handleAction, 
+const {
+  getConnectionRequests,
+  handleConnectionAction,
   sendConnectionRequest,
   getConnectionStatus,
-  getNotificationCount 
+  getNotificationCount
 } = require('../controllers/notificationController');
-const { protect } = require('../middleware/auth'); 
+const { protect } = require('../middleware/auth');
 
-router.get('/requests', protect, getRequests);
-
+router.get('/requests', protect, getConnectionRequests);
 router.get('/status', protect, getConnectionStatus);
-
 router.get('/notification-count', protect, getNotificationCount);
-
-router.patch('/requests/:id/:action', protect, handleAction);
-
+router.patch('/requests/:id/:action', protect, handleConnectionAction);
 router.post('/send', protect, sendConnectionRequest);
 
 module.exports = router;

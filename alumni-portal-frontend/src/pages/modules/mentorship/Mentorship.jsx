@@ -41,7 +41,7 @@ export default function Mentorship() {
   const [userId, setUserId] = useState("");
   const [filterField, setFilterField] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-  const [confirmDialog, setConfirmDialog] = useState(null); // { id }
+  const [confirmDialog, setConfirmDialog] = useState(null);
   const { toasts, addToast, removeToast } = useToast();
 
   // Modal States
@@ -88,9 +88,9 @@ export default function Mentorship() {
       }
     } catch (err) {
       console.error("Error fetching mentorships:", err);
+      setError(err.response?.data?.message || "Failed to load mentorships.");
     } finally {
       setLoading(false);
-      setError(null);
     }
   };
 
@@ -118,7 +118,7 @@ export default function Mentorship() {
       });
 
       if (res.data.success) {
-        setPendingApplications([...pendingApplications, selectedMentor.postedBy._id]);
+        setPendingApplications((prev) => [...prev, selectedMentor.postedBy._id]);
         addToast("Application sent! The mentor will be notified.", "success");
         setShowApplyModal(false);
         setApplyMessage("");

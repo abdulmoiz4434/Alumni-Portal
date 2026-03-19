@@ -1,6 +1,33 @@
+/* =========================================
+   1. :root Variables
+   ========================================= */
+:root {
+  --ci-bg-main: #f3f3f3;
+  --ci-white: #ffffff;
+  --ci-dark: #1a1a1a;
+
+  --ci-gold: #d4aa28;
+  --ci-gold-light: rgba(212, 170, 40, 0.12);
+
+  --ci-text-dark: #1a1a2e;
+  --ci-text-muted: #6b7280;
+  --ci-text-dim: #e0e0e0;
+
+  --ci-border: #e0e0e0;
+
+  --ci-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  --ci-radius-md: 10px;
+  --ci-radius-lg: 12px;
+  --ci-radius-xl: 15px;
+}
+
+/* =========================================
+   2. Base & Shared Styles
+   ========================================= */
 .career-insights {
   min-height: 100vh;
-  background-color: #f3f3f3;
+  background-color: var(--ci-bg-main);
   padding: 2rem;
 }
 
@@ -17,17 +44,19 @@
 .loading-spinner {
   width: 48px;
   height: 48px;
-  color: #d4af37;
+  color: var(--ci-gold);
   animation: spin 1s linear infinite;
 }
 
-/* Hero */
+/* =========================================
+   3. Hero Section
+   ========================================= */
 .career-insights-hero {
-  background: #1a1a1a;
+  background: var(--ci-dark);
   padding: 40px;
   text-align: center;
-  color: #d4aa28;
-  border-radius: 15px;
+  color: var(--ci-gold);
+  border-radius: var(--ci-radius-xl);
   margin-bottom: 2rem;
 }
 
@@ -43,26 +72,27 @@
   margin-bottom: 20px;
   line-height: 1.1;
   animation: fadeInUp 0.6s ease-out;
-  color: #d4aa28;
+  color: var(--ci-gold);
 }
 
 .career-subtitle {
   font-size: 1.15rem;
-  font-weight: normal;
   line-height: 1.6;
-  color: #e0e0e0;
+  color: var(--ci-text-dim);
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
 .career-subtitle span {
   font-weight: bold;
-  color: #1a1a1a;
-  background: #d4aa28;
+  color: var(--ci-dark);
+  background: var(--ci-gold);
   padding: 2px 8px;
-  border-radius: 12px;
+  border-radius: var(--ci-radius-lg);
 }
 
-/* Stats */
+/* =========================================
+   4. Layout Containers
+   ========================================= */
 .career-insights-stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -72,29 +102,45 @@
   padding-bottom: 20px;
 }
 
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+/* =========================================
+   5. Content Cards (Shared Base)
+   ========================================= */
+.career-insights-stat-card,
+.chart-card {
+  background: var(--ci-white);
+  border: 1px solid var(--ci-border);
+  border-radius: var(--ci-radius-lg);
+  box-shadow: var(--ci-shadow);
+  opacity: 0;
+}
+
+/* Stats Cards */
 .career-insights-stat-card {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
 }
 
 .stat-icon {
   width: 48px;
   height: 48px;
-  border-radius: 10px;
-  background: rgba(212, 170, 40, 0.12);
+  border-radius: var(--ci-radius-md);
+  background: var(--ci-gold-light);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #d4aa28;
+  color: var(--ci-gold);
 }
 
 .stat-icon svg {
@@ -105,35 +151,21 @@
 .stat-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--ci-text-muted);
   margin: 0;
 }
 
 .stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--ci-text-dark);
   margin: 0;
 }
 
-/* Charts */
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 0;
-}
-
+/* Chart Cards */
 .chart-card {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   animation: fadeInUp 0.6s ease-out 0.2s forwards;
-  opacity: 0;
 }
 
 .chart-card:nth-child(2) {
@@ -150,13 +182,13 @@
 .chart-header svg {
   width: 20px;
   height: 20px;
-  color: #d4aa28;
+  color: var(--ci-gold);
 }
 
 .chart-header h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--ci-text-dark);
   margin: 0;
 }
 
@@ -164,24 +196,9 @@
   height: 350px;
 }
 
-/* Loader */
-.career-loader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 0.75rem;
-  background: #f3f3f3;
-}
-
-.career-loader p {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-/* Keyframes */
+/* =========================================
+   6. Animations
+   ========================================= */
 @keyframes fadeInUp {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -191,133 +208,42 @@
   to { transform: rotate(360deg); }
 }
 
-/* ========== RESPONSIVE ========== */
+/* =========================================
+   7. Media Queries
+   ========================================= */
 @media (max-width: 1024px) {
-  .career-insights {
-    padding: 1.5rem;
-  }
-
-  .career-insights-hero {
-    padding: 28px;
-  }
-
-  .career-main-title {
-    font-size: 2.4rem;
-  }
-
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .chart-box {
-    height: 300px;
-  }
+  .career-insights { padding: 1.5rem; }
+  .career-insights-hero { padding: 28px; }
+  .career-main-title { font-size: 2.4rem; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .chart-box { height: 300px; }
 }
 
 @media (max-width: 768px) {
-  .career-insights {
-    padding: 1rem;
-  }
-
-  .career-insights-hero {
-    padding: 24px 16px;
-    margin-bottom: 1.25rem;
-  }
-
-  .career-main-title {
-    font-size: 2rem;
-    margin-bottom: 12px;
-  }
-
-  .career-subtitle {
-    font-size: 1rem;
-  }
-
-  /* FIXED: was referencing .stats-grid which doesn't exist */
-  .career-insights-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .career-insights-stat-card {
-    padding: 1rem;
-  }
-
-  .stat-value {
-    font-size: 1.25rem;
-  }
-
-  .charts-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .chart-card {
-    padding: 1rem;
-  }
-
-  .chart-box {
-    height: 260px;
-  }
+  .career-insights { padding: 1rem; }
+  .career-insights-hero { padding: 24px 16px; margin-bottom: 1.25rem; }
+  .career-main-title { font-size: 2rem; margin-bottom: 12px; }
+  .career-subtitle { font-size: 1rem; }
+  .career-insights-stats-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+  .career-insights-stat-card { padding: 1rem; }
+  .stat-value { font-size: 1.25rem; }
+  .charts-grid { gap: 1rem; }
+  .chart-card { padding: 1rem; }
+  .chart-box { height: 260px; }
 }
 
 @media (max-width: 480px) {
-  .career-insights {
-    padding: 0.75rem;
-  }
-
-  .career-insights-hero {
-    padding: 20px 12px;
-  }
-
-  .career-main-title {
-    font-size: 1.75rem;
-  }
-
-  .career-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .career-insights-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-
-  .stat-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .stat-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .stat-label {
-    font-size: 0.8rem;
-  }
-
-  .stat-value {
-    font-size: 1.1rem;
-  }
-
-  .chart-card {
-    overflow: hidden;
-    padding: 0.75rem;
-  }
-
-  .chart-box {
-    height: 200px;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .chart-box canvas {
-    max-width: 100% !important;
-  }
-
-  .chart-header h3 {
-    font-size: 1rem;
-  }
+  .career-insights { padding: 0.75rem; }
+  .career-insights-hero { padding: 20px 12px; }
+  .career-main-title { font-size: 1.75rem; }
+  .career-subtitle { font-size: 0.9rem; }
+  .career-insights-stats-grid { gap: 0.5rem; }
+  .stat-icon { width: 40px; height: 40px; }
+  .stat-icon svg { width: 20px; height: 20px; }
+  .stat-label { font-size: 0.8rem; }
+  .stat-value { font-size: 1.1rem; }
+  .chart-card { overflow: hidden; padding: 0.75rem; }
+  .chart-box { height: 200px; overflow: hidden; position: relative; }
+  .chart-box canvas { max-width: 100% !important; }
+  .chart-header h3 { font-size: 1rem; }
 }

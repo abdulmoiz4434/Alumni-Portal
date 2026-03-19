@@ -2,9 +2,6 @@ const messageService = require("./messageService");
 
 const CONVERSATION_ROOM_PREFIX = "conversation:";
 
-/**
- * Get serialized message payload for emission.
- */
 async function toMessagePayload(msg) {
   const sender = await messageService.getUserById(msg.senderId);
   return {
@@ -14,14 +11,10 @@ async function toMessagePayload(msg) {
     content: msg.content,
     isRead: msg.isRead,
     created_at: msg.createdAt,
-    createdAt: msg.createdAt,
     sender
   };
 }
 
-/**
- * Handle new socket connection: join user's personal room.
- */
 function handleConnection(socket) {
   const userId = socket.user?._id?.toString();
   if (!userId) return;
@@ -30,8 +23,7 @@ function handleConnection(socket) {
 
   socket.on("join:conversation", (conversationId) => {
     if (!conversationId) return;
-    const room = CONVERSATION_ROOM_PREFIX + conversationId;
-    socket.join(room);
+    socket.join(CONVERSATION_ROOM_PREFIX + conversationId);
     socket.emit("joined:conversation", { conversationId });
   });
 
@@ -43,56 +35,49 @@ function handleConnection(socket) {
   socket.on("message:send", async (data) => {
     try {
       const { conversationId, content } = data || {};
-      if (!conversationId || !content || !content.trim()) {
+      const trimmedContent = content?.trim();
+
+      if (!conversationId || !trimmedContent) {
         socket.emit("message:error", { message: "Missing conversationId or content" });
         return;
       }
-      
+
       const senderId = socket.user._id;
       const conversation = await messageService.getConversationById(conversationId);
-      
+
       if (!conversation) {
         socket.emit("message:error", { message: "Conversation not found" });
         return;
       }
-      
+
       const isParticipant = conversation.participants.some(
         (p) => (p._id || p).toString() === socket.userId
       );
-      
+
       if (!isParticipant) {
         socket.emit("message:error", { message: "Not a participant" });
         return;
       }
-      
+
       const message = await messageService.createMessage(
         conversationId,
         senderId,
-        content.trim()
+        trimmedContent
       );
-      
+
       const payload = await toMessagePayload(message);
-      const room = CONVERSATION_ROOM_PREFIX + conversationId;
-      socket.server.to(room).emit("message:new", payload);
+      socket.server.to(CONVERSATION_ROOM_PREFIX + conversationId).emit("message:new", payload);
     } catch (err) {
       console.error("socket message:send error", err);
       socket.emit("message:error", { message: "Failed to send message" });
     }
   });
 
-  socket.on("disconnect", (reason) => {
-    handleDisconnection(socket, reason);
+  socket.on("disconnect", () => {
+    // Socket.IO automatically removes the socket from all rooms on disconnect
   });
 }
 
-/**
- * Handle socket disconnection.
- */
-function handleDisconnection(socket, reason) {
-  // Cleanup if needed; Socket.IO automatically removes from rooms
-}
-
 module.exports = {
-  handleConnection,
-  handleDisconnection
+  handleConnection
 };

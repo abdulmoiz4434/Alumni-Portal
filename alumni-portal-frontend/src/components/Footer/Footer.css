@@ -1,4 +1,4 @@
-/* Footer.css - Black & White Theme */
+/* Footer.css */
 
 .footer {
   background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
@@ -90,11 +90,6 @@
   text-decoration: none;
 }
 
-.social-link svg {
-  width: 16px;
-  height: 16px;
-}
-
 .social-link:hover {
   background: #ffffff;
   color: #1a1a1a;
@@ -134,15 +129,10 @@
   font-size: 0.85rem;
   transition: all 0.3s ease;
   display: inline-block;
-  position: relative;
 }
 
 .footer-links li a:hover {
   color: #ffffff;
-}
-
-.footer-links li a:hover::before {
-  width: 100%;
 }
 
 /* Contact Info */
@@ -167,8 +157,6 @@
   flex-shrink: 0;
   margin-top: 2px;
   color: #ffffff;
-  width: 16px;
-  height: 16px;
 }
 
 .footer-contact li a {
@@ -243,7 +231,6 @@
     gap: 1.5rem;
   }
 
-  /* About — left column, row 1 */
   .footer-about {
     grid-column: 1;
     grid-row: 1;
@@ -253,19 +240,16 @@
     max-width: 100%;
   }
 
-  /* Quick Links — left column, row 2 */
   .footer-column:nth-child(2) {
     grid-column: 1;
     grid-row: 2;
   }
 
-  /* Resources — right column, row 1 */
   .footer-column:nth-child(3) {
     grid-column: 2;
     grid-row: 1;
   }
 
-  /* Contact Us — right column, row 2 */
   .footer-column:nth-child(4) {
     grid-column: 2;
     grid-row: 2;
@@ -273,47 +257,9 @@
   }
 }
 
-/* ==================== TABLET & MOBILE: Two-column layout ==================== */
 @media (max-width: 768px) {
   .footer-container {
     padding: 1.75rem 1.25rem 1rem;
-  }
-
-  /*
-   * Left column:  About (logo + description + social) + Quick Links
-   * Right column: Resources + Contact Us
-   */
-  .footer-top {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-  }
-
-  /* About — left column, row 1 */
-  .footer-about {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .footer-description {
-    max-width: 100%;
-  }
-
-  /* Quick Links — left column, row 2 */
-  .footer-column:nth-child(2) {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  /* Resources — right column, row 1 */
-  .footer-column:nth-child(3) {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  /* Contact Us — right column, row 2 */
-  .footer-column:nth-child(4) {
-    grid-column: 2;
-    grid-row: 2;
   }
 
   .footer-bottom {

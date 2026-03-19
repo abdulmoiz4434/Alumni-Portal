@@ -4,7 +4,6 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
   Tooltip,
   Legend,
 } from 'chart.js';
@@ -17,7 +16,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
   Tooltip,
   Legend
 );
@@ -70,6 +68,54 @@ const TrendingUpIcon = () => (
   </svg>
 );
 
+// Static — defined outside component to avoid recreation on every render
+const chartOptions = {
+  indexAxis: 'y',
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    tooltip: {
+      backgroundColor: '#fff',
+      titleColor: '#1a1a2e',
+      bodyColor: '#6b7280',
+      borderColor: '#e0e0e0',
+      borderWidth: 1,
+      padding: 12,
+      displayColors: false,
+      callbacks: {
+        title: (context) => context[0].label,
+        label: (context) => `Count: ${context.parsed.x}`,
+      }
+    }
+  },
+  scales: {
+    x: {
+      beginAtZero: true,
+      ticks: {
+        stepSize: 1,
+        color: '#6b7280',
+        font: { size: 12 }
+      },
+      grid: {
+        color: '#e0e0e0',
+        drawBorder: false,
+      }
+    },
+    y: {
+      ticks: {
+        color: '#6b7280',
+        font: { size: 12 }
+      },
+      grid: {
+        display: false,
+      }
+    }
+  }
+};
+
 const CareerInsights = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -84,9 +130,9 @@ const CareerInsights = () => {
         }
       } catch (err) {
         console.error("Error loading career insights:", err);
+        setError(err.response?.data?.message || "Failed to load career data");
       } finally {
         setLoading(false);
-        setError(null);
       }
     };
     fetchInsights();
@@ -103,7 +149,6 @@ const CareerInsights = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="career-insights">
@@ -115,12 +160,11 @@ const CareerInsights = () => {
     );
   }
 
-  // Job Titles Chart Data
   const jobTitleData = {
-    labels: data?.jobTitles.map(item => item._id) || [],
+    labels: data?.jobTitles?.map(item => item._id) || [],
     datasets: [{
       label: 'Number of Alumni',
-      data: data?.jobTitles.map(item => item.count) || [],
+      data: data?.jobTitles?.map(item => item.count) || [],
       backgroundColor: GOLD_SHADES,
       borderColor: GOLD_SHADES.map(color => color.replace('0.9', '1')),
       borderWidth: 1,
@@ -128,64 +172,16 @@ const CareerInsights = () => {
     }]
   };
 
-  // Companies Chart Data
   const companyData = {
-    labels: data?.companies.map(item => item._id) || [],
+    labels: data?.companies?.map(item => item._id) || [],
     datasets: [{
       label: 'Alumni Employed',
-      data: data?.companies.map(item => item.count) || [],
+      data: data?.companies?.map(item => item.count) || [],
       backgroundColor: GOLD_SHADES,
       borderColor: GOLD_SHADES.map(color => color.replace('0.9', '1')),
       borderWidth: 1,
       borderRadius: 6,
     }]
-  };
-
-  const chartOptions = {
-    indexAxis: 'y', // Horizontal bars
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        backgroundColor: '#fff',
-        titleColor: '#1a1a2e',
-        bodyColor: '#6b7280',
-        borderColor: '#e0e0e0',
-        borderWidth: 1,
-        padding: 12,
-        displayColors: false,
-        callbacks: {
-          title: (context) => context[0].label,
-          label: (context) => `Count: ${context.parsed.x}`,
-        }
-      }
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1,
-          color: '#6b7280',
-          font: { size: 12 }
-        },
-        grid: {
-          color: '#e0e0e0',
-          drawBorder: false,
-        }
-      },
-      y: {
-        ticks: {
-          color: '#6b7280',
-          font: { size: 12 }
-        },
-        grid: {
-          display: false,
-        }
-      }
-    }
   };
 
   return (
@@ -201,21 +197,21 @@ const CareerInsights = () => {
       </div>
 
       {/* Stats */}
-      <div className="career-insights-stats-grid ">
-        <div className="career-insights-stat-card ">
+      <div className="career-insights-stats-grid">
+        <div className="career-insights-stat-card">
           <div className="stat-icon"><UsersIcon /></div>
-            <p className="stat-label">Total Alumni</p>
-            <p className="stat-value">{data?.totalContributors?.toLocaleString()}</p>
+          <p className="stat-label">Total Alumni</p>
+          <p className="stat-value">{data?.totalContributors?.toLocaleString()}</p>
         </div>
         <div className="career-insights-stat-card">
           <div className="stat-icon"><BriefcaseIcon /></div>
-            <p className="stat-label">Unique Roles</p>
-            <p className="stat-value">{data?.jobTitles?.length}</p>
+          <p className="stat-label">Unique Roles</p>
+          <p className="stat-value">{data?.jobTitles?.length}</p>
         </div>
         <div className="career-insights-stat-card">
           <div className="stat-icon"><BuildingIcon /></div>
-            <p className="stat-label">Companies</p>
-            <p className="stat-value">{data?.companies?.length}</p>
+          <p className="stat-label">Companies</p>
+          <p className="stat-value">{data?.companies?.length}</p>
         </div>
       </div>
 

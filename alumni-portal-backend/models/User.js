@@ -34,7 +34,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: ""
     },
-    // ADD THESE NEW FIELDS FOR CONNECTIONS AND MENTORSHIP:
     connections: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'

@@ -5,9 +5,7 @@ import {
   MapPin,
   Linkedin,
   Facebook,
-  Twitter,
   Instagram,
-  Github,
 } from "lucide-react";
 import "./Footer.css";
 
@@ -65,7 +63,7 @@ const Footer = () => {
             <h4 className="footer-heading">Quick Links</h4>
             <ul className="footer-links">
               <li>
-                <Link to="/modules/dashboard">Dashboard</Link>
+                <Link to="/modules">Dashboard</Link>
               </li>
               <li>
                 <Link to="/modules/events">Events</Link>

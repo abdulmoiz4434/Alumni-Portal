@@ -1,5 +1,6 @@
 const Mentorship = require("../models/Mentorship");
 const MentorshipRequest = require("../models/MentorshipRequest");
+const { successResponse, errorResponse } = require("../utils/response");
 
 // @desc    Send a mentorship application/request
 // @route   POST /api/mentorship/apply
@@ -8,16 +9,16 @@ const sendMentorshipRequest = async (req, res) => {
     const { alumnusId, message } = req.body;
     const studentId = req.user._id;
 
-    // 1. Prevent applying to yourself
-    if (studentId.toString() === alumnusId.toString()) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "You cannot apply to your own mentorship offering." 
-      });
+    if (!alumnusId) {
+      return errorResponse(res, "Alumnus ID is required", 400);
     }
 
-    // 2. Check if an active request already exists 
-    // UPDATED: Using 'student' and 'alumnus' to match your Model
+    // Prevent applying to yourself
+    if (studentId.toString() === alumnusId.toString()) {
+      return errorResponse(res, "You cannot apply to your own mentorship offering.", 400);
+    }
+
+    // Check if an active request already exists
     const existingRequest = await MentorshipRequest.findOne({
       student: studentId,
       alumnus: alumnusId,
@@ -25,14 +26,9 @@ const sendMentorshipRequest = async (req, res) => {
     });
 
     if (existingRequest) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "You already have a pending application for this mentor." 
-      });
+      return errorResponse(res, "You already have a pending application for this mentor.", 400);
     }
 
-    // 3. Create the request
-    // UPDATED: Using 'student' and 'alumnus' to match your Model
     await MentorshipRequest.create({
       student: studentId,
       alumnus: alumnusId,
@@ -40,16 +36,10 @@ const sendMentorshipRequest = async (req, res) => {
       status: 'pending'
     });
 
-    res.status(201).json({ 
-      success: true, 
-      message: "Application sent successfully!" 
-    });
+    return successResponse(res, null, 201, "Application sent successfully!");
   } catch (error) {
     console.error("Mentorship Request Error:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Server error sending application: " + error.message 
-    });
+    return errorResponse(res, "Server error sending application: " + error.message, 500);
   }
 };
 
@@ -59,10 +49,7 @@ const createMentorship = async (req, res) => {
     const { title, field, duration, description, skills } = req.body;
 
     if (!title || !field || !duration || !description || !skills) {
-      return res.status(400).json({
-        success: false,
-        message: "Please fill all required fields"
-      });
+      return errorResponse(res, "Please fill all required fields", 400);
     }
 
     const mentorship = await Mentorship.create({
@@ -79,17 +66,10 @@ const createMentorship = async (req, res) => {
       status: "active"
     });
 
-    res.status(201).json({
-      success: true,
-      data: mentorship,
-      message: "Mentorship posted successfully"
-    });
+    return successResponse(res, mentorship, 201, "Mentorship posted successfully");
   } catch (error) {
     console.error("Error creating mentorship:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message || "Server Error"
-    });
+    return errorResponse(res, error.message || "Server Error", 500);
   }
 };
 
@@ -100,13 +80,10 @@ const getAllMentorships = async (req, res) => {
       .populate("postedBy", "fullName email")
       .sort({ createdAt: -1 });
 
-    res.status(200).json({
-      success: true,
-      count: mentorships.length,
-      data: mentorships
-    });
+    return successResponse(res, mentorships, 200, "Mentorships fetched successfully");
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error" });
+    console.error("Error fetching mentorships:", error);
+    return errorResponse(res, "Server Error", 500);
   }
 };
 
@@ -117,12 +94,13 @@ const getMentorshipById = async (req, res) => {
       .populate("postedBy", "fullName email");
 
     if (!mentorship) {
-      return res.status(404).json({ success: false, message: "Mentorship not found" });
+      return errorResponse(res, "Mentorship not found", 404);
     }
 
-    res.status(200).json({ success: true, data: mentorship });
+    return successResponse(res, mentorship, 200);
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error" });
+    console.error("Error fetching mentorship by ID:", error);
+    return errorResponse(res, "Server Error", 500);
   }
 };
 
@@ -132,11 +110,11 @@ const updateMentorship = async (req, res) => {
     let mentorship = await Mentorship.findById(req.params.id);
 
     if (!mentorship) {
-      return res.status(404).json({ success: false, message: "Mentorship not found" });
+      return errorResponse(res, "Mentorship not found", 404);
     }
 
     if (mentorship.postedBy.toString() !== req.user._id.toString() && req.user.role !== "admin") {
-      return res.status(403).json({ success: false, message: "Access denied" });
+      return errorResponse(res, "Access denied", 403);
     }
 
     const { title, field, duration, description, skills } = req.body;
@@ -155,9 +133,10 @@ const updateMentorship = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({ success: true, data: mentorship, message: "Updated successfully" });
+    return successResponse(res, mentorship, 200, "Updated successfully");
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error" });
+    console.error("Error updating mentorship:", error);
+    return errorResponse(res, "Server Error", 500);
   }
 };
 
@@ -167,21 +146,21 @@ const deleteMentorship = async (req, res) => {
     const mentorship = await Mentorship.findById(req.params.id);
 
     if (!mentorship) {
-      return res.status(404).json({ success: false, message: "Mentorship not found" });
+      return errorResponse(res, "Mentorship not found", 404);
     }
 
     const isAdmin = req.user.role === "admin";
     const isOwner = mentorship.postedBy.toString() === req.user._id.toString();
 
     if (!isAdmin && !isOwner) {
-      return res.status(403).json({ success: false, message: "Access denied" });
+      return errorResponse(res, "Access denied", 403);
     }
 
     await Mentorship.findByIdAndDelete(req.params.id);
-
-    res.status(200).json({ success: true, message: "Mentorship deleted successfully" });
+    return successResponse(res, null, 200, "Mentorship deleted successfully");
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error" });
+    console.error("Error deleting mentorship:", error);
+    return errorResponse(res, "Server Error", 500);
   }
 };
 

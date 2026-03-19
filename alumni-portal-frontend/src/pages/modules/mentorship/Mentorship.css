@@ -1,5 +1,61 @@
+/* =========================================
+   1. :root Variables
+   ========================================= */
+:root {
+  --m-dark: #1a1a1a;
+  --m-dark-deep: #121314;
+  --m-dark-card: #1e293b;
+  --m-dark-btn: #1d1f23;
+
+  --m-gold: #e6bb2f;
+  --m-gold-dark: #d4aa28;
+  --m-gold-muted: #d7c15e;
+
+  --m-bg-light: #f9fafb;
+  --m-bg-alt: #f8fafc;
+  --m-white: #ffffff;
+
+  --m-text-main: #475569;
+  --m-text-dark: #090808;
+  --m-text-muted: #64748b;
+  --m-text-light: #94a3b8;
+  --m-text-skill: #705656;
+
+  --m-border-main: #e2e8f0;
+  --m-border-light: #f1f5f9;
+  --m-border-input: #ddd;
+  --m-border-hover: #cbd5e1;
+
+  --m-success: #10b981;
+  --m-danger: #ef4444;
+  --m-danger-hover: #dc2626;
+  --m-danger-bg: #fee;
+
+  --m-shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --m-shadow-md: 0 4px 12px rgba(212, 170, 40, 0.3);
+  --m-shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --m-shadow-focus: 0 0 0 3px rgba(230, 187, 47, 0.15);
+  --m-shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.2);
+  --m-shadow-modal-sub: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  --m-radius-sm: 6px;
+  --m-radius-md: 8px;
+  --m-radius-lg: 10px;
+  --m-radius-xl: 12px;
+  --m-radius-2xl: 15px;
+  --m-radius-card: 16px;
+  --m-radius-badge: 20px;
+  --m-radius-round: 50px;
+
+  --m-transition-main: all 0.3s ease;
+  --m-transition-fast: all 0.2s ease;
+}
+
+/* =========================================
+   2. Base / Reset & Shared Styles
+   ========================================= */
 .mentorship {
-  background: #f9fafb;
+  background: var(--m-bg-light);
   min-height: 100vh;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   padding: 24px 32px;
@@ -14,23 +70,47 @@
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  gap: 1rem;
+  gap: 16px;
 }
 
-.loading-spinner {
-  width: 48px;
-  height: 48px;
-  color: #d4af37;
-  animation: spin 1s linear infinite;
+.mentorship-loading p {
+  color: var(--m-text-muted);
+  font-size: 1rem;
 }
 
-/* Header Section */
+/* =========================================
+   3. Layout Containers
+   ========================================= */
+.mentorship-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.opportunities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* =========================================
+   4. Component-specific Styles
+   ========================================= */
+
+/* Hero Section */
 .mentorship-hero {
-  background: #1a1a1a;
+  background: var(--m-dark);
   padding: 20px;
   text-align: center;
-  color: #d4aa28;
-  border-radius: 15px;
+  border-radius: var(--m-radius-2xl);
 }
 
 .mentorship-hero-content {
@@ -42,7 +122,7 @@
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 16px;
-  color: #e6bb2f;
+  color: var(--m-gold);
   animation: fadeInUp 0.6s ease-out;
 }
 
@@ -51,28 +131,37 @@
   max-width: 680px;
   margin: 0 auto;
   line-height: 1.6;
-  color: #ffffff;
+  color: var(--m-white);
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
-.mentorship-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  animation: fadeInUp 0.6s ease-out 0.5s both;
-  padding: 24px 24px;
+.create-mentorship-btn-hero {
+  margin-top: 24px;
+  padding: 12px 24px;
+  background: var(--m-gold);
+  color: var(--m-dark);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--m-radius-round);
+  cursor: pointer;
+  transition: var(--m-transition-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeInUp 0.6s ease-out 0.4s both;
 }
 
-/* Search and Filter Section */
+/* Search and Filters */
 .mentorship-search-filter-section {
-  background: #1a1a1a;
+  background: var(--m-dark);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: var(--m-radius-xl);
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-/* FIXED: added flex: 1 and position: relative */
 .search-box {
   flex: 1;
   min-width: 200px;
@@ -84,23 +173,18 @@
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #121314;
+  color: var(--m-dark-deep);
 }
 
 .search-input {
   width: 100%;
   box-sizing: border-box;
   padding: 1rem 1rem 0.875rem 3rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
+  border: 2px solid var(--m-border-main);
+  border-radius: var(--m-radius-lg);
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: var(--m-transition-main);
   outline: none;
-}
-
-.search-input:focus {
-  border-color: #e6bb2f;
-  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.15);
 }
 
 .filters {
@@ -111,12 +195,12 @@
 
 .filter-select {
   padding: 0.875rem 2.5rem 0.875rem 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
+  border: 2px solid var(--m-border-main);
+  border-radius: var(--m-radius-lg);
   font-size: 1rem;
-  background: white;
+  background: var(--m-white);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--m-transition-main);
   outline: none;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -124,43 +208,19 @@
   background-position: right 1rem center;
 }
 
-.filter-select:hover {
-  border-color: #cbd5e1;
-}
-
-.filter-select:focus {
-  border-color: #e6bb2f;
-  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.15);
-}
-
-/* Opportunities Grid */
-.opportunities-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-}
-
-/* Opportunity Card — FIXED: added flex-direction: column */
+/* Opportunity Card */
 .opportunity-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  background: var(--m-white);
+  border-radius: var(--m-radius-card);
+  box-shadow: var(--m-shadow-sm);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: var(--m-transition-main);
   border: 2px solid transparent;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
-.opportunity-card:hover {
-  transform: translateY(-4px);
-  border-color: #e6bb2f;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* Card Header — FIXED: flex-direction: column */
 .card-header {
   padding: 1rem 1rem 0.75rem;
   display: flex;
@@ -178,20 +238,20 @@
   display: inline-flex;
   align-items: center;
   padding: 0.35rem 0.85rem;
-  border-radius: 20px;
+  border-radius: var(--m-radius-badge);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  background: #e6bb2f;
-  color: #090808;
+  background: var(--m-gold);
+  color: var(--m-text-dark);
 }
 
 .mentorship-posted-date {
   display: inline-flex;
   align-items: center;
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--m-text-light);
   white-space: nowrap;
 }
 
@@ -199,7 +259,7 @@
   width: 100%;
   font-size: 1.2rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--m-dark-card);
   line-height: 2.35;
   text-align: left;
   margin: 0 0 0.6rem;
@@ -210,16 +270,16 @@
   gap: 0.4rem;
   font-size: 0.9rem;
   font-weight: 500;
-  color: #64748b;
+  color: var(--m-text-muted);
   text-align: left;
   margin: 2px;
 }
 
-.company-name svg {
-  color: #94a3b8;
+.company-name svg,
+.info-item svg {
+  color: var(--m-text-light);
 }
 
-/* Card Body */
 .card-body {
   padding: 0 1rem 1rem;
   flex: 1;
@@ -233,7 +293,7 @@
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--m-border-light);
 }
 
 .info-item {
@@ -241,22 +301,17 @@
   align-items: center;
   gap: 0.375rem;
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--m-text-muted);
   font-weight: 500;
 }
 
-.info-item svg {
-  color: #94a3b8;
-}
-
 .description {
-  color: #475569;
+  color: var(--m-text-main);
   font-size: 0.85rem;
   line-height: 1.45;
   margin-bottom: 0.75rem;
 }
 
-/* Skills Container */
 .skills-container {
   display: flex;
   flex-wrap: wrap;
@@ -265,144 +320,116 @@
 }
 
 .mentorship-skill-tag {
-  background: #e6bb2f;
-  color: #705656;
+  background: var(--m-gold);
+  color: var(--m-text-skill);
   padding: 6px 14px;
-  border-radius: 12px;
+  border-radius: var(--m-radius-xl);
   font-size: 0.80rem;
   font-weight: 500;
 }
 
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 0.75rem;
-  border-top: 1px solid #f1f5f9;
-  margin-top: auto;
-}
-
-.mentorship-type {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #10b981;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.posted-by {
-  font-size: 0.875rem;
-  color: #94a3b8;
-  background: #f8fafc;
-  padding: 0.375rem 0.75rem;
-  border-radius: 6px;
-}
-
-/* Card Actions */
 .card-actions {
   display: flex;
   gap: 0.75rem;
   padding: 1rem;
-  background: #f8fafc;
-  border-top: 1px solid #f1f5f9;
+  background: var(--m-bg-alt);
+  border-top: 1px solid var(--m-border-light);
 }
 
 .btn-primary {
   flex: 1;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--m-radius-lg);
   padding: 0.6rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--m-transition-main);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #e6bb2f;
-  color: rgb(8, 8, 8);
+  background: var(--m-gold);
+  color: var(--m-dark-deep);
 }
 
-.btn-primary:hover {
-  background: #d4aa28;
+.btn-primary.mentorship-accepted {
+  background: var(--m-gold-muted);
+  cursor: not-allowed;
+  opacity: 0.9;
 }
 
-.btn-primary:active {
-  transform: translateY(0);
+.btn-primary.applied {
+  background: var(--m-dark-btn);
+  color: var(--m-white);
+  cursor: not-allowed;
 }
 
-/* No Results */
-.no-results {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 4rem 2rem;
-  background: white;
-  border-radius: 16px;
-}
-
-.no-results svg {
-  margin-bottom: 1.5rem;
-}
-
-.no-results h3 {
-  font-size: 1.5rem;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
-}
-
-.no-results p {
-  color: #64748b;
-  font-size: 1rem;
-}
-
-/* Hero Button */
-.create-mentorship-btn-hero {
-  margin-top: 24px;
-  padding: 12px 24px;
-  background: #e6bb2f;
-  color: #1a1a1a;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 50px;
+.mentorship-delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 82px;
+  width: 32px;
+  height: 32px;
+  background: var(--m-danger-bg);
+  color: var(--m-danger);
+  border: 2px solid var(--m-danger);
+  border-radius: var(--m-radius-sm);
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  animation: fadeInUp 0.6s ease-out 0.4s both;
+  justify-content: center;
+  transition: var(--m-transition-fast);
+  z-index: 10;
 }
 
-.create-mentorship-btn-hero:hover {
-  background: #d4aa28;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(212, 170, 40, 0.3);
-}
-
-/* Modal */
-.modal-overlay {
+/* =========================================
+   5. Modals & Dialogs
+   ========================================= */
+.modal-overlay,
+.confirm-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9999;
 }
 
+.confirm-overlay {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 9998;
+  animation: overlayFadeIn 0.2s ease;
+}
+
+.event-modal,
+.confirm-dialog {
+  background: var(--m-white);
+  border-radius: var(--m-radius-card);
+  position: relative;
+}
+
 .event-modal {
-  background: #ffffff;
-  border-radius: 16px;
   max-width: 800px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   padding: 30px;
-  position: relative;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--m-shadow-modal);
+}
+
+.confirm-dialog {
+  padding: 32px 28px 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--m-shadow-modal), var(--m-shadow-modal-sub);
+  animation: dialogSlideIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-header {
@@ -410,7 +437,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--m-border-light);
   padding-bottom: 15px;
 }
 
@@ -419,14 +446,7 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #6c757d;
-}
-
-/* Form */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  color: var(--m-text-muted);
 }
 
 .form-group {
@@ -438,27 +458,27 @@
 .form-group label {
   font-weight: 600;
   font-size: 14px;
-  color: #1a1a1a;
+  color: var(--m-dark);
 }
 
 .form-group input,
 .form-group select,
-.form-group textarea {
+.form-group textarea,
+.apply-textarea {
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid var(--m-border-input);
+  border-radius: var(--m-radius-md);
   font-family: inherit;
   font-size: 14px;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #e6bb2f;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(230, 187, 47, 0.1);
+.apply-textarea {
+  width: 100%;
+  margin-top: 10px;
+  resize: vertical;
+  box-sizing: border-box;
 }
 
-/* Modal Footer */
 .modal-footer {
   margin-top: 30px;
   display: flex;
@@ -466,150 +486,43 @@
   gap: 15px;
 }
 
-.event-btn-cancel {
-  padding: 12px 24px;
-  background: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  cursor: pointer;
+.confirm-btn {
+  padding: 11px 20px;
+  font-size: 14px;
   font-weight: 600;
-  transition: all 0.2s;
+  cursor: pointer;
+  transition: var(--m-transition-fast);
+  border: 2px solid transparent;
+  border-radius: var(--m-radius-lg);
+  flex: 1;
 }
 
-.event-btn-cancel:hover {
-  background: #e9ecef;
+.event-btn-cancel {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--m-bg-alt);
+  border: 2px solid var(--m-border-input);
+  border-radius: var(--m-radius-md);
+  transition: var(--m-transition-fast);
 }
 
 .event-btn-submit {
   padding: 12px 24px;
-  background: #e6bb2f;
-  color: #1a1a1a;
+  background: var(--m-gold);
+  color: var(--m-dark);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--m-radius-md);
   cursor: pointer;
   font-weight: 700;
-  transition: all 0.2s;
-}
-
-.event-btn-submit:hover {
-  background: #d4aa28;
-  transform: translateY(-1px);
-}
-
-/* Delete Button */
-.mentorship-delete-btn {
-  position: absolute;
-  top: 10px;
-  right: 82px;
-  width: 32px;
-  height: 32px;
-  background: #fee;
-  color: #ef4444;
-  border: 2px solid #ef4444;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  z-index: 10;
-}
-
-.mentorship-delete-btn:hover {
-  background: #ef4444;
-  color: white;
-  transform: scale(1.1);
-}
-
-/* Loader */
-.events-loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  gap: 16px;
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid #f3f4f6;
-  border-top-color: #e6bb2f;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-.events-loader-container p {
-  color: #6b7280;
-  font-size: 1rem;
-}
-
-.apply-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-top: 10px;
-  font-family: inherit;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
-/* Mentorship status buttons */
-.btn-primary.mentorship-accepted {
-  background: #d7c15e;
-  color: rgb(16, 12, 12);
-  cursor: not-allowed;
-  opacity: 0.9;
-}
-
-.btn-primary.applied {
-  background: #1d1f23;
-  color: white;
-  cursor: not-allowed;
-}
-
-/* ==================== CONFIRM DIALOG ==================== */
-
-.confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(3px);
-  z-index: 9998;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: overlayFadeIn 0.2s ease;
-}
-
-@keyframes overlayFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.confirm-dialog {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 32px 28px 24px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.2),
-    0 4px 16px rgba(0, 0, 0, 0.1);
-  animation: dialogSlideIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes dialogSlideIn {
-  from { opacity: 0; transform: scale(0.88) translateY(12px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  transition: var(--m-transition-fast);
 }
 
 .confirm-message {
   font-size: 15px;
   font-weight: 500;
-  color: #1a1a1a;
+  color: var(--m-dark);
   line-height: 1.6;
   margin: 0 0 24px 0;
   text-align: center;
@@ -621,172 +534,143 @@
   justify-content: center;
 }
 
-.confirm-btn {
-  flex: 1;
-  padding: 11px 20px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.2s ease;
-}
-
 .confirm-cancel {
-  background: #f3f4f6;
+  background: var(--m-bg-light);
   color: #374151;
-  border-color: #e5e7eb;
-}
-
-.confirm-cancel:hover {
-  background: #e5e7eb;
-  border-color: #d1d5db;
+  border-color: var(--m-border-main);
 }
 
 .confirm-delete {
-  background: #ef4444;
-  color: #ffffff;
-  border-color: #ef4444;
+  background: var(--m-danger);
+  color: var(--m-white);
+  border-color: var(--m-danger);
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  color: var(--m-gold-dark);
+  animation: spin 1s linear infinite;
+}
+
+/* =========================================
+   6. State Styles (Hover, Focus, Active)
+   ========================================= */
+.create-mentorship-btn-hero:hover {
+  background: var(--m-gold-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--m-shadow-md);
+}
+
+.search-input:focus,
+.filter-select:focus,
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus,
+.apply-textarea:focus {
+  border-color: var(--m-gold);
+  outline: none;
+  box-shadow: var(--m-shadow-focus);
+}
+
+.filter-select:hover {
+  border-color: var(--m-border-hover);
+}
+
+.opportunity-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--m-gold);
+  box-shadow: var(--m-shadow-lg);
+}
+
+.btn-primary:hover:not(.applied):not(.mentorship-accepted) {
+  background: var(--m-gold-dark);
+}
+
+.btn-primary:active:not(.applied):not(.mentorship-accepted) {
+  transform: translateY(0);
+}
+
+.event-btn-cancel:hover,
+.confirm-cancel:hover {
+  background: var(--m-border-main);
+  border-color: var(--m-border-hover);
+}
+
+.event-btn-submit:hover {
+  background: var(--m-gold-dark);
+  transform: translateY(-1px);
+}
+
+.mentorship-delete-btn:hover {
+  background: var(--m-danger);
+  color: var(--m-white);
+  transform: scale(1.1);
 }
 
 .confirm-delete:hover {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: var(--m-danger-hover);
+  border-color: var(--m-danger-hover);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* Keyframes */
+/* =========================================
+   7. Animations and Keyframes
+   ========================================= */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dialogSlideIn {
+  from { opacity: 0; transform: scale(0.88) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* ========== RESPONSIVE ========== */
+/* =========================================
+   8. Media Queries
+   ========================================= */
 @media (max-width: 1024px) {
-  .mentorship {
-    padding: 20px 24px;
-  }
-
-  .main-title {
-    font-size: 2.4rem;
-  }
-
-  .opportunities-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .mentorship { padding: 20px 24px; }
+  .main-title { font-size: 2.4rem; }
+  .opportunities-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .mentorship {
-    padding: 16px;
-  }
-
-  .mentorship-hero {
-    padding: 24px 16px;
-  }
-
-  .main-title {
-    font-size: 2rem;
-  }
-
-  .subtitle {
-    font-size: 1rem;
-  }
-
-  .mentorship-container {
-    padding: 16px 0;
-  }
-
-  .mentorship-search-filter-section {
-    flex-direction: column;
-  }
-
-  .search-box {
-    min-width: unset;
-    width: 100%;
-  }
-
-  .filters {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .filter-select {
-    width: 100%;
-  }
-
-  /* 2 columns on tablet portrait */
-  .opportunities-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .card-actions {
-    flex-direction: column;
-  }
-
-  .btn-primary {
-    width: 100%;
-  }
-
-  .info-row {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .card-footer {
-    flex-direction: column;
-    gap: 0.75rem;
-    align-items: flex-start;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .event-modal {
-    padding: 20px;
-    width: 95%;
-  }
+  .mentorship { padding: 16px; }
+  .mentorship-hero { padding: 24px 16px; }
+  .main-title { font-size: 2rem; }
+  .subtitle { font-size: 1rem; }
+  .mentorship-container { padding: 16px 0; }
+  .mentorship-search-filter-section { flex-direction: column; }
+  .search-box { min-width: unset; width: 100%; }
+  .filters { flex-direction: column; width: 100%; }
+  .filter-select { width: 100%; }
+  .opportunities-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .card-actions, .info-row { flex-direction: column; }
+  .info-row { gap: 0.5rem; }
+  .btn-primary { width: 100%; }
+  .card-footer { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+  .form-grid { grid-template-columns: 1fr; }
+  .event-modal { padding: 20px; width: 95%; }
 }
 
 @media (max-width: 480px) {
-  .mentorship {
-    padding: 12px;
-  }
-
-  .mentorship-hero {
-    padding: 20px 12px;
-  }
-
-  .main-title {
-    font-size: 1.75rem;
-  }
-
-  .subtitle {
-    font-size: 0.9rem;
-  }
-
-  .mentorship-container {
-    padding: 12px 0;
-  }
-
-  /* Single column on mobile */
-  .opportunities-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .job-title {
-    font-size: 1.1rem;
-  }
-
-  .create-mentorship-btn-hero {
-    padding: 10px 20px;
-    font-size: 0.9rem;
-  }
+  .mentorship { padding: 12px; }
+  .mentorship-hero { padding: 20px 12px; }
+  .main-title { font-size: 1.75rem; }
+  .subtitle { font-size: 0.9rem; }
+  .mentorship-container { padding: 12px 0; }
+  .opportunities-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+  .job-title { font-size: 1.1rem; }
+  .create-mentorship-btn-hero { padding: 10px 20px; font-size: 0.9rem; }
 }

@@ -36,7 +36,7 @@ export default function AdminAuth() {
   const handleAdminLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      alert("Please fill in all fields");
+      setLoginError(true);
       return;
     }
 
@@ -59,8 +59,8 @@ export default function AdminAuth() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      
-      navigate("/modules", { replace: true }, { replace: true });
+
+      navigate("/modules", { replace: true });
     } catch (err) {
       console.error("Admin Login Error:", err);
       setLoginError(true);
@@ -73,13 +73,11 @@ export default function AdminAuth() {
       <div className="admin-auth-container">
         {/* Admin Login Panel */}
         <div className="admin-auth-panel">
-          <div className="admin-logo-container">
-            <img
-              src="/Round-Logo-USP.png"
-              alt="University Logo"
-              className="admin-logo"
-            />
-          </div>
+          <img
+            src="/Round-Logo-USP.png"
+            alt="University Logo"
+            className="admin-logo"
+          />
 
           <h2 className="admin-panel-title">Admin Portal</h2>
           <p className="admin-subtitle">Access restricted to authorized administrators only</p>
@@ -119,7 +117,7 @@ export default function AdminAuth() {
                   aria-label="Toggle password visibility"
                   disabled={isLoading}
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff /> : <Eye />}
                 </button>
               </div>
               {loginError && (
@@ -129,8 +127,6 @@ export default function AdminAuth() {
               )}
             </div>
 
-
-
             <button
               type="submit"
               className="admin-button"
@@ -139,7 +135,6 @@ export default function AdminAuth() {
               {isLoading ? "Signing In..." : "Access Admin Portal"}
             </button>
           </form>
-
         </div>
       </div>
     </main>

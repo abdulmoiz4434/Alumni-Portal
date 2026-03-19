@@ -18,7 +18,6 @@ export default function Messaging() {
   const [newMessage, setNewMessage] = useState("");
   const [activeChatUser, setActiveChatUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [socketConnected, setSocketConnected] = useState(false);
 
   const scrollRef = useRef(null);
 
@@ -28,17 +27,10 @@ export default function Messaging() {
     const socket = socketService.connect(token);
     if (!socket) return;
 
-    const onConnect = () => setSocketConnected(true);
-    const onDisconnect = () => setSocketConnected(false);
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    if (socket.connected) setSocketConnected(true);
-
     return () => {
       if (socket) {
-        socket.off("connect", onConnect);
-        socket.off("disconnect", onDisconnect);
+        socket.off("connect");
+        socket.off("disconnect");
       }
     };
   }, []);
@@ -166,11 +158,10 @@ export default function Messaging() {
           <div className="conv-list">
             {conversations.length > 0 ? (
               conversations.map((conv) => {
-                // Improved identification logic for the other user
                 const otherParticipant = conv.participants?.find(
                   (p) => (p._id || p.id || p).toString() !== currentUserId?.toString()
                 );
-                
+
                 const displayName = otherParticipant?.fullName || "Unknown User";
                 const displayInitial = displayName.charAt(0).toUpperCase();
                 const convId = conv._id || conv.id;
@@ -184,12 +175,12 @@ export default function Messaging() {
                   >
                     <div className="conv-avatar">
                       {profilePic ? (
-                        <img 
-                          src={profilePic} 
-                          alt={displayName} 
+                        <img
+                          src={profilePic}
+                          alt={displayName}
                           className="sidebar-avatar-img"
                           onError={(e) => {
-                            e.target.style.display = 'none';
+                            e.target.style.display = "none";
                             e.target.parentElement.innerText = displayInitial;
                           }}
                         />

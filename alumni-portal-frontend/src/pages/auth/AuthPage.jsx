@@ -58,6 +58,8 @@ export default function AuthPage() {
     }
   }, [navigate]);
 
+  const [globalError, setGlobalError] = useState("");
+
   const [isStudent, setIsStudent] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
   const [registrationType, setRegistrationType] = useState("");
@@ -165,6 +167,7 @@ export default function AuthPage() {
     }
 
     try {
+      setGlobalError("");
       setStudentPasswordMismatch(false);
       setStudentPasswordError("");
       socketService.disconnect();
@@ -188,7 +191,7 @@ export default function AuthPage() {
         (err.response
           ? "Registration failed"
           : "Cannot reach server. Is the backend running on the correct port?");
-      alert(msg);
+      setGlobalError(msg);
     }
   };
 
@@ -209,6 +212,7 @@ export default function AuthPage() {
     }
 
     try {
+      setGlobalError("");
       setAlumniPasswordMismatch(false);
       setAlumniPasswordError("");
       socketService.disconnect();
@@ -233,14 +237,13 @@ export default function AuthPage() {
         (err.response
           ? "Registration failed"
           : "Cannot reach server. Is the backend running on the correct port?");
-      alert(msg);
+      setGlobalError(msg);
     }
   };
 
   // Determine which panels are active for inert/tabindex control
   const studentRegActive = showRegistration && registrationType === "student";
   const alumniRegActive = showRegistration && registrationType === "alumni";
-  const loginVisible = !showRegistration;
 
   return (
     <main className="auth-main">
@@ -248,7 +251,6 @@ export default function AuthPage() {
       {/* LOGIN CONTAINER */}
       <div
         className={`auth-container ${showRegistration ? "slide-up" : ""}`}
-        // When registration is shown, prevent tabbing into hidden login fields
         inert={showRegistration ? "" : undefined}
       >
         {/* MOBILE TOGGLE BAR */}
@@ -270,7 +272,6 @@ export default function AuthPage() {
         {/* STUDENT LOGIN */}
         <div
           className={`auth-panel student-sign-in-panel ${isStudent ? "active" : "hidden-left"}`}
-          // Prevent tabbing into the hidden alumni panel
           inert={!isStudent ? "" : undefined}
         >
           <h2 className="login-form-panel-title">Student Login</h2>
@@ -406,6 +407,7 @@ export default function AuthPage() {
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
           <h2 className="registration-form-panel-title">Student Registration</h2>
+          {globalError && <div className="global-error-banner">{globalError}</div>}
           <div className="registration-form">
             <div className="form-row">
               <input
@@ -554,6 +556,7 @@ export default function AuthPage() {
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
           <h2 className="registration-form-panel-title">Alumni Registration</h2>
+          {globalError && <div className="global-error-banner">{globalError}</div>}
           <div className="registration-form">
             <div className="form-row">
               <input
@@ -682,11 +685,7 @@ export default function AuthPage() {
             <button type="submit" className="auth-button registration-button">
               Register
             </button>
-            <button
-              type="button"
-              className="back-to-login-link"
-              onClick={() => setShowRegistration(false)}
-            >
+            <button type="button" className="back-to-login-link" onClick={() => setShowRegistration(false)}>
               Back to Login
             </button>
           </div>

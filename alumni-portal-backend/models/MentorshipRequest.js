@@ -11,4 +11,6 @@ const mentorshipRequestSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+mentorshipRequestSchema.index({ student: 1, alumnus: 1 });
+
 module.exports = mongoose.model('MentorshipRequest', mentorshipRequestSchema);

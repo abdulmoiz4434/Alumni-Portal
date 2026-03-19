@@ -31,7 +31,7 @@ export default function Notifications() {
       return;
     }
     fetchRequests();
-  }, [activeTab]);
+  }, [activeTab, isAdmin, navigate]);
 
   const fetchRequests = async () => {
     try {
@@ -100,127 +100,125 @@ export default function Notifications() {
         )}
       </div>
 
-      <div className="notifications-list">
-        {loading ? (
-          <div className="notif-loader">
-            <div className="spinner"></div>
-            <p>Loading requests...</p>
-          </div>
-        ) : requests.length > 0 ? (
-          requests.map((req) => {
-            const requester = req.sender || req.student;
-            const isMentorship = activeTab === "mentorship";
-            const studentProfile = req.studentProfile;
+      {loading ? (
+        <div className="notif-loader">
+          <div className="spinner"></div>
+          <p>Loading requests...</p>
+        </div>
+      ) : requests.length > 0 ? (
+        requests.map((req) => {
+          const requester = req.sender || req.student;
+          const isMentorship = activeTab === "mentorship";
+          const studentProfile = req.studentProfile;
 
-            return (
-              <div key={req._id} className="request-card">
-                <div className="req-user-info">
-                  <div className="req-avatar-wrapper">
-                    {requester?.profilePicture ? (
-                      <img
-                        src={requester.profilePicture}
-                        alt={requester.fullName}
-                        className="req-avatar"
-                      />
-                    ) : (
-                      <div className="req-avatar-placeholder">
-                        <User size={36} />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="req-details">
-                    <h3>{requester?.fullName || "Unknown User"}</h3>
-                    <p className="req-role">
-                      {requester?.role} •{" "}
-                      {isMentorship
-                        ? "applied for mentorship"
-                        : "wants to connect"}
-                    </p>
-
-                    {isMentorship && studentProfile && (
-                      <div className="student-details">
-                        <div className="detail-row">
-                          <span className="detail-label">Degree:</span>
-                          <span className="detail-value">
-                            {studentProfile.degree || "N/A"}
-                          </span>
-                        </div>
-                        <div className="detail-row">
-                          <span className="detail-label">Department:</span>
-                          <span className="detail-value">
-                            {studentProfile.department || "N/A"}
-                          </span>
-                        </div>
-                        <div className="detail-row">
-                          <span className="detail-label">Semester:</span>
-                          <span className="detail-value">
-                            {studentProfile.semester || "N/A"}
-                          </span>
-                        </div>
-                        <div className="detail-row">
-                          <span className="detail-label">CGPA:</span>
-                          <span className="detail-value">
-                            {studentProfile.cgpa
-                              ? studentProfile.cgpa.toFixed(2)
-                              : "N/A"}
-                          </span>
-                        </div>
-                        {studentProfile.skills &&
-                          studentProfile.skills.length > 0 && (
-                            <div className="detail-row skills-row">
-                              <span className="detail-label">Skills:</span>
-                              <div className="skills-tags">
-                                {studentProfile.skills.map((skill, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="notification-skill-tag"
-                                  >
-                                    {skill}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                      </div>
-                    )}
-
-                    {req.message && (
-                      <p className="req-message">"{req.message}"</p>
-                    )}
-                  </div>
+          return (
+            <div key={req._id} className="request-card">
+              <div className="req-user-info">
+                <div className="req-avatar-wrapper">
+                  {requester?.profilePicture ? (
+                    <img
+                      src={requester.profilePicture}
+                      alt={requester.fullName}
+                      className="req-avatar"
+                    />
+                  ) : (
+                    <div className="req-avatar-placeholder">
+                      <User size={36} />
+                    </div>
+                  )}
                 </div>
 
-                <div className="req-actions">
-                  <button
-                    className="btn-accept"
-                    onClick={() => handleAction(req._id, "accept")}
-                  >
-                    <FiCheck /> Accept
-                  </button>
-                  <button
-                    className="btn-reject"
-                    onClick={() => handleAction(req._id, "reject")}
-                  >
-                    <FiX /> Decline
-                  </button>
+                <div className="req-details">
+                  <h3>{requester?.fullName || "Unknown User"}</h3>
+                  <p className="req-role">
+                    {requester?.role} •{" "}
+                    {isMentorship
+                      ? "applied for mentorship"
+                      : "wants to connect"}
+                  </p>
+
+                  {isMentorship && studentProfile && (
+                    <div className="student-details">
+                      <div className="detail-row">
+                        <span className="detail-label">Degree:</span>
+                        <span className="detail-value">
+                          {studentProfile.degree || "N/A"}
+                        </span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="detail-label">Department:</span>
+                        <span className="detail-value">
+                          {studentProfile.department || "N/A"}
+                        </span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="detail-label">Semester:</span>
+                        <span className="detail-value">
+                          {studentProfile.semester || "N/A"}
+                        </span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="detail-label">CGPA:</span>
+                        <span className="detail-value">
+                          {studentProfile.cgpa
+                            ? studentProfile.cgpa.toFixed(2)
+                            : "N/A"}
+                        </span>
+                      </div>
+                      {studentProfile.skills &&
+                        studentProfile.skills.length > 0 && (
+                          <div className="detail-row skills-row">
+                            <span className="detail-label">Skills:</span>
+                            <div className="skills-tags">
+                              {studentProfile.skills.map((skill, idx) => (
+                                <span
+                                  key={idx}
+                                  className="notification-skill-tag"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  )}
+
+                  {req.message && (
+                    <p className="req-message">"{req.message}"</p>
+                  )}
                 </div>
               </div>
-            );
-          })
-        ) : (
-          <div className="empty-state">
-            <FiMessageSquare size={48} />
-            <p>
-              No pending{" "}
-              {activeTab === "connections"
-                ? "connection requests"
-                : "mentorship applications"}{" "}
-              at the moment.
-            </p>
-          </div>
-        )}
-      </div>
+
+              <div className="req-actions">
+                <button
+                  className="btn-accept"
+                  onClick={() => handleAction(req._id, "accept")}
+                >
+                  <FiCheck /> Accept
+                </button>
+                <button
+                  className="btn-reject"
+                  onClick={() => handleAction(req._id, "reject")}
+                >
+                  <FiX /> Decline
+                </button>
+              </div>
+            </div>
+          );
+        })
+      ) : (
+        <div className="empty-state">
+          <FiMessageSquare size={48} />
+          <p>
+            No pending{" "}
+            {activeTab === "connections"
+              ? "connection requests"
+              : "mentorship applications"}{" "}
+            at the moment.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

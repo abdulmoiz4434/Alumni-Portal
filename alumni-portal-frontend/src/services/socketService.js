@@ -9,7 +9,12 @@ let socket = null;
 export function connect(token) {
   if (!token) return null;
   if (socket?.connected) return socket;
-  
+
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+
   socket = io(getSocketUrl(), {
     auth: { token },
     transports: ["websocket", "polling"],
@@ -39,7 +44,7 @@ export function emit(event, data) {
 export function on(event, callback) {
   if (!socket) return () => {};
   socket.on(event, callback);
-  
+
   return () => {
     if (socket) {
       socket.off(event, callback);
@@ -64,14 +69,3 @@ export function sendMessage(conversationId, content) {
     socket.emit("message:send", { conversationId, content: content.trim() });
   }
 }
-
-export default {
-  connect,
-  disconnect,
-  getSocket,
-  emit,
-  on,
-  joinConversation,
-  leaveConversation,
-  sendMessage,
-};

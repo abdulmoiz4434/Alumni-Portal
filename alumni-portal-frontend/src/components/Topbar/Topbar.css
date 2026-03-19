@@ -1,10 +1,8 @@
-/* ===== Existing styles (unchanged) ===== */
 .topbar {
   position: relative;
   height: 40px;
   display: flex;
   justify-content: space-between;
-  /* space between left & right */
   align-items: center;
   padding: 14px;
   margin: 0;
@@ -35,42 +33,24 @@
 }
 
 .topbar-welcome {
-  position: absolute;
-  left: 520px;
   white-space: nowrap;
   color: #d0cfcb;
   font-size: 20px;
   font-weight: 500;
   letter-spacing: 0.3px;
-
-  /* Animation moved to media query for larger screens */
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-@keyframes slideInWelcome {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 /* ===== Notification Bell Styles ===== */
 .topbar-right {
   display: flex;
   align-items: center;
-  z-index: 10; /* Ensures it stays above the absolute welcome text if they overlap */
+  z-index: 10;
 }
 
 .notification-btn {
   background: transparent;
   border: none;
-  color: #dbdee5; /* Matched to your logo color */
+  color: #dbdee5;
   cursor: pointer;
   position: relative;
   display: flex;
@@ -83,7 +63,7 @@
 
 .notification-btn:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #e6bb2f; /* Gold highlight on hover */
+  color: #e6bb2f;
 }
 
 .notification-badge {
@@ -124,7 +104,6 @@
 
   .topbar-left {
     margin-left: 50px;
-    /* Push it right, away from menu icon */
     gap: 8px;
   }
 
@@ -139,7 +118,6 @@
 
   .topbar-welcome {
     display: none;
-    /* hide for small screens */
   }
 }
 
@@ -147,7 +125,6 @@
 @media (min-width: 768px) {
   .topbar-welcome {
     animation: slideInWelcome 2.5s ease-out forwards;
-    /* Center align */
     left: 50%;
     transform: translateX(-50%);
     position: absolute;
@@ -163,7 +140,6 @@
 
     100% {
       transform: translateX(-50%);
-      /* Centered end position */
       opacity: 1;
     }
   }

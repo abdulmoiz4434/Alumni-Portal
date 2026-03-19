@@ -11,11 +11,7 @@ export default function Sidebar() {
   const isAdmin = user?.role === "admin";
 
   const handleLogout = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const isAdmin = user?.role === "admin";
-
     socketService.disconnect();
-
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setIsOpen(false);
@@ -31,12 +27,12 @@ export default function Sidebar() {
 
   return (
     <>
-   <button className="menu-btn" onClick={() => setIsOpen(true)}>
-    <div className="menu-class">
-      <Menu size={26} />
-      {isOpen && <span className="menu-btn-text">USP</span>}
-    </div>
-    </button>
+      <button className="menu-btn" onClick={() => setIsOpen(true)}>
+        <div className="menu-class">
+          <Menu size={26} />
+          {isOpen && <span className="menu-btn-text">USP</span>}
+        </div>
+      </button>
 
       {isOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 

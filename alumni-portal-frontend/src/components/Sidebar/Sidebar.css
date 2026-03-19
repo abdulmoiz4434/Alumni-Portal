@@ -10,7 +10,6 @@
   transition: transform 0.3s ease;
 }
 
-
 /* Navigation wrapper */
 .sidebar-nav {
   display: flex;
@@ -20,7 +19,7 @@
 
 /* Shared styles for links & buttons */
 .sidebar-nav a {
-  color: #d1d5db;                 /* neutral light gray */
+  color: #d1d5db;
   text-decoration: none;
   padding: 10px 14px;
   border-radius: 8px;
@@ -28,12 +27,8 @@
   align-items: center;
   gap: 12px;
   position: relative;
-
   background: transparent;
-  border: none;
-  cursor: pointer;
   font: inherit;
-
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
@@ -44,30 +39,31 @@
   content: "○";
   font-size: 22px;
   font-weight: 700;
-  color: #b5b9c2;                 /* muted gray */
+  color: #b5b9c2;
   transition: color 0.2s ease;
 }
 
 /* Hover state */
 .sidebar-nav a:hover {
-  background-color: #27272a;      /* subtle dark hover */
+  background-color: #27272a;
   color: #ffffff;
 }
 
-.sidebar-nav a:hover::before{
+.sidebar-nav a:hover::before {
   color: #ffffff;
 }
 
 /* Active state */
 .sidebar-nav a.active {
-  background-color: #323235;      /* darker than hover */
+  background-color: #323235;
   color: #ffffff;
 }
 
 .sidebar-nav a.active::before {
-  color: #dbde06;                 /* accent color (green) */
+  color: #dbde06;
 }
-/* Logout button - distinct style */
+
+/* Logout button */
 .logout-btn {
   background: #323235;
   color: white;
@@ -77,18 +73,17 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  margin-top: 12px;            /* small spacing from previous link */
+  margin-top: 12px;
   transition: background-color 0.2s ease, color 0.2s ease;
   display: flex;
-  justify-content:center ;
+  justify-content: center;
   gap: 8px;
 }
 
 .logout-btn:hover {
-  background-color: #e6bb2f;   /* darker red on hover */
+  background-color: #e6bb2f;
   color: black;
 }
-
 
 .menu-btn {
   display: none;
@@ -96,7 +91,6 @@
   top: 9px;
   left: 10px;
   z-index: 1100;
-
   background: #191a1b;
   color: white;
   padding: 8px;
@@ -129,9 +123,6 @@
     transition: transform 0.3s ease;
     padding-top: 66px;
     box-sizing: border-box;
-    .menu-usp {
-      display: none;
-    }
   }
 
   .sidebar.open {
@@ -140,23 +131,15 @@
 
   .menu-btn {
     display: block;
-    position: fixed;
-    top: 9px;
-    left: 10px;
-    z-index: 1101; 
-    background: #191a1b;
-    color: white;
+    z-index: 1101;
     border: none;
     border-radius: 8px;
-    padding: 8px;
-    cursor: pointer;
   }
 
   .menu-btn-text {
-  font-size: 2rem;
-  font-weight: 600;
-  font-family: 'Playfair Display', serif;
-  color: #d4af37;
-}
-
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    color: #d4af37;
+  }
 }

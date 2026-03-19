@@ -6,6 +6,7 @@ const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
 const initSocket = require("./config/socket");
+const errorMiddleware = require('./middleware/errorMiddleware');
 
 const authRoutes = require('./routes/auth');
 const messageRoutes = require('./routes/messages');
@@ -69,13 +70,7 @@ app.use((req, res) => {
 });
 
 /* ================= GLOBAL ERROR HANDLER ================= */
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal Server Error'
-  });
-});
+app.use(errorMiddleware);
 
 /* ================= SERVER INIT ================= */
 const server = http.createServer(app);

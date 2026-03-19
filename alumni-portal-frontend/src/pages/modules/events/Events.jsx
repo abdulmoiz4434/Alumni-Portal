@@ -42,7 +42,7 @@ export default function Events() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState("");
-  const [confirmDialog, setConfirmDialog] = useState(null); // { eventId }
+  const [confirmDialog, setConfirmDialog] = useState(null);
   const { toasts, addToast, removeToast } = useToast();
 
   // Create Event States
@@ -109,9 +109,9 @@ export default function Events() {
       setFilteredEvents(res.data.data);
     } catch (err) {
       console.error("Error fetching events:", err);
+      setError(err.response?.data?.message || "Failed to load events.");
     } finally {
       setLoading(false);
-      setError(null);
     }
   };
 
@@ -296,7 +296,12 @@ export default function Events() {
               className="filter-select"
             >
               {categories.map((cat) => (
-                <option key={cat} value={cat.toLowerCase()}>{cat}</option>
+                <option
+                  key={cat}
+                  value={cat === "All Types" ? "all" : cat.toLowerCase()}
+                >
+                  {cat}
+                </option>
               ))}
             </select>
 
@@ -431,7 +436,7 @@ export default function Events() {
                     onChange={(e) => setNewEvent({ ...newEvent, category: e.target.value })}
                   >
                     {categories
-                      .filter((c) => c !== "All")
+                      .filter((c) => c !== "All Types")
                       .map((cat) => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))}

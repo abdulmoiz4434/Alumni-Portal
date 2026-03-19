@@ -164,7 +164,6 @@ exports.updateEvent = async (req, res) => {
       event.image = req.file.path;
     }
 
-    event.updatedAt = Date.now();
     await event.save();
 
     return successResponse(res, event, 200, "Event updated successfully");

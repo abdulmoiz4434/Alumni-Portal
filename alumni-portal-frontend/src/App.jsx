@@ -47,7 +47,6 @@ function App() {
 
           <Route path="notifications" element={<Notifications />} />
 
-          {/* Messaging & Profile restricted to students and alumni only (not admin) */}
           <Route
             path="messaging/:conversationId?"
             element={

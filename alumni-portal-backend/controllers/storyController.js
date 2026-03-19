@@ -1,22 +1,29 @@
-const SuccessStory = require('../models/SuccessStories'); // Imported as SuccessStory
+const SuccessStory = require('../models/SuccessStories');
+const { successResponse, errorResponse } = require('../utils/response');
 
 exports.getStories = async (req, res) => {
   try {
-    const stories = await SuccessStory.find() 
+    const stories = await SuccessStory.find()
       .populate('alumnus', 'fullName profilePicture batch')
       .sort({ createdAt: -1 });
-      
-    res.status(200).json({ success: true, data: stories });
+
+    return successResponse(res, stories, 200, "Stories fetched successfully");
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Get Stories Error:", error);
+    return errorResponse(res, error.message, 500);
   }
 };
 
 exports.createStory = async (req, res) => {
   try {
     const { title, content } = req.body;
+
+    if (!title || !content) {
+      return errorResponse(res, "Title and content are required", 400);
+    }
+
     const story = await SuccessStory.create({
-      alumnus: req.user.id, 
+      alumnus: req.user.id,
       title,
       content
     });
@@ -24,9 +31,10 @@ exports.createStory = async (req, res) => {
     const populatedStory = await SuccessStory.findById(story._id)
       .populate('alumnus', 'fullName profilePicture batch');
 
-    res.status(201).json({ success: true, data: populatedStory });
+    return successResponse(res, populatedStory, 201, "Story created successfully");
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Create Story Error:", error);
+    return errorResponse(res, error.message, 500);
   }
 };
 
@@ -35,24 +43,21 @@ exports.deleteStory = async (req, res) => {
     const story = await SuccessStory.findById(req.params.id);
 
     if (!story) {
-      return res.status(404).json({ success: false, message: "Story not found" });
+      return errorResponse(res, "Story not found", 404);
     }
 
-    // FIX: Check both .id and ._id for the logged-in user
     const currentUserId = req.user.id || req.user._id;
-
-    // Check ownership or admin status
     const isOwner = story.alumnus.toString() === currentUserId.toString();
     const isAdmin = req.user.role === 'admin';
 
     if (!isOwner && !isAdmin) {
-      return res.status(401).json({ success: false, message: "Not authorized" });
+      return errorResponse(res, "Not authorized", 403);
     }
 
     await story.deleteOne();
-    res.status(200).json({ success: true, message: "Story removed" });
+    return successResponse(res, null, 200, "Story removed");
   } catch (error) {
-    console.error("Delete Error:", error); // Check your terminal for this!
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Delete Story Error:", error);
+    return errorResponse(res, error.message, 500);
   }
 };

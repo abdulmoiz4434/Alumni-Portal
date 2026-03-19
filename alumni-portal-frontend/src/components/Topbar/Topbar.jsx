@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FiBell } from "react-icons/fi";
 import API from "../../api/axios";
 import "./Topbar.css";
@@ -8,26 +8,22 @@ export default function Topbar() {
   const navigate = useNavigate();
   const [notificationCount, setNotificationCount] = useState(0);
 
-  // Get user role from localStorage
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = user.role === "admin";
 
   useEffect(() => {
-    // Optimization: If Admin, don't even start the fetch cycle
     if (isAdmin) return;
 
     fetchNotificationCount();
 
     const interval = setInterval(fetchNotificationCount, 30000);
-
-    const handleUpdate = () => fetchNotificationCount();
-    window.addEventListener('notificationUpdate', handleUpdate);
+    window.addEventListener("notificationUpdate", fetchNotificationCount);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('notificationUpdate', handleUpdate);
+      window.removeEventListener("notificationUpdate", fetchNotificationCount);
     };
-  }, [isAdmin]); // Re-run if role changes
+  }, [isAdmin]);
 
   const fetchNotificationCount = async () => {
     try {
@@ -61,10 +57,9 @@ export default function Topbar() {
       </div>
 
       <div className="topbar-right">
-        {/* RBAC: Only show the notification button if NOT an admin */}
         {!isAdmin && (
-          <button 
-            className="notification-btn" 
+          <button
+            className="notification-btn"
             onClick={handleNotificationClick}
             title="Notifications"
           >

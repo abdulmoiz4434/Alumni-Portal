@@ -105,7 +105,7 @@ function StoryCard({ story, user, onDelete, index }) {
           </div>
         </div>
         <div className="story-date">
-          <FiCalendar size={12} style={{ marginRight: "4px" }} />
+          <FiCalendar size={12} />
           {new Date(story.createdAt).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
@@ -177,7 +177,7 @@ export default function SuccessStories() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddStoryModal, setShowAddStoryModal] = useState(false);
-  const [confirmDialog, setConfirmDialog] = useState(null); // { storyId }
+  const [confirmDialog, setConfirmDialog] = useState(null);
   const { toasts, addToast, removeToast } = useToast();
 
   const user = JSON.parse(localStorage.getItem("user"));

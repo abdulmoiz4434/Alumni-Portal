@@ -41,7 +41,7 @@ export default function Jobs() {
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [confirmDialog, setConfirmDialog] = useState(null); // { id }
+  const [confirmDialog, setConfirmDialog] = useState(null);
   const { toasts, addToast, removeToast } = useToast();
 
   // 2. Form State
@@ -88,9 +88,9 @@ export default function Jobs() {
       }
     } catch (err) {
       console.error("Error fetching jobs:", err);
+      setError(err.response?.data?.message || "Failed to load opportunities.");
     } finally {
       setLoading(false);
-      setError(null);
     }
   };
 

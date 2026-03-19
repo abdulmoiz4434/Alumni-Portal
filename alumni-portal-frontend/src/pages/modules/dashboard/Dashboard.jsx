@@ -244,8 +244,9 @@ const Dashboard = () => {
                             <MapPin className="meta-icon" /> {job.location}
                           </span>
                           <span className="job-type-badge">
-                            {job.category.charAt(0).toUpperCase() +
-                              job.category.slice(1) || "Full-time"}
+                            {job.category
+                              ? job.category.charAt(0).toUpperCase() + job.category.slice(1)
+                              : "Full-time"}
                           </span>
                         </div>
                       </div>
@@ -273,7 +274,7 @@ const Dashboard = () => {
             <div className="quick-stats-grid">
               <div className="quick-stat">
                 <span className="quick-stat-value">
-                  {stats?.totalAlumni?.toLocaleString() - 1 || "0"}
+                  {((stats?.totalAlumni ?? 1) - 1).toLocaleString()}
                 </span>
                 <span className="quick-stat-label">Total Users</span>
               </div>

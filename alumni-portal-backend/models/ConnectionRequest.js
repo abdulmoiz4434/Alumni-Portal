@@ -10,4 +10,6 @@ const connectionRequestSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+connectionRequestSchema.index({ sender: 1, receiver: 1 });
+
 module.exports = mongoose.model('ConnectionRequest', connectionRequestSchema);
