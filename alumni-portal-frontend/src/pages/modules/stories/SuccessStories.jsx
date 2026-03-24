@@ -9,7 +9,7 @@ import {
 } from "react-icons/fi";
 import { FaQuoteLeft } from "react-icons/fa";
 import API from "../../../api/axios";
-import { Toast, useToast } from "../Profile/Toast";
+import { Toast, useToast } from "../profile/Toast";
 import "./SuccessStories.css";
 
 // Confirm Dialog Component

@@ -14,7 +14,7 @@ import {
 } from "react-icons/fa";
 import { Trash2, Loader } from "lucide-react";
 import API from "../../../api/axios";
-import { Toast, useToast } from "../Profile/Toast";
+import { Toast, useToast } from "../profile/Toast";
 import "./Events.css";
 
 // Confirm Dialog Component

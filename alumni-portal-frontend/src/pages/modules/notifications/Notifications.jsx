@@ -11,7 +11,7 @@ import {
 import { User } from "lucide-react";
 
 import API from "../../../api/axios";
-import { Toast, useToast } from "../Profile/Toast";
+import { Toast, useToast } from "../profile/Toast";
 import "./Notifications.css";
 
 export default function Notifications() {

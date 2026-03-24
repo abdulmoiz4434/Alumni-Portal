@@ -11,7 +11,7 @@ import {
   Trash2,
   X
 } from "lucide-react";
-import { Toast, useToast } from "../Profile/Toast";
+import { Toast, useToast } from "../profile/Toast";
 import "./Jobs.css";
 
 // Confirm Dialog Component
