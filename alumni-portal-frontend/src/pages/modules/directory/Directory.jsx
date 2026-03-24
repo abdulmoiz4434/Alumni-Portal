@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { Search, UserPlus, CheckCircle, MessageCircle, Trash2, User, Loader } from "lucide-react";
 import API from "../../../api/axios";
-import { Toast, useToast } from "../Profile/Toast";
+import { Toast, useToast } from "../profile/Toast";
 import "./Directory.css";
 
-// Confirm Dialog Component
 function ConfirmDialog({ message, onConfirm, onCancel }) {
   return (
     <div className="confirm-overlay">
