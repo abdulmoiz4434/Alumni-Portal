@@ -88,19 +88,19 @@ const Footer = () => {
             <h4 className="footer-heading">Resources</h4>
             <ul className="footer-links">
               <li>
-                <Link to="/help">Help Center</Link>
+                <Link to="/helpCenter">Help Center</Link>
               </li>
               <li>
                 <Link to="/faqs">FAQs</Link>
               </li>
               <li>
-                <Link to="/privacy">Privacy Policy</Link>
+                <Link to="/privacyPolicy">Privacy Policy</Link>
               </li>
               <li>
-                <Link to="/terms">Terms of Service</Link>
+                <Link to="/termsOfService">Terms of Service</Link>
               </li>
               <li>
-                <Link to="/support">Contact Support</Link>
+                <Link to="/contactSupport">Contact Support</Link>
               </li>
             </ul>
           </div>

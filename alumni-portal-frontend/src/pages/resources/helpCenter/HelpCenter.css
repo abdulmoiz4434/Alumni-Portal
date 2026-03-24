@@ -1,0 +1,45 @@
+.helpcenter-container {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  padding: 60px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.helpcenter-container h1 {
+  font-size: 2.5rem;
+  color: #c9a84c;
+  border-bottom: 2px solid #c9a84c;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.helpcenter-container p {
+  font-size: 1.1rem;
+  color: #cccccc;
+  margin-bottom: 30px;
+  line-height: 1.8;
+}
+
+.helpcenter-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.helpcenter-container ul li {
+  background-color: #1a1a1a;
+  border-left: 4px solid #c9a84c;
+  padding: 14px 20px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #f0f0f0;
+  transition: background 0.3s;
+}
+
+.helpcenter-container ul li:hover {
+  background-color: #222222;
+  color: #c9a84c;
+  cursor: pointer;
+}
