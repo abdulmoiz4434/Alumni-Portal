@@ -108,10 +108,12 @@ export default function AuthPage() {
   const openStudentRegistration = () => {
     setRegistrationType("student");
     setShowRegistration(true);
+    setGlobalError("");
   };
   const openAlumniRegistration = () => {
     setRegistrationType("alumni");
     setShowRegistration(true);
+    setGlobalError("");
   };
 
   // ─── Login Handlers ───────────────────────────────────────────────────────
@@ -276,17 +278,25 @@ export default function AuthPage() {
         >
           <h2 className="login-form-panel-title">Student Login</h2>
           <form className="auth-form" onSubmit={handleStudentLogin}>
-            <input
-              type="email"
-              required
-              placeholder="Enter Email"
-              value={studentEmail}
-              onChange={(e) => {
-                setStudentEmail(e.target.value);
-                setStudentLoginError(false);
-              }}
-              className={`auth-input ${studentLoginError ? "input-error" : ""}`}
-            />
+            
+            {/* WRAPPED EMAIL IN form-field-wrapper TO MATCH REGISTRATION STYLE */}
+            <div className="form-field-wrapper">
+              <input
+                type="email"
+                required
+                placeholder="Enter Email"
+                value={studentEmail}
+                onChange={(e) => {
+                  setStudentEmail(e.target.value);
+                  setStudentLoginError(false);
+                }}
+                className={`auth-input ${studentLoginError ? "input-error" : ""}`}
+              />
+              <p className="error-message">
+                {studentLoginError ? "Invalid email or password" : ""}
+              </p>
+            </div>
+
             <div className="password-field-container">
               <div className="password-input-wrapper">
                 <input
@@ -309,9 +319,6 @@ export default function AuthPage() {
                   {showStudentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {studentLoginError && (
-                <p className="error-message">Invalid email or password</p>
-              )}
             </div>
 
             <div className="auth-button-container">
@@ -332,17 +339,25 @@ export default function AuthPage() {
         >
           <h2 className="login-form-panel-title">Alumni Login</h2>
           <form className="auth-form" onSubmit={handleAlumniLogin}>
-            <input
-              type="email"
-              required
-              placeholder="Enter Email"
-              value={alumniEmail}
-              onChange={(e) => {
-                setAlumniEmail(e.target.value);
-                setAlumniLoginError(false);
-              }}
-              className={`auth-input ${alumniLoginError ? "input-error" : ""}`}
-            />
+            
+            {/* WRAPPED EMAIL IN form-field-wrapper TO MATCH REGISTRATION STYLE */}
+            <div className="form-field-wrapper">
+              <input
+                type="email"
+                required
+                placeholder="Enter Email"
+                value={alumniEmail}
+                onChange={(e) => {
+                  setAlumniEmail(e.target.value);
+                  setAlumniLoginError(false);
+                }}
+                className={`auth-input ${alumniLoginError ? "input-error" : ""}`}
+              />
+              <p className="error-message">
+                {alumniLoginError ? "Invalid email or password" : ""}
+              </p>
+            </div>
+
             <div className="password-field-container">
               <div className="password-input-wrapper">
                 <input
@@ -365,9 +380,6 @@ export default function AuthPage() {
                   {showAlumniPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {alumniLoginError && (
-                <p className="error-message">Invalid email or password</p>
-              )}
             </div>
 
             <button type="submit" className="auth-button Alumni-sign-in-button">
@@ -407,7 +419,6 @@ export default function AuthPage() {
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
           <h2 className="registration-form-panel-title">Student Registration</h2>
-          {globalError && <div className="global-error-banner">{globalError}</div>}
           <div className="registration-form">
             <div className="form-row">
               <input
@@ -429,7 +440,7 @@ export default function AuthPage() {
             <div className="form-row">
               <div className="form-field-wrapper">
                 <input
-                  className={`auth-input ${studentRegEmailError ? "input-error" : ""}`}
+                  className={`auth-input ${studentRegEmailError || globalError ? "input-error" : ""}`}
                   placeholder="Email"
                   type="email"
                   required
@@ -437,11 +448,12 @@ export default function AuthPage() {
                   onChange={(e) => {
                     setStudentRegEmail(e.target.value);
                     setStudentRegEmailError("");
+                    setGlobalError("");
                   }}
                 />
-                {studentRegEmailError && (
-                  <p className="error-message">{studentRegEmailError}</p>
-                )}
+                <p className="error-message">
+                  {globalError || studentRegEmailError || ""}
+                </p>
               </div>
               <div className="form-field-wrapper">
                 <input
@@ -451,6 +463,7 @@ export default function AuthPage() {
                   value={studentRegDepartment}
                   onChange={(e) => setStudentRegDepartment(e.target.value)}
                 />
+                <p className="error-message">{""}</p>
               </div>
             </div>
             <div className="form-row">
@@ -538,7 +551,11 @@ export default function AuthPage() {
             <button
               type="button"
               className="back-to-login-link"
-              onClick={() => setShowRegistration(false)}
+              onClick={() => {
+                setShowRegistration(false);
+                setGlobalError("");
+                setStudentRegEmailError("");
+              }}
             >
               Back to Login
             </button>
@@ -556,7 +573,6 @@ export default function AuthPage() {
             <img src="/USP_RL.png" alt="Monogram" />
           </div>
           <h2 className="registration-form-panel-title">Alumni Registration</h2>
-          {globalError && <div className="global-error-banner">{globalError}</div>}
           <div className="registration-form">
             <div className="form-row">
               <input
@@ -578,7 +594,7 @@ export default function AuthPage() {
             <div className="form-row">
               <div className="form-field-wrapper">
                 <input
-                  className={`auth-input ${alumniRegEmailError ? "input-error" : ""}`}
+                  className={`auth-input ${alumniRegEmailError || globalError ? "input-error" : ""}`}
                   placeholder="Email"
                   type="email"
                   required
@@ -586,11 +602,12 @@ export default function AuthPage() {
                   onChange={(e) => {
                     setAlumniRegEmail(e.target.value);
                     setAlumniRegEmailError("");
+                    setGlobalError("");
                   }}
                 />
-                {alumniRegEmailError && (
-                  <p className="error-message">{alumniRegEmailError}</p>
-                )}
+                <p className="error-message">
+                  {globalError || alumniRegEmailError || ""}
+                </p>
               </div>
               <div className="form-field-wrapper">
                 <input
@@ -601,6 +618,7 @@ export default function AuthPage() {
                   value={alumniRegGradYear}
                   onChange={(e) => setAlumniRegGradYear(e.target.value)}
                 />
+                <p className="error-message">{""}</p>
               </div>
             </div>
             <div className="form-row">
@@ -685,7 +703,11 @@ export default function AuthPage() {
             <button type="submit" className="auth-button registration-button">
               Register
             </button>
-            <button type="button" className="back-to-login-link" onClick={() => setShowRegistration(false)}>
+            <button type="button" className="back-to-login-link" onClick={() => {
+              setShowRegistration(false);
+              setGlobalError("");
+              setAlumniRegEmailError("");
+            }}>
               Back to Login
             </button>
           </div>
