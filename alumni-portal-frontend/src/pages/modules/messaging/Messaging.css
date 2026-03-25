@@ -454,20 +454,14 @@
 /* MOBILE: Full-screen panel switch */
 @media (max-width: 640px) {
   .chat-layout { flex-direction: column; position: relative; }
-  
-  /* CRITICAL: Space for fixed hamburger */
   .chat-header {
-    padding-left: 65px !important;
     position: sticky;
     top: 0;
     z-index: 100;
     background: var(--msg-header-bg);
   }
 
-  .messaging-back-btn { 
-    display: block; 
-    margin-right: 10px;
-  }
+  .messaging-back-btn {display: block; margin-right: 10px;}
 
   .chat-sidebar { width: 100%; border-right: none; border-bottom: none; flex: 1; max-height: 100%; }
   .chat-main { display: none; }
