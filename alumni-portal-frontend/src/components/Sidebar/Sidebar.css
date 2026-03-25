@@ -130,16 +130,39 @@
   }
 
   .menu-btn {
-    display: block;
-    z-index: 1101;
+    display: flex;
+    align-items: center;
+    /* Lock to the glass top-left to avoid jumping */
+    position: fixed;
+    top: 0; 
+    left: 0;
+    /* Ensuring it sits above Topbar and Messaging Header */
+    z-index: 2000; 
     border: none;
-    border-radius: 8px;
+    border-radius: 0;
+    /* Height matches the Topbar layout */
+    height: 54px;
+    width: 60px;
+    justify-content: center;
+    background: #191a1b;
   }
 
   .menu-btn-text {
-    font-size: 2rem;
+    /* Reduced size to ensure it doesn't push the back arrow or logo */
+    font-size: 1.5rem;
     font-weight: 600;
     font-family: 'Playfair Display', serif;
     color: #d4af37;
+    margin-left: 10px;
+  }
+
+  /* Optional: Hide text on very small phones to keep the header clean */
+  @media (max-width: 480px) {
+    .menu-btn-text {
+      display: none;
+    }
+    .menu-btn {
+      width: 50px;
+    }
   }
 }

@@ -1,49 +1,43 @@
-/* Layout.css - Fixed Sidebar with Footer at Bottom */
+/* Layout.css */
 
 .layout {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  /* Full viewport height */
+  height: 100svh; 
   width: 100%;
-  overflow: hidden;
-  /* Prevent body scroll */
+  overflow: hidden; 
 }
 
-/* Area below topbar */
 .body {
   display: flex;
   flex: 1;
   overflow: hidden;
+  min-height: 0;
 }
 
-/* Main content area - scrollable */
 .content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  /* Enable vertical scrolling */
   overflow-x: hidden;
-  /* Prevent horizontal scroll */
   min-height: 0;
-  /* Critical for flex children scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Wrapper to ensure footer stays at bottom */
 .content-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  /* Fill the scrollable area */
+  min-height: 100%; 
+  width: 100%;
+  flex: 1 0 auto; 
 }
 
-/* Main content grows to push footer down */
 .content-main {
-  flex: 1;
+  flex: 1 0 auto;
 }
 
-/* Full height for Messaging module */
 .content.no-scroll {
   overflow: hidden;
 }
@@ -56,4 +50,53 @@
 .content.no-scroll .content-main {
   height: 100%;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Responsive Logic --- */
+
+@media (min-width: 481px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .layout.is-chat-active .body {
+    margin-top: 0; 
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout.is-chat-active {
+    /* KEY CHANGE: position: fixed locks the app shell in place */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .layout.is-chat-active .body {
+    height: 100%;
+    margin-top: 0;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .layout.is-chat-active .content {
+    height: 100%;
+    padding-top: 0;
+    overflow: hidden;
+  }
+
+  .layout.is-chat-active .menu-btn {
+    display: none !important;
+  }
 }
