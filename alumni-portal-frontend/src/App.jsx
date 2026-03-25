@@ -14,7 +14,7 @@ import AdminAuth from "./pages/admin/Adminauth";
 import Notifications from "./pages/modules/notifications/Notifications";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import HelpCenter from "./pages/resources/helpCenter/HelpCenter";
-import FAQs from "./pages/resources/faqs/FAQs";
+import FAQs from "./pages/resources/FAQs/FAQs";
 import Privacy from "./pages/resources/privacyPolicy/PrivacyPolicy";
 import Terms from "./pages/resources/termsOfService/TermsOfService";
 import Support from "./pages/resources/contactSupport/ContactSupport";
