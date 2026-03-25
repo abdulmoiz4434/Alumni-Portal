@@ -75,9 +75,9 @@
   flex-direction: column;
   background: var(--msg-grad-start);
   min-height: 0;
-  height: 100%; /* Ensures it fills parent height */
+  height: 100%;
   position: relative;
-  overflow: hidden; /* Anchors content so header doesn't slide */
+  overflow: hidden; 
 }
 
 /* Scrollbars */
@@ -213,10 +213,10 @@
   border-left: 1px solid rgb(83, 79, 79);
   align-items: center;
   gap: 10px;
-  position: sticky; /* Keep pinned to top */
+  position: sticky;
   top: 0;
-  z-index: 100;
-  flex-shrink: 0; /* Important: Prevents squishing when keyboard opens */
+  z-index: 1000;
+  flex-shrink: 0;
   width: 100%;
 }
 
@@ -257,7 +257,7 @@
 
 /* Messages Area */
 .chat-messages {
-  flex: 1; /* Grow to fill space, shrink when keyboard opens */
+  flex: 1;
   padding: 14px 18px;
   background: linear-gradient(180deg, var(--msg-grad-start) 0%, var(--msg-grad-end) 100%);
   overflow-y: auto;
@@ -327,7 +327,7 @@
   background: var(--msg-input-bg);
   border: 2px solid var(--msg-input-border);
   border-radius: var(--msg-radius-md);
-  flex-shrink: 0; /* Keep size constant at bottom */
+  flex-shrink: 0;
 }
 
 .chat-input input {
@@ -461,58 +461,54 @@
   .chat-input button { padding: 12px 18px; font-size: 14px; }
 }
 
-/* MOBILE: Full-screen panel switch */
-@media (max-width: 640px) {
+/* MOBILE: Targeting Phones specifically */
+@media (max-width: 480px) {
   .chat-layout { 
     flex-direction: column; 
     position: relative; 
-    height: 100%; /* Important for panel switching */
+    height: 100dvh !important; /* Using Dynamic Viewport Height */
+    overflow: hidden !important;
+  }
+
+  .chat-main { 
+    display: none; 
+    height: 100dvh !important; 
+    flex-direction: column !important;
+    overflow: hidden !important; /* Forces scroll to happen in chat-messages instead */
   }
 
   .chat-header {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
+    flex-shrink: 0 !important;
     background: var(--msg-header-bg);
-    flex-shrink: 0;
-    width: 100%;
     border-bottom: 1px solid var(--msg-border-dark);
-  }
-
-  .messaging-back-btn { display: block; margin-right: 10px; }
-
-  .chat-sidebar { width: 100%; border-right: none; border-bottom: none; flex: 1; max-height: 100%; }
-  
-  .chat-main { 
-    display: none; 
-    height: 100%; 
-    overflow: hidden; 
   }
 
   .chat-layout.chat-open .chat-sidebar { display: none; }
   .chat-layout.chat-open .chat-main { 
-    display: flex; 
-    flex: 1; 
-    height: 100%; /* Pinned to viewport */
+    display: flex !important; 
+    flex: 1 !important; 
   }
 
-  .msg-bubble { max-width: 85%; }
+  .chat-messages {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain; /* Prevents pull-to-refresh and page bounce */
+  }
+
   .chat-input { 
     padding: 10px 12px; 
     gap: 8px; 
-    border-radius: 0; /* Optional: looks cleaner on mobile */
+    flex-shrink: 0 !important;
+    border-radius: 0; 
   }
-  .chat-input button { padding: 12px 16px; }
-  .no-chat-selected { padding: 24px 16px; }
-  .no-chat-selected h3 { font-size: 18px; }
-}
 
-@media (max-width: 480px) {
+  .messaging-back-btn { display: block; margin-right: 10px; }
   .chat-input input { padding: 10px 12px; font-size: 13px; }
   .chat-input button { padding: 10px 14px; font-size: 13px; }
   .msg-bubble { max-width: 90%; font-size: 13px; padding: 8px 12px; }
   .header-text h4 { font-size: 15px; }
   .header-text p { font-size: 12px; }
-  .conv-info h4 { font-size: 13px; }
-  .last-msg { font-size: 11px; }
 }
