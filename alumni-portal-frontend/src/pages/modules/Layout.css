@@ -1,13 +1,13 @@
-/* Layout.css - Fixed Sidebar with Footer at Bottom */
+/* Layout.css */
 
 .layout {
   display: flex;
   flex-direction: column;
+  /* Use svh for mobile stability */
   height: 100vh;
-  /* Full viewport height */
+  height: 100svh; 
   width: 100%;
-  overflow: hidden;
-  /* Prevent body scroll */
+  overflow: hidden; 
 }
 
 /* Area below topbar */
@@ -15,35 +15,37 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  min-height: 0;
 }
 
-/* Main content area - scrollable */
+/* Main content area - This is the scrollable window */
 .content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  /* Enable vertical scrolling */
   overflow-x: hidden;
-  /* Prevent horizontal scroll */
   min-height: 0;
-  /* Critical for flex children scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Wrapper to ensure footer stays at bottom */
+/* Wrapper: This MUST be flex and min-height 100% */
 .content-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  /* Fill the scrollable area */
+  /* This ensures the wrapper is at least as tall as the screen */
+  min-height: 100%; 
+  width: 100%;
+  /* Important: allows the footer's margin-top: auto to work */
+  flex: 1 0 auto; 
 }
 
-/* Main content grows to push footer down */
+/* Main content grows to fill all space NOT taken by footer */
 .content-main {
-  flex: 1;
+  flex: 1 0 auto;
 }
 
-/* Full height for Messaging module */
+/* --- Messaging Specific Logic (Full screen, no footer) --- */
 .content.no-scroll {
   overflow: hidden;
 }
@@ -56,4 +58,6 @@
 .content.no-scroll .content-main {
   height: 100%;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
