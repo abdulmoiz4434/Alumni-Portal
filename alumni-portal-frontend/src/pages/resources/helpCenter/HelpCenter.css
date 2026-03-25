@@ -1,13 +1,13 @@
 /* ===== HelpCenter.css (Updated to match Privacy/FAQ design) ===== */
 
 .helpcenter-container {
-  min-height: 80vh;
+  min-height: 50vh;
   background-color: #dadada;
   color: #090909;
   padding: 30px 20px 40px;
   max-width: 900px;
   border-radius: 15px;
-  margin: 20px auto 0 auto;
+  margin: 20px auto ;
 }
 
 /* Hero */
