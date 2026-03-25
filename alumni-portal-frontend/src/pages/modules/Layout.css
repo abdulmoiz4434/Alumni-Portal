@@ -3,7 +3,6 @@
 .layout {
   display: flex;
   flex-direction: column;
-  /* Use svh for mobile stability */
   height: 100vh;
   height: 100svh; 
   width: 100%;
@@ -55,6 +54,7 @@
   flex-direction: column;
 }
 
+/* --- Responsive Logic --- */
 
 @media (min-width: 481px) {
   .layout {
@@ -70,20 +70,30 @@
 
 @media (max-width: 480px) {
   .layout.is-chat-active {
+    /* KEY CHANGE: position: fixed locks the app shell in place */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     height: 100svh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    width: 100%;
   }
 
   .layout.is-chat-active .body {
     height: 100%;
     margin-top: 0;
+    flex: 1;
+    min-height: 0;
   }
 
   .layout.is-chat-active .content {
     height: 100%;
     padding-top: 0;
+    overflow: hidden;
   }
 
   .layout.is-chat-active .menu-btn {
