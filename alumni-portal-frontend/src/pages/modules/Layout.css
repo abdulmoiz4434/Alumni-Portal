@@ -61,3 +61,14 @@
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 768px) {
+  .layout.is-chat-active .body {
+    height: 100vh;
+    height: 100svh;
+  }
+
+  .layout.is-chat-active .menu-btn {
+    display: none !important;
+  }
+}
