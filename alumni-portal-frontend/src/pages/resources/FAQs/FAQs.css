@@ -1,33 +1,148 @@
+/* ===== FAQs.css (Updated to match Privacy Policy) ===== */
+
 .faqs-container {
   min-height: 100vh;
-  background-color: #0a0a0a;
-  color: #ffffff;
-  padding: 60px 40px;
+  background-color: #dadada;
+  color: #090909;
+  padding: 30px 20px 40px;
   max-width: 900px;
-  margin: 0 auto;
+  border-radius: 15px;
+  margin: 20px auto 0 auto;
 }
 
-.faqs-container h1 {
+/* Hero */
+.faqs-hero {
+  margin-bottom: 44px;
+}
+
+.faqs-hero h1 {
   font-size: 2.5rem;
-  color: #c9a84c;
+  font-weight: 700;
+  color: #000000;
   border-bottom: 2px solid #c9a84c;
   padding-bottom: 12px;
-  margin-bottom: 30px;
+  margin: 0 0 16px 0;
 }
 
-.faqs-container h3 {
-  font-size: 1.2rem;
+.faqs-subtitle {
+  font-size: 0.98rem;
+  color: #282525;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* FAQ list */
+.faqs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 44px;
+}
+
+/* Individual FAQ item */
+.faq-item {
+  background-color: #1a1a1a;
+  border-left: 4px solid #c9a84c;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 4px 0;
+  transition: box-shadow 0.3s ease;
+}
+
+.faq-item--open {
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.2);
+}
+
+/* Trigger */
+.faq-trigger {
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  text-align: left;
+}
+
+/* Question */
+.faq-question {
+  font-size: 0.92rem;
+  font-weight: 700;
   color: #c9a84c;
-  margin-top: 28px;
-  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  flex: 1;
 }
 
-.faqs-container p {
-  font-size: 1rem;
+/* Chevron */
+.faq-chevron {
+  color: #c9a84c;
+}
+
+/* Answer */
+.faq-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  padding: 0 20px;
+}
+
+.faq-body--visible {
+  max-height: 300px;
+  padding: 4px 20px 18px;
+}
+
+.faq-answer {
+  font-size: 0.92rem;
   color: #cccccc;
   line-height: 1.8;
+  margin: 0;
+}
+
+/* Footer note (same as privacy contact box) */
+.faqs-footer-note {
   background-color: #1a1a1a;
-  padding: 14px 18px;
-  border-radius: 6px;
   border-left: 4px solid #c9a84c;
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+
+.faqs-footer-note p {
+  font-size: 0.92rem;
+  color: #aaaaaa;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.faqs-footer-note a {
+  color: #c9a84c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.faqs-footer-note a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .faqs-container {
+    padding: 40px 20px 60px;
+  }
+
+  .faqs-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .faq-trigger {
+    padding: 14px 16px;
+  }
+
+  .faq-body--visible {
+    padding: 4px 16px 16px;
+  }
 }

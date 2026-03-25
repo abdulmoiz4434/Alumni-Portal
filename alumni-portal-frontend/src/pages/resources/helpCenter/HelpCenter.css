@@ -1,45 +1,177 @@
+/* ===== HelpCenter.css (Updated to match Privacy/FAQ design) ===== */
+
 .helpcenter-container {
-  min-height: 100vh;
-  background-color: #0a0a0a;
-  color: #ffffff;
-  padding: 60px 40px;
+  min-height: 80vh;
+  background-color: #dadada;
+  color: #090909;
+  padding: 30px 20px 40px;
   max-width: 900px;
-  margin: 0 auto;
+  border-radius: 15px;
+  margin: 20px auto 0 auto;
 }
 
-.helpcenter-container h1 {
+/* Hero */
+.helpcenter-hero {
+  margin-bottom: 44px;
+}
+
+.helpcenter-hero h1 {
   font-size: 2.5rem;
-  color: #c9a84c;
+  font-weight: 700;
+  color: #000000;
   border-bottom: 2px solid #c9a84c;
   padding-bottom: 12px;
-  margin-bottom: 20px;
+  margin: 0 0 16px 0;
 }
 
-.helpcenter-container p {
-  font-size: 1.1rem;
+.helpcenter-subtitle {
+  font-size: 0.98rem;
+  color: #282525;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Accordion wrapper */
+.helpcenter-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 44px;
+}
+
+/* Each item */
+.accordion-item {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  border-left: 4px solid #c9a84c;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.accordion-item--open {
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.2);
+}
+
+/* Trigger */
+.accordion-trigger {
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  text-align: left;
+}
+
+/* Left side */
+.accordion-trigger-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Icon */
+.accordion-icon-wrapper {
+  width: 34px;
+  height: 34px;
+  background-color: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c9a84c;
+  flex-shrink: 0;
+}
+
+/* Question (match section heading style) */
+.accordion-question {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #c9a84c;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Chevron */
+.accordion-chevron {
+  color: #c9a84c;
+  transition: transform 0.3s ease;
+}
+
+/* Rotate when open */
+.accordion-item--open .accordion-chevron {
+  transform: rotate(180deg);
+}
+
+/* Body */
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  padding: 0 20px 0 66px;
+}
+
+.accordion-body--visible {
+  max-height: 300px;
+  padding: 4px 20px 18px 66px;
+}
+
+/* Answer */
+.accordion-answer {
+  font-size: 0.92rem;
   color: #cccccc;
-  margin-bottom: 30px;
   line-height: 1.8;
+  margin: 0;
 }
 
-.helpcenter-container ul {
-  list-style: none;
-  padding: 0;
-}
-
-.helpcenter-container ul li {
+/* Footer note */
+.helpcenter-footer-note {
   background-color: #1a1a1a;
   border-left: 4px solid #c9a84c;
-  padding: 14px 20px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #f0f0f0;
-  transition: background 0.3s;
+  border-radius: 8px;
+  padding: 16px 20px;
 }
 
-.helpcenter-container ul li:hover {
-  background-color: #222222;
+.helpcenter-footer-note p {
+  font-size: 0.92rem;
+  color: #aaaaaa;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.helpcenter-footer-note a {
   color: #c9a84c;
-  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.helpcenter-footer-note a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .helpcenter-container {
+    padding: 40px 20px 60px;
+  }
+
+  .helpcenter-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .accordion-trigger {
+    padding: 14px 16px;
+  }
+
+  .accordion-body--visible {
+    padding: 4px 16px 16px 16px;
+  }
+
+  .accordion-trigger-left {
+    gap: 10px;
+  }
 }

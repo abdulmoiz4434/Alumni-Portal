@@ -14,7 +14,7 @@
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+gap: 4px;
   text-decoration: none;
 }
 
@@ -104,7 +104,7 @@
 
   .topbar-left {
     margin-left: 50px;
-    gap: 8px;
+  gap: 4px;
   }
 
   .topbar-logo-img {

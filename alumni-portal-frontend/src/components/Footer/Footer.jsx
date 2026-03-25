@@ -20,7 +20,9 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="footer-column footer-about">
             <div className="footer-logo">
-              <div className="logo-circle">AP</div>
+              <div className="logo-circle">
+                <img src="Round-Logo-USP.png" alt="Alumni Portal Logo" />
+              </div>
               <h3>Alumni Portal</h3>
             </div>
             <p className="footer-description">
@@ -77,9 +79,6 @@ const Footer = () => {
               <li>
                 <Link to="/modules/directory">Alumni Directory</Link>
               </li>
-              <li>
-                <Link to="/modules/about">About Us</Link>
-              </li>
             </ul>
           </div>
 
@@ -111,11 +110,11 @@ const Footer = () => {
             <ul className="footer-contact">
               <li>
                 <Mail size={16} />
-                <a href="mailto:alumni@university.edu">USP.edu.pk</a>
+                <a href="mailto:info@usp.edu.pk">info@usp.edu.pk</a>
               </li>
               <li>
                 <Phone size={16} />
-                <a href="tel:+92 304 7177684">+92 304 7177684</a>
+                <a href="tel:+92 304 7177684">+92-61-111-477-786</a>
               </li>
               <li>
                 <MapPin size={16} />
