@@ -10,7 +10,6 @@
   overflow: hidden; 
 }
 
-/* Area below topbar */
 .body {
   display: flex;
   flex: 1;
@@ -18,7 +17,6 @@
   min-height: 0;
 }
 
-/* Main content area - This is the scrollable window */
 .content {
   flex: 1;
   display: flex;
@@ -29,23 +27,18 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Wrapper: This MUST be flex and min-height 100% */
 .content-wrapper {
   display: flex;
   flex-direction: column;
-  /* This ensures the wrapper is at least as tall as the screen */
   min-height: 100%; 
   width: 100%;
-  /* Important: allows the footer's margin-top: auto to work */
   flex: 1 0 auto; 
 }
 
-/* Main content grows to fill all space NOT taken by footer */
 .content-main {
   flex: 1 0 auto;
 }
 
-/* --- Messaging Specific Logic (Full screen, no footer) --- */
 .content.no-scroll {
   overflow: hidden;
 }
@@ -62,10 +55,35 @@
   flex-direction: column;
 }
 
-@media (max-width: 768px) {
+
+@media (min-width: 481px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+  
   .layout.is-chat-active .body {
-    height: 100vh;
+    margin-top: 0; 
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout.is-chat-active {
     height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .layout.is-chat-active .body {
+    height: 100%;
+    margin-top: 0;
+  }
+
+  .layout.is-chat-active .content {
+    height: 100%;
+    padding-top: 0;
   }
 
   .layout.is-chat-active .menu-btn {

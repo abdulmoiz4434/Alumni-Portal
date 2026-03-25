@@ -1,5 +1,5 @@
-import { Outlet, useLocation, useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Topbar from "../../components/Topbar/Topbar";
 import Footer from "../../components/Footer/Footer";
@@ -9,16 +9,22 @@ export default function Layout() {
   const location = useLocation();
   const contentRef = useRef(null);
   
-  // 1. Detect if we are in a specific chat (e.g., /modules/messaging/123)
-  // This regex checks if there is something after the base messaging path
+  // Changed from 768 to 480 to target PHONES only
+  const [isPhone, setIsPhone] = useState(window.innerWidth <= 480);
+
+  useEffect(() => {
+    const handleResize = () => setIsPhone(window.innerWidth <= 480);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const isInsideSpecificChat = /^\/modules\/messaging\/.+/.test(location.pathname);
   const isMessagingBase = location.pathname.startsWith("/modules/messaging");
 
-  // Hide footer on all messaging routes
   const hideFooter = isMessagingBase;
 
-  // 2. Hide Navigation elements when inside a specific chat on mobile
-  const hideNavForChat = isInsideSpecificChat;
+  // Now this only becomes true on small mobile screens
+  const hideNavForChat = isInsideSpecificChat && isPhone;
 
   useEffect(() => {
     if (contentRef.current) {
@@ -31,11 +37,9 @@ export default function Layout() {
 
   return (
     <div className={`layout ${hideNavForChat ? "is-chat-active" : ""}`}>
-      {/* Hide Topbar entirely when in a specific chat */}
       {!hideNavForChat && <Topbar />}
 
       <div className="body">
-        {/* We pass a prop or use CSS to hide the hamburger icon in Sidebar */}
         <Sidebar hideHamburger={hideNavForChat} />
 
         <main
