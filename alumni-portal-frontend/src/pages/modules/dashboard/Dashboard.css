@@ -607,6 +607,7 @@ h1 { margin: 0; }
   .quick-stat-value { font-size: 1.35rem; }
   .quick-stat-label { font-size: 0.78rem; }
   .quick-stats-grid { gap: 0.75rem; }
+  .view-all-btn { padding: 0.4rem 0.8rem; font-size: 0.65rem; margin-top: 10px; }
 }
 
 @media (max-width: 480px) {
@@ -618,7 +619,7 @@ h1 { margin: 0; }
   .stat-value { font-size: 1.75rem; }
   .main-grid { gap: 1rem; }
   .content-card { padding: 1rem; }
-  .dashboard-card-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .dashboard-card-header {  align-items: flex-start; gap: 0.75rem; }
   .card-title { font-size: 1rem; }
   .event-date-badge { width: 50px; height: 50px; }
   .event-day { font-size: 1.25rem; }
