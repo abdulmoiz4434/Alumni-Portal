@@ -64,7 +64,7 @@ export default function Events() {
   // Filters
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedAudience, setSelectedAudience] = useState("all");
-  const [selectedStatus, setSelectedStatus] = useState("upcoming");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const categories = [
@@ -80,10 +80,11 @@ export default function Events() {
     "Other",
   ];
 
+  // Fetch everything once on mount — all filtering is done client-side
   useEffect(() => {
-    fetchEvents();
     fetchUserProfile();
-  }, [selectedStatus]);
+    fetchEvents();
+  }, []);
 
   const fetchUserProfile = async () => {
     try {
@@ -98,15 +99,8 @@ export default function Events() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const res = await API.get("/events", {
-        params: {
-          status: selectedStatus || undefined,
-          category: selectedCategory !== "all" ? selectedCategory : undefined,
-          search: searchQuery || undefined,
-        },
-      });
+      const res = await API.get("/events");
       setEvents(res.data.data);
-      setFilteredEvents(res.data.data);
     } catch (err) {
       console.error("Error fetching events:", err);
       setError(err.response?.data?.message || "Failed to load events.");
@@ -115,14 +109,30 @@ export default function Events() {
     }
   };
 
-  // Filter events client-side
+  // All filtering is done client-side — instant, no network calls
   useEffect(() => {
     let filtered = [...events];
+
+    // Status filter — computed from date, same as the status badge on each card
+    if (selectedStatus === "upcoming") {
+      filtered = filtered.filter(
+        (e) => !isPast(parseISO(e.date)) && !isToday(parseISO(e.date))
+      );
+    } else if (selectedStatus === "completed") {
+      filtered = filtered.filter(
+        (e) => isPast(parseISO(e.date)) && !isToday(parseISO(e.date))
+      );
+    } else if (selectedStatus === "ongoing") {
+      filtered = filtered.filter((e) => isToday(parseISO(e.date)));
+    }
+
+    // Category filter — exact casing to match DB enum e.g. "Workshop" not "workshop"
     if (selectedCategory !== "all") {
       filtered = filtered.filter(
-        (event) => event.category.toLowerCase() === selectedCategory.toLowerCase()
+        (event) => event.category === selectedCategory
       );
     }
+
     if (selectedAudience !== "all") {
       filtered = filtered.filter(
         (event) =>
@@ -130,6 +140,7 @@ export default function Events() {
           event.targetAudience === "all"
       );
     }
+
     if (searchQuery) {
       filtered = filtered.filter(
         (event) =>
@@ -138,8 +149,9 @@ export default function Events() {
           event.venue.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+
     setFilteredEvents(filtered);
-  }, [selectedCategory, selectedAudience, searchQuery, events]);
+  }, [selectedStatus, selectedCategory, selectedAudience, searchQuery, events]);
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
@@ -207,7 +219,7 @@ export default function Events() {
 
   const getStatusColor = (eventDate) => {
     const date = parseISO(eventDate);
-    if (isPast(date)) return "status-past";
+    if (isPast(date) && !isToday(date)) return "status-past";
     if (isToday(date)) return "status-today";
     return "status-upcoming";
   };
@@ -290,6 +302,7 @@ export default function Events() {
               <option value="">All Status</option>
             </select>
 
+            {/* ✅ FIX: Category options use original casing to match DB enum values */}
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -298,7 +311,7 @@ export default function Events() {
               {categories.map((cat) => (
                 <option
                   key={cat}
-                  value={cat === "All Types" ? "all" : cat.toLowerCase()}
+                  value={cat === "All Types" ? "all" : cat}
                 >
                   {cat}
                 </option>
@@ -356,7 +369,7 @@ export default function Events() {
                   )}
 
                   <div className={`event-status-badge ${getStatusColor(event.date)}`}>
-                    {isPast(parseISO(event.date))
+                    {isPast(parseISO(event.date)) && !isToday(parseISO(event.date))
                       ? "Completed"
                       : isToday(parseISO(event.date))
                       ? "Today"
