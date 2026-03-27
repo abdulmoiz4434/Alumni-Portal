@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import API from "../../../api/axios";
 import {
   Search,
@@ -94,6 +94,25 @@ export default function Jobs() {
     }
   };
 
+  // ✅ Dynamically derive unique locations from actual job data
+  // Normalized to title case so "lahore" and "Lahore" don't appear as duplicates
+  const locationOptions = useMemo(() => {
+    const seen = new Set();
+    const locations = [];
+    opportunities.forEach((job) => {
+      const normalized = job.location.trim().toLowerCase();
+      if (!seen.has(normalized)) {
+        seen.add(normalized);
+        // Store display label as title case e.g. "Lahore"
+        locations.push(
+          job.location.trim().charAt(0).toUpperCase() +
+          job.location.trim().slice(1).toLowerCase()
+        );
+      }
+    });
+    return locations.sort();
+  }, [opportunities]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -137,23 +156,26 @@ export default function Jobs() {
     return false;
   };
 
-  // Filter Logic
-  const filteredOpportunities = opportunities.filter((item) => {
-    const matchesSearch =
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.company.toLowerCase().includes(searchTerm.toLowerCase());
+  // ✅ All filtering is client-side — instant, no network calls
+  const filteredOpportunities = useMemo(() => {
+    return opportunities.filter((item) => {
+      const matchesSearch =
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.company.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesLocation =
-      filterLocation === "all" ||
-      item.location.toLowerCase().includes(filterLocation.toLowerCase());
+      // ✅ Compare normalized location so "Lahore" matches "lahore" in DB
+      const matchesLocation =
+        filterLocation === "all" ||
+        item.location.trim().toLowerCase() === filterLocation.toLowerCase();
 
-    const matchesTab =
-      activeTab === "all" ||
-      (activeTab === "jobs" && item.category === "job") ||
-      (activeTab === "internships" && item.category === "internship");
+      const matchesTab =
+        activeTab === "all" ||
+        (activeTab === "jobs" && item.category === "job") ||
+        (activeTab === "internships" && item.category === "internship");
 
-    return matchesSearch && matchesLocation && matchesTab;
-  });
+      return matchesSearch && matchesLocation && matchesTab;
+    });
+  }, [opportunities, searchTerm, filterLocation, activeTab]);
 
   if (loading) {
     return (
@@ -218,15 +240,18 @@ export default function Jobs() {
           </div>
 
           <div className="filters">
+            {/* ✅ Location options are dynamically generated from actual job data */}
             <select
               value={filterLocation}
               onChange={(e) => setFilterLocation(e.target.value)}
               className="filter-select"
             >
               <option value="all">All Locations</option>
-              <option value="remote">Remote</option>
-              <option value="lahore">Lahore</option>
-              <option value="karachi">Karachi</option>
+              {locationOptions.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
             </select>
 
             <select

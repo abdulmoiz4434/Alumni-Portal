@@ -17,13 +17,22 @@ exports.getAllEvents = async (req, res) => {
     }
     // Admin can see all events
 
-    // Status filter
-    if (status) {
-      filter.status = status;
+    // ✅ FIX: Status filter now uses date-range queries instead of stored status field
+    if (status === 'upcoming') {
+      filter.date = { $gt: new Date() };
+    } else if (status === 'completed') {
+      filter.date = { $lt: new Date() };
+    } else if (status === 'ongoing') {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+      filter.date = { $gte: startOfDay, $lte: endOfDay };
     }
+    // If status is empty/undefined, no date filter is applied (show all)
 
-    // Category filter
-    if (category) {
+    // ✅ FIX: Category filter uses exact value (title case) to match DB enum
+    if (category && category !== 'all') {
       filter.category = category;
     }
 
