@@ -73,11 +73,8 @@ function handleConnection(socket) {
     }
   });
 
-  socket.on("disconnect", () => {
-    // Socket.IO automatically removes the socket from all rooms on disconnect
-  });
+  socket.on("disconnect", () => {});
 }
-
 module.exports = {
   handleConnection
 };

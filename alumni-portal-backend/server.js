@@ -22,7 +22,6 @@ connectDB();
 
 const app = express();
 
-/* ================= CORS ================= */
 app.use(cors({
   origin: [process.env.CLIENT_URL, 'http://localhost:5173'].filter(Boolean),
   credentials: true,
@@ -32,11 +31,9 @@ app.use(cors({
 
 app.options(/(.*)/, cors());
 
-/* ============== BODY PARSERS ============== */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* ================= API ROUTES ================= */
 app.use('/api/messages', messageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', eventRoutes);
@@ -47,11 +44,9 @@ app.use('/api/careerInsights', careerInsightsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/stories', storyRoutes);
 
-/* ================= STATIC FRONTEND ================= */
 const frontendPath = path.join(__dirname, '..', 'alumni-portal-frontend', 'dist');
 app.use(express.static(frontendPath));
 
-/* ================= API 404 HANDLER ================= */
 app.use('/api', (req, res) => {
   res.status(404).json({
     success: false,
@@ -59,20 +54,12 @@ app.use('/api', (req, res) => {
   });
 });
 
-/* ================= SPA FALLBACK ================= */
-/*
-  Instead of using app.get('*') or app.get('/:any*'),
-  use app.use without a path.
-  This avoids path-to-regexp parsing entirely.
-*/
 app.use((req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-/* ================= GLOBAL ERROR HANDLER ================= */
 app.use(errorMiddleware);
 
-/* ================= SERVER INIT ================= */
 const server = http.createServer(app);
 initSocket(server);
 
