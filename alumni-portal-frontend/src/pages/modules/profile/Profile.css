@@ -576,9 +576,9 @@
   /* Toast Mobile Strategy: Centered and Full Width */
   .toast-container {
     right: 5%;
-    left: 5%;
+    left: 10%;
     bottom: 20px;
-    width: 90%;
+    width: 80%;
     align-items: center;
   }
 
@@ -586,7 +586,7 @@
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    padding: 12px 36px 12px 14px;
+    padding: 18px 40px 18px 16px;
   }
 }
 
@@ -602,6 +602,6 @@
   .profile-input, .profile-textarea { font-size: 14px; padding: 10px 12px; }
   
   .toast-container { bottom: 12px; }
-  .toast { padding: 10px 32px 10px 10px; }
+  .toast { padding: 16px 37px 16px 13px; }
   .toast-message { font-size: 13px; }
 }
