@@ -354,7 +354,8 @@
    ========================================= */
 .profile-input,
 .profile-textarea {
-  width: 90%;
+  width: 100%;
+  box-sizing: border-box;
   padding: 12px 16px;
   border: 2px solid var(--p-border-input);
   border-radius: var(--p-radius-md);
@@ -455,7 +456,7 @@
 }
 
 /* =========================================
-   10. Toasts
+   10. Toasts (Responsive Optimized)
    ========================================= */
 .toast-container {
   position: fixed;
@@ -473,46 +474,48 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 14px 40px 14px 16px;
   border-radius: var(--p-radius-lg);
-  min-width: 280px;
-  max-width: 380px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  width: 380px; /* Desktop width */
+  max-width: 90vw; /* Prevent overflow on slightly small screens */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
-  font-size: 14px;
-  font-weight: 500;
   background: var(--p-dark);
   color: var(--p-white);
   border: 1px solid var(--p-toast-border);
 }
 
-/* Success */
-.toast-success .toast-icon { color: var(--p-gold); }
-.toast-success .toast-progress { background: var(--p-gold); }
-
-/* Error */
-.toast-error .toast-icon { color: var(--p-toast-error); }
-.toast-error .toast-progress { background: var(--p-toast-error); }
-
-/* Warning */
-.toast-warning .toast-icon { color: var(--p-toast-warning); }
-.toast-warning .toast-progress { background: var(--p-toast-warning); }
-
 .toast-icon {
-  flex-shrink: 0;
+  flex-shrink: 0; /* Important: prevents squishing on small screens */
   display: flex;
   align-items: center;
 }
 
+/* Status Colors */
+.toast-success .toast-icon { color: var(--p-gold); }
+.toast-success .toast-progress { background: var(--p-gold); }
+
+.toast-error .toast-icon { color: var(--p-toast-error); }
+.toast-error .toast-progress { background: var(--p-toast-error); }
+
+.toast-warning .toast-icon { color: var(--p-toast-warning); }
+.toast-warning .toast-progress { background: var(--p-toast-warning); }
+
 .toast-message {
   flex: 1;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.4;
   color: #f0f0f0;
+  word-break: break-word;
 }
 
 .toast-close {
-  flex-shrink: 0;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
@@ -520,14 +523,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
-  border-radius: var(--p-radius-sm);
-  transition: color 0.2s ease, background 0.2s ease;
+  padding: 8px;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
 }
 
 .toast-close:hover {
   color: var(--p-white);
-  background: var(--p-toast-bg);
 }
 
 .toast-progress {
@@ -537,7 +539,6 @@
   height: 3px;
   width: 100%;
   transform-origin: left;
-  border-radius: 0 0 12px 12px;
 }
 
 /* =========================================
@@ -554,9 +555,11 @@
 @media (max-width: 1024px) {
   .profile-container { padding: 24px 20px; }
   .profile-header-card { padding: 28px; }
-  .profile-header-content { gap: 20px; }
   .profile-name { font-size: 26px; }
   .profile-card { padding: 24px; }
+  
+  .toast-container { bottom: 24px; right: 24px; }
+  .toast { width: 320px; }
 }
 
 @media (max-width: 768px) {
@@ -566,23 +569,39 @@
   .profile-grid { grid-template-columns: 1fr; gap: 20px; }
   .profile-header-content { flex-direction: column; align-items: center; text-align: center; }
   .profile-title-row { justify-content: center; }
-  .profile-metadata { margin-top: 12px; }
+  .profile-metadata { margin-top: 12px; justify-content: center; width: 100%; }
   .profile-header-actions { display: none; }
   .profile-mobile-actions { display: block; }
-  .profile-input,
-  .profile-textarea { width: 100%; box-sizing: border-box; }
+  
+  /* Toast Mobile Strategy: Centered and Full Width */
+  .toast-container {
+    right: 5%;
+    left: 5%;
+    bottom: 20px;
+    width: 90%;
+    align-items: center;
+  }
+
+  .toast {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 12px 36px 12px 14px;
+  }
 }
 
 @media (max-width: 480px) {
   .profile-container { padding: 16px 12px; }
   .profile-card { padding: 16px; }
   .profile-header-card { padding: 20px 16px; }
-  .profile-avatar-wrapper { width: 96px; height: 96px; }
+  .profile-avatar-wrapper { width: 90px; height: 90px; }
   .profile-name { font-size: 22px; }
   .profile-metadata { flex-direction: column; gap: 12px; margin-top: 8px; }
   .profile-metadata-divider { display: none; }
   .profile-section-title { font-size: 16px; }
   .profile-input, .profile-textarea { font-size: 14px; padding: 10px 12px; }
-  .toast-container { bottom: 16px; right: 12px; left: 12px; }
-  .toast { min-width: unset; max-width: 100%; width: 100%; }
+  
+  .toast-container { bottom: 12px; }
+  .toast { padding: 10px 32px 10px 10px; }
+  .toast-message { font-size: 13px; }
 }
