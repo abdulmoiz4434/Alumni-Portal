@@ -186,7 +186,6 @@ const CareerInsights = () => {
 
   return (
     <div className="career-insights">
-      {/* Hero */}
       <div className="career-insights-hero">
         <div className="career-insights-hero-content">
           <h1 className="career-main-title">Career Insights</h1>
@@ -196,7 +195,6 @@ const CareerInsights = () => {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="career-insights-stats-grid">
         <div className="career-insights-stat-card">
           <div className="stat-icon"><UsersIcon /></div>
@@ -215,7 +213,6 @@ const CareerInsights = () => {
         </div>
       </div>
 
-      {/* Charts */}
       <div className="charts-grid">
         <div className="chart-card">
           <div className="chart-header">

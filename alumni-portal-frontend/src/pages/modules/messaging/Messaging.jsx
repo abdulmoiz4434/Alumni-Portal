@@ -20,7 +20,6 @@ export default function Messaging() {
 
   const scrollRef = useRef(null);
 
-  // Socket.IO: connect on mount with JWT
   useEffect(() => {
     const token = localStorage.getItem("token");
     const socket = socketService.connect(token);
@@ -34,7 +33,6 @@ export default function Messaging() {
     };
   }, []);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (!loading && messages.length > 0) {
       setTimeout(() => {
@@ -56,7 +54,6 @@ export default function Messaging() {
     fetchConversations();
   }, [conversationId]);
 
-  // Initialize active chat and messages (HTTP)
   useEffect(() => {
     if (!conversationId) {
       setLoading(false);
@@ -117,7 +114,6 @@ export default function Messaging() {
     initChat();
   }, [conversationId, currentUserId, navigate]);
 
-  // Socket.IO: join conversation room and listen for message:new
   useEffect(() => {
     if (!conversationId) return;
 

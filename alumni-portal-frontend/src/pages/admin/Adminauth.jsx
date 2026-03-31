@@ -71,7 +71,6 @@ export default function AdminAuth() {
   return (
     <main className="admin-auth-main">
       <div className="admin-auth-container">
-        {/* Admin Login Panel */}
         <div className="admin-auth-panel">
           <img
             src="/Round-Logo-USP.png"

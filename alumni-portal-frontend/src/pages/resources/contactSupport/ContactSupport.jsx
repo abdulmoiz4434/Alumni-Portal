@@ -13,7 +13,6 @@ import './ContactSupport.css';
 const Support = () => {
   return (
     <div className="support-container">
-      {/* Hero */}
       <div className="support-hero">
         <h1>Contact Support</h1>
         <p className="support-subtitle">
@@ -22,9 +21,7 @@ const Support = () => {
         </p>
       </div>
 
-      {/* Contact Cards Grid */}
       <div className="support-cards-grid">
-        {/* Email */}
         <div className="support-card">
           <div className="support-card-icon">
             <Mail size={22} />
@@ -38,7 +35,6 @@ const Support = () => {
           </div>
         </div>
 
-        {/* Phone */}
         <div className="support-card">
           <div className="support-card-icon">
             <Phone size={22} />
@@ -52,7 +48,6 @@ const Support = () => {
           </div>
         </div>
 
-        {/* Address */}
         <div className="support-card">
           <div className="support-card-icon">
             <MapPin size={22} />
@@ -63,8 +58,6 @@ const Support = () => {
             <span className="support-link">USP, Multan, Pakistan</span>
           </div>
         </div>
-
-        {/* Hours */}
         <div className="support-card">
           <div className="support-card-icon">
             <Clock size={22} />
@@ -76,8 +69,6 @@ const Support = () => {
           </div>
         </div>
       </div>
-
-      {/* Social Section */}
       <div className="support-social-section">
         <h2>Connect With Us</h2>
         <p>Follow us on social media for updates, announcements, and community highlights.</p>
@@ -115,7 +106,6 @@ const Support = () => {
         </div>
       </div>
 
-      {/* Also see */}
       <div className="support-also-see">
         <p>
           You may also find answers in our{' '}

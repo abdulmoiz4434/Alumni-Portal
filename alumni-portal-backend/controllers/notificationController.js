@@ -5,7 +5,6 @@ const Conversation = require('../models/Conversation');
 const Student = require('../models/Student');
 const { successResponse, errorResponse } = require('../utils/response');
 
-// 1. Send Connection Request
 exports.sendConnectionRequest = async (req, res) => {
   try {
     const { receiverId } = req.body;
@@ -45,7 +44,6 @@ exports.sendConnectionRequest = async (req, res) => {
   }
 };
 
-// 2. Send Mentorship Request
 exports.sendMentorshipRequest = async (req, res) => {
   try {
     const { alumnusId, message } = req.body;
@@ -85,7 +83,6 @@ exports.sendMentorshipRequest = async (req, res) => {
   }
 };
 
-// 3a. Get pending Connection Requests (for /connections/requests)
 exports.getConnectionRequests = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -101,7 +98,6 @@ exports.getConnectionRequests = async (req, res) => {
   }
 };
 
-// 3b. Get pending Mentorship Requests (for /mentorship/requests)
 exports.getMentorshipRequests = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -129,7 +125,6 @@ exports.getMentorshipRequests = async (req, res) => {
   }
 };
 
-// 4a. Handle Connection Request Action (Accept/Reject)
 exports.handleConnectionAction = async (req, res) => {
   try {
     const { id, action } = req.params;
@@ -168,7 +163,6 @@ exports.handleConnectionAction = async (req, res) => {
   }
 };
 
-// 4b. Handle Mentorship Request Action (Accept/Reject)
 exports.handleMentorshipAction = async (req, res) => {
   try {
     const { id, action } = req.params;
@@ -207,7 +201,6 @@ exports.handleMentorshipAction = async (req, res) => {
   }
 };
 
-// 5. Get Connection Status
 exports.getConnectionStatus = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -230,7 +223,6 @@ exports.getConnectionStatus = async (req, res) => {
   }
 };
 
-// 6. Get Mentorship Status
 exports.getMentorshipStatus = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -253,7 +245,6 @@ exports.getMentorshipStatus = async (req, res) => {
   }
 };
 
-// 7. Get Notification Count
 exports.getNotificationCount = async (req, res) => {
   try {
     const userId = req.user._id;

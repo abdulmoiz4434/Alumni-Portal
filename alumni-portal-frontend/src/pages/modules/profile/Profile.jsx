@@ -14,7 +14,6 @@ import {
 import { Toast, useToast } from "./Toast";
 import "./Profile.css";
 
-// Avatar Component
 function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading, addToast }) {
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
@@ -58,9 +57,8 @@ function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading, addT
     >
       <motion.div
         whileHover={isEditing ? { scale: 1.05 } : {}}
-        className={`profile-avatar-wrapper ${isEditing ? "editable" : ""} ${
-          dragOver ? "drag-over" : ""
-        }`}
+        className={`profile-avatar-wrapper ${isEditing ? "editable" : ""} ${dragOver ? "drag-over" : ""
+          }`}
         onClick={() => isEditing && fileInputRef.current?.click()}
       >
         {avatar ? (
@@ -113,7 +111,6 @@ function ProfileAvatar({ avatar, name, isEditing, onImageUpload, uploading, addT
   );
 }
 
-// Field Component
 function ProfileField({
   label,
   field,
@@ -171,7 +168,6 @@ function ProfileField({
   );
 }
 
-// Main Profile Component
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -323,21 +319,21 @@ export default function Profile() {
   const roleFields =
     profile.role === "alumni"
       ? [
-          { field: "degree", label: "Degree" },
-          { field: "company", label: "Company" },
-          { field: "jobTitle", label: "Job Title" },
-          { field: "linkedin", label: "LinkedIn", isLink: true },
-          { field: "skills", label: "Skills" },
-          { field: "location", label: "Location" },
-        ]
+        { field: "degree", label: "Degree" },
+        { field: "company", label: "Company" },
+        { field: "jobTitle", label: "Job Title" },
+        { field: "linkedin", label: "LinkedIn", isLink: true },
+        { field: "skills", label: "Skills" },
+        { field: "location", label: "Location" },
+      ]
       : [
-          { field: "degree", label: "Degree" },
-          { field: "semester", label: "Semester", type: "number", step: "0.01" },
-          { field: "cgpa", label: "CGPA", type: "number", step: "0.01" },
-          { field: "careerGoals", label: "Career Goals" },
-          { field: "skills", label: "Skills" },
-          { field: "interests", label: "Interests" },
-        ];
+        { field: "degree", label: "Degree" },
+        { field: "semester", label: "Semester", type: "number", step: "0.01" },
+        { field: "cgpa", label: "CGPA", type: "number", step: "0.01" },
+        { field: "careerGoals", label: "Career Goals" },
+        { field: "skills", label: "Skills" },
+        { field: "interests", label: "Interests" },
+      ];
 
   if (loading) {
     return (
@@ -363,7 +359,6 @@ export default function Profile() {
 
   return (
     <div className="profile">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
 
       <div className="profile-container">

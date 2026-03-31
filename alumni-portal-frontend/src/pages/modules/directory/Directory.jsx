@@ -137,10 +137,7 @@ export default function Directory() {
 
   return (
     <div className="directory">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
-
-      {/* Confirm Dialog */}
       {confirmDialog && (
         <ConfirmDialog
           message={`Are you sure you want to delete ${confirmDialog.userName}? This action cannot be undone.`}

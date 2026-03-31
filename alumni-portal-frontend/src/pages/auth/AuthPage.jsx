@@ -249,13 +249,10 @@ export default function AuthPage() {
 
   return (
     <main className="auth-main">
-
-      {/* LOGIN CONTAINER */}
       <div
         className={`auth-container ${showRegistration ? "slide-up" : ""}`}
         inert={showRegistration ? "" : undefined}
       >
-        {/* MOBILE TOGGLE BAR */}
         <div className="mobile-auth-toggle">
           <button
             className={isStudent ? "active" : ""}
@@ -271,15 +268,12 @@ export default function AuthPage() {
           </button>
         </div>
 
-        {/* STUDENT LOGIN */}
         <div
           className={`auth-panel student-sign-in-panel ${isStudent ? "active" : "hidden-left"}`}
           inert={!isStudent ? "" : undefined}
         >
           <h2 className="login-form-panel-title">Student Login</h2>
           <form className="auth-form" onSubmit={handleStudentLogin}>
-            
-            {/* WRAPPED EMAIL IN form-field-wrapper TO MATCH REGISTRATION STYLE */}
             <div className="form-field-wrapper">
               <input
                 type="email"
@@ -331,16 +325,12 @@ export default function AuthPage() {
             </p>
           </form>
         </div>
-
-        {/* ALUMNI LOGIN */}
         <div
           className={`auth-panel Alumni-sign-in-panel ${isStudent ? "hidden-right" : "active"}`}
           inert={isStudent ? "" : undefined}
         >
           <h2 className="login-form-panel-title">Alumni Login</h2>
           <form className="auth-form" onSubmit={handleAlumniLogin}>
-            
-            {/* WRAPPED EMAIL IN form-field-wrapper TO MATCH REGISTRATION STYLE */}
             <div className="form-field-wrapper">
               <input
                 type="email"
@@ -390,8 +380,6 @@ export default function AuthPage() {
             </p>
           </form>
         </div>
-
-        {/* TOGGLE PANEL */}
         <div
           className={`auth-panel middle-panel ${isStudent ? "middle-right" : "middle-left"}`}
         >
@@ -408,8 +396,6 @@ export default function AuthPage() {
           </button>
         </div>
       </div>
-
-      {/* STUDENT REGISTRATION */}
       <div
         className={`registration-container ${studentRegActive ? "slide-up-active" : ""}`}
         inert={!studentRegActive ? "" : undefined}
@@ -562,8 +548,6 @@ export default function AuthPage() {
           </div>
         </form>
       </div>
-
-      {/* ALUMNI REGISTRATION */}
       <div
         className={`registration-container ${alumniRegActive ? "slide-up-active" : ""}`}
         inert={!alumniRegActive ? "" : undefined}

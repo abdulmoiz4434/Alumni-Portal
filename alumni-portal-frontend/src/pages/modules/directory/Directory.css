@@ -1,8 +1,4 @@
-/* =========================================
-   1. :root Variables
-   ========================================= */
 :root {
-  /* Colors */
   --dir-bg-main: #f9fafb;
   --dir-white: #ffffff;
   --dir-dark: #1a1a1a;
@@ -12,19 +8,16 @@
   --dir-gold-muted: #d7c15e;
   --dir-gold-light: #fffef8;
 
-  /* Text */
   --dir-text-main: #374151;
   --dir-text-dark: #111827;
   --dir-text-muted: #6b7280;
   --dir-text-light: #9ca3af;
   --dir-text-icon: #121314;
 
-  /* Borders & Backgrounds */
   --dir-border-main: #e2e8f0;
   --dir-border-card: #e5e7eb;
   --dir-bg-avatar: #f3f4f6;
 
-  /* Badges */
   --dir-badge-alumni-bg: #fef3c7;
   --dir-badge-alumni-text: #92400e;
   --dir-badge-alumni-border: #fde68a;
@@ -33,20 +26,17 @@
   --dir-badge-student-text: #1e40af;
   --dir-badge-student-border: #bfdbfe;
 
-  /* Status / Actions */
   --dir-btn-sent: #1d1f23;
   --dir-danger: #ef4444;
   --dir-danger-hover: #dc2626;
   --dir-danger-bg: #fee;
 
-  /* Radiuses */
   --dir-radius-sm: 6px;
   --dir-radius-md: 10px;
   --dir-radius-lg: 12px;
   --dir-radius-xl: 15px;
   --dir-radius-round: 50%;
 
-  /* Shadows */
   --dir-shadow-sm: 0 6px 12px rgba(0, 0, 0, 0.1);
   --dir-shadow-card: 0 8px 20px rgba(0, 0, 0, 0.08);
   --dir-shadow-focus: 0 0 0 4px rgba(230, 187, 47, 0.1);
@@ -58,9 +48,6 @@
   --dir-transition-fast: all 0.2s ease;
 }
 
-/* =========================================
-   2. Base / Reset & Shared Styles
-   ========================================= */
 .directory {
   background: var(--dir-bg-main);
   min-height: 100vh;
@@ -87,9 +74,6 @@
   animation: spin 1s linear infinite;
 }
 
-/* =========================================
-   3. Layout Containers
-   ========================================= */
 .directory-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -103,9 +87,6 @@
   gap: 24px;
 }
 
-/* =========================================
-   4. Hero Section
-   ========================================= */
 .directory-hero {
   background: var(--dir-dark);
   padding: 20px;
@@ -135,9 +116,6 @@
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
-/* =========================================
-   5. Search & Filters
-   ========================================= */
 .directory-search-filter-section {
   background: var(--dir-dark);
   padding: 20px;
@@ -208,9 +186,6 @@
   animation: fadeInUp 0.6s ease-out 0.4s both;
 }
 
-/* =========================================
-   6. Network Cards
-   ========================================= */
 .directory-card {
   background: var(--dir-white);
   border-radius: var(--dir-radius-lg);
@@ -361,9 +336,6 @@
   z-index: 10;
 }
 
-/* =========================================
-   7. Empty States
-   ========================================= */
 .no-results {
   grid-column: 1 / -1;
   display: flex;
@@ -389,9 +361,6 @@
   margin: 0 0 8px 0;
 }
 
-/* =========================================
-   8. Modals & Dialogs
-   ========================================= */
 .confirm-overlay {
   position: fixed;
   inset: 0;
@@ -452,9 +421,6 @@
   border-color: var(--dir-danger);
 }
 
-/* =========================================
-   9. State Styles (Hover, Focus, Active)
-   ========================================= */
 .search-input:focus {
   border-color: var(--dir-gold);
   background: var(--dir-gold-light);
@@ -499,58 +465,146 @@
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* =========================================
-   10. Animations
-   ========================================= */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes overlayFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes dialogSlideIn {
-  from { opacity: 0; transform: scale(0.88) translateY(12px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* =========================================
-   11. Media Queries
-   ========================================= */
 @media (max-width: 1024px) {
-  .directory { padding: 20px 24px; }
-  .directory-title { font-size: 2.4rem; }
-  .directory-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .directory {
+    padding: 20px 24px;
+  }
+
+  .directory-title {
+    font-size: 2.4rem;
+  }
+
+  .directory-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
 }
 
 @media (max-width: 768px) {
-  .directory { padding: 16px; }
-  .directory-title { font-size: 2rem; }
-  .directory-subtitle { font-size: 1rem; }
-  .directory-hero { padding: 24px 16px; }
-  .directory-container { padding: 20px 0; }
-  .directory-search-filter-section { flex-direction: column; gap: 12px; }
-  .filters { flex-wrap: wrap; }
-  .filter-btn { flex: 1; min-width: 0; padding: 10px 16px; font-size: 0.9rem; }
-  .directory-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .directory {
+    padding: 16px;
+  }
+
+  .directory-title {
+    font-size: 2rem;
+  }
+
+  .directory-subtitle {
+    font-size: 1rem;
+  }
+
+  .directory-hero {
+    padding: 24px 16px;
+  }
+
+  .directory-container {
+    padding: 20px 0;
+  }
+
+  .directory-search-filter-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+
+  .directory-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 }
 
 @media (max-width: 480px) {
-  .directory { padding: 12px; }
-  .directory-title { font-size: 1.6rem; }
-  .directory-subtitle { font-size: 0.9rem; }
-  .directory-hero { padding: 20px 12px; }
-  .directory-container { padding: 16px 0; }
-  .search-input { padding: 12px 12px 12px 44px; font-size: 0.95rem; }
-  .directory-grid { grid-template-columns: 1fr; gap: 12px; }
-  .directory-avatar-wrapper { width: 60px; height: 60px; }
-  .directory-name { font-size: 1rem; }
-  .directory-message-btn { padding: 10px 18px; font-size: 0.9rem; }
+  .directory {
+    padding: 12px;
+  }
+
+  .directory-title {
+    font-size: 1.6rem;
+  }
+
+  .directory-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .directory-hero {
+    padding: 20px 12px;
+  }
+
+  .directory-container {
+    padding: 16px 0;
+  }
+
+  .search-input {
+    padding: 12px 12px 12px 44px;
+    font-size: 0.95rem;
+  }
+
+  .directory-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .directory-avatar-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .directory-name {
+    font-size: 1rem;
+  }
+
+  .directory-message-btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
 }

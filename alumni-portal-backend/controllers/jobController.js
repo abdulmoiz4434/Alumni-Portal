@@ -1,8 +1,6 @@
 const Job = require("../models/Job");
 const { successResponse, errorResponse } = require("../utils/response");
 
-// @desc    Create a new job/internship
-// @route   POST /api/jobs
 const createJob = async (req, res) => {
   try {
     const {
@@ -46,8 +44,6 @@ const createJob = async (req, res) => {
   }
 };
 
-// @desc    Get all jobs
-// @route   GET /api/jobs
 const getAllJobs = async (req, res) => {
   try {
     let filter = {};
@@ -67,8 +63,6 @@ const getAllJobs = async (req, res) => {
   }
 };
 
-// @desc    Delete a job (RBAC: Admin or Owner only)
-// @route   DELETE /api/jobs/:id
 const deleteJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);

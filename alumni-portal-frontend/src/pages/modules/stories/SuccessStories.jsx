@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
-import { 
-  FiPlus, 
-  FiTrash2, 
-  FiUser, 
-  FiCalendar, 
-  FiBookOpen, 
-  FiX 
+import {
+  FiPlus,
+  FiTrash2,
+  FiUser,
+  FiCalendar,
+  FiBookOpen,
+  FiX
 } from "react-icons/fi";
 import { FaQuoteLeft } from "react-icons/fa";
 import API from "../../../api/axios";
 import { Toast, useToast } from "../profile/Toast";
 import "./SuccessStories.css";
 
-// Confirm Dialog Component
 function ConfirmDialog({ message, onConfirm, onCancel }) {
   return (
     <div className="confirm-overlay">
@@ -31,7 +30,6 @@ function ConfirmDialog({ message, onConfirm, onCancel }) {
   );
 }
 
-// Story Card Component
 function StoryCard({ story, user, onDelete, index }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const maxLength = 200;
@@ -117,7 +115,6 @@ function StoryCard({ story, user, onDelete, index }) {
   );
 }
 
-// Add Story Modal Component
 function AddStoryModal({ onClose, newStory, onChange, onSubmit }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -172,7 +169,6 @@ function AddStoryModal({ onClose, newStory, onChange, onSubmit }) {
   );
 }
 
-// Main Component
 export default function SuccessStories() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -246,10 +242,7 @@ export default function SuccessStories() {
 
   return (
     <div className="success-stories">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
-
-      {/* Confirm Dialog */}
       {confirmDialog && (
         <ConfirmDialog
           message="Are you sure you want to delete this story? This action cannot be undone."

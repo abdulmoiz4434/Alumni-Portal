@@ -201,10 +201,7 @@ export default function Jobs() {
 
   return (
     <div className="jobs">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
-
-      {/* Confirm Dialog */}
       {confirmDialog && (
         <ConfirmDialog
           message="Are you sure you want to delete this opportunity? This action cannot be undone."
@@ -240,7 +237,6 @@ export default function Jobs() {
           </div>
 
           <div className="filters">
-            {/* ✅ Location options are dynamically generated from actual job data */}
             <select
               value={filterLocation}
               onChange={(e) => setFilterLocation(e.target.value)}
@@ -327,8 +323,6 @@ export default function Jobs() {
           )}
         </div>
       </div>
-
-      {/* Post Opportunity Modal */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="event-modal">

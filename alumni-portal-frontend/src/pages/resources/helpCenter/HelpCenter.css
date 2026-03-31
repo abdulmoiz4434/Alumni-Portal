@@ -1,5 +1,3 @@
-/* ===== HelpCenter.css (Updated to match Privacy/FAQ design) ===== */
-
 .helpcenter-container {
   min-height: 50vh;
   background-color: #dadada;
@@ -7,10 +5,9 @@
   padding: 30px 20px 40px;
   max-width: 900px;
   border-radius: 15px;
-  margin: 20px auto ;
+  margin: 20px auto;
 }
 
-/* Hero */
 .helpcenter-hero {
   margin-bottom: 44px;
 }
@@ -31,7 +28,6 @@
   margin: 0;
 }
 
-/* Accordion wrapper */
 .helpcenter-accordion {
   display: flex;
   flex-direction: column;
@@ -39,7 +35,6 @@
   margin-bottom: 44px;
 }
 
-/* Each item */
 .accordion-item {
   background-color: #1a1a1a;
   border-radius: 8px;
@@ -52,7 +47,6 @@
   box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.2);
 }
 
-/* Trigger */
 .accordion-trigger {
   width: 100%;
   background: transparent;
@@ -65,14 +59,12 @@
   text-align: left;
 }
 
-/* Left side */
 .accordion-trigger-left {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Icon */
 .accordion-icon-wrapper {
   width: 34px;
   height: 34px;
@@ -86,7 +78,6 @@
   flex-shrink: 0;
 }
 
-/* Question (match section heading style) */
 .accordion-question {
   font-size: 0.92rem;
   font-weight: 700;
@@ -95,18 +86,15 @@
   letter-spacing: 0.4px;
 }
 
-/* Chevron */
 .accordion-chevron {
   color: #c9a84c;
   transition: transform 0.3s ease;
 }
 
-/* Rotate when open */
 .accordion-item--open .accordion-chevron {
   transform: rotate(180deg);
 }
 
-/* Body */
 .accordion-body {
   max-height: 0;
   overflow: hidden;
@@ -119,7 +107,6 @@
   padding: 4px 20px 18px 66px;
 }
 
-/* Answer */
 .accordion-answer {
   font-size: 0.92rem;
   color: #cccccc;
@@ -127,7 +114,6 @@
   margin: 0;
 }
 
-/* Footer note */
 .helpcenter-footer-note {
   background-color: #1a1a1a;
   border-left: 4px solid #c9a84c;
@@ -153,7 +139,6 @@
   text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 600px) {
   .helpcenter-container {
     padding: 40px 20px 60px;

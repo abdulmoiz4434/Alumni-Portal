@@ -1,8 +1,4 @@
-/* =========================================
-   1. :root Variables
-   ========================================= */
 :root {
-  /* Colors */
   --p-bg-main: #f8f9fa;
   --p-white: #ffffff;
   --p-dark: #1a1a1a;
@@ -11,31 +7,26 @@
   --p-gold-dark: #d4aa28;
   --p-gold-light: #fffef8;
 
-  /* Borders & Backgrounds */
   --p-bg-avatar: #e5e7eb;
   --p-bg-avatar-light: #f3f4f6;
   --p-border-card: #e9ecef;
   --p-border-input: #dee2e6;
 
-  /* Text */
   --p-text-main: #495057;
   --p-text-muted: #6c757d;
   --p-text-label: #0f0303;
 
-  /* Toasts */
   --p-toast-border: #2a2a2a;
   --p-toast-error: #ff5c5c;
   --p-toast-warning: #f0a500;
   --p-toast-bg: rgba(255, 255, 255, 0.1);
 
-  /* Radiuses */
   --p-radius-sm: 4px;
   --p-radius-md: 10px;
   --p-radius-lg: 12px;
   --p-radius-xl: 16px;
   --p-radius-round: 50%;
 
-  /* Shadows */
   --p-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --p-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
   --p-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -47,9 +38,6 @@
   --p-transition-fast: all 0.2s ease;
 }
 
-/* =========================================
-   2. Base / Reset & Shared Styles
-   ========================================= */
 .profile {
   min-height: 100vh;
   padding-bottom: 40px;
@@ -79,9 +67,6 @@
   animation: spin 1s linear infinite;
 }
 
-/* =========================================
-   3. Card Styles
-   ========================================= */
 .profile-card {
   background: var(--p-white);
   padding: 32px;
@@ -120,9 +105,6 @@
   flex-shrink: 0;
 }
 
-/* =========================================
-   4. Avatar Container
-   ========================================= */
 .profile-avatar-container {
   position: relative;
   flex-shrink: 0;
@@ -216,9 +198,6 @@
   opacity: 0.7;
 }
 
-/* =========================================
-   5. Loading Spinners
-   ========================================= */
 .upload-spinner,
 .upload-spinner-small {
   border-radius: var(--p-radius-round);
@@ -239,9 +218,6 @@
   border-top-color: var(--p-dark);
 }
 
-/* =========================================
-   6. Header Info
-   ========================================= */
 .profile-title-row {
   display: flex;
   align-items: center;
@@ -306,9 +282,6 @@
   background: var(--p-border-input);
 }
 
-/* =========================================
-   7. Content Sections
-   ========================================= */
 .profile-section-title {
   margin: 0 0 20px 0;
   font-size: 18px;
@@ -349,9 +322,6 @@
   text-decoration: underline;
 }
 
-/* =========================================
-   8. Form Inputs
-   ========================================= */
 .profile-input,
 .profile-textarea {
   width: 100%;
@@ -389,16 +359,12 @@
   white-space: pre-wrap;
 }
 
-/* Grid Layout */
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 
-/* =========================================
-   9. Buttons
-   ========================================= */
 .profile-btn {
   display: inline-flex;
   align-items: center;
@@ -455,9 +421,6 @@
   gap: 12px;
 }
 
-/* =========================================
-   10. Toasts (Responsive Optimized)
-   ========================================= */
 .toast-container {
   position: fixed;
   bottom: 28px;
@@ -476,8 +439,8 @@
   gap: 12px;
   padding: 14px 40px 14px 16px;
   border-radius: var(--p-radius-lg);
-  width: 380px; /* Desktop width */
-  max-width: 90vw; /* Prevent overflow on slightly small screens */
+  width: 380px;
+  max-width: 90vw;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
@@ -487,20 +450,34 @@
 }
 
 .toast-icon {
-  flex-shrink: 0; /* Important: prevents squishing on small screens */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
 }
 
-/* Status Colors */
-.toast-success .toast-icon { color: var(--p-gold); }
-.toast-success .toast-progress { background: var(--p-gold); }
+.toast-success .toast-icon {
+  color: var(--p-gold);
+}
 
-.toast-error .toast-icon { color: var(--p-toast-error); }
-.toast-error .toast-progress { background: var(--p-toast-error); }
+.toast-success .toast-progress {
+  background: var(--p-gold);
+}
 
-.toast-warning .toast-icon { color: var(--p-toast-warning); }
-.toast-warning .toast-progress { background: var(--p-toast-warning); }
+.toast-error .toast-icon {
+  color: var(--p-toast-error);
+}
+
+.toast-error .toast-progress {
+  background: var(--p-toast-error);
+}
+
+.toast-warning .toast-icon {
+  color: var(--p-toast-warning);
+}
+
+.toast-warning .toast-progress {
+  background: var(--p-toast-warning);
+}
 
 .toast-message {
   flex: 1;
@@ -541,39 +518,85 @@
   transform-origin: left;
 }
 
-/* =========================================
-   11. Animations
-   ========================================= */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* =========================================
-   12. Media Queries
-   ========================================= */
 @media (max-width: 1024px) {
-  .profile-container { padding: 24px 20px; }
-  .profile-header-card { padding: 28px; }
-  .profile-name { font-size: 26px; }
-  .profile-card { padding: 24px; }
-  
-  .toast-container { bottom: 24px; right: 24px; }
-  .toast { width: 320px; }
+  .profile-container {
+    padding: 24px 20px;
+  }
+
+  .profile-header-card {
+    padding: 28px;
+  }
+
+  .profile-name {
+    font-size: 26px;
+  }
+
+  .profile-card {
+    padding: 24px;
+  }
+
+  .toast-container {
+    bottom: 24px;
+    right: 24px;
+  }
+
+  .toast {
+    width: 320px;
+  }
 }
 
 @media (max-width: 768px) {
-  .profile-container { padding: 20px 16px; }
-  .profile-card { padding: 20px; }
-  .profile-header-card { padding: 24px; }
-  .profile-grid { grid-template-columns: 1fr; gap: 20px; }
-  .profile-header-content { flex-direction: column; align-items: center; text-align: center; }
-  .profile-title-row { justify-content: center; }
-  .profile-metadata { margin-top: 12px; justify-content: center; width: 100%; }
-  .profile-header-actions { display: none; }
-  .profile-mobile-actions { display: block; }
-  
-  /* Toast Mobile Strategy: Centered and Full Width */
+  .profile-container {
+    padding: 20px 16px;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
+
+  .profile-header-card {
+    padding: 24px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .profile-header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-title-row {
+    justify-content: center;
+  }
+
+  .profile-metadata {
+    margin-top: 12px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .profile-header-actions {
+    display: none;
+  }
+
+  .profile-mobile-actions {
+    display: block;
+  }
+
   .toast-container {
     right: 5%;
     left: 10%;
@@ -591,17 +614,56 @@
 }
 
 @media (max-width: 480px) {
-  .profile-container { padding: 16px 12px; }
-  .profile-card { padding: 16px; }
-  .profile-header-card { padding: 20px 16px; }
-  .profile-avatar-wrapper { width: 90px; height: 90px; }
-  .profile-name { font-size: 22px; }
-  .profile-metadata { flex-direction: column; gap: 12px; margin-top: 8px; }
-  .profile-metadata-divider { display: none; }
-  .profile-section-title { font-size: 16px; }
-  .profile-input, .profile-textarea { font-size: 14px; padding: 10px 12px; }
-  
-  .toast-container { bottom: 12px; }
-  .toast { padding: 16px 37px 16px 13px; }
-  .toast-message { font-size: 13px; }
+  .profile-container {
+    padding: 16px 12px;
+  }
+
+  .profile-card {
+    padding: 16px;
+  }
+
+  .profile-header-card {
+    padding: 20px 16px;
+  }
+
+  .profile-avatar-wrapper {
+    width: 90px;
+    height: 90px;
+  }
+
+  .profile-name {
+    font-size: 22px;
+  }
+
+  .profile-metadata {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .profile-metadata-divider {
+    display: none;
+  }
+
+  .profile-section-title {
+    font-size: 16px;
+  }
+
+  .profile-input,
+  .profile-textarea {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .toast-container {
+    bottom: 12px;
+  }
+
+  .toast {
+    padding: 16px 37px 16px 13px;
+  }
+
+  .toast-message {
+    font-size: 13px;
+  }
 }

@@ -8,8 +8,6 @@ import "./Layout.css";
 export default function Layout() {
   const location = useLocation();
   const contentRef = useRef(null);
-  
-  // Changed from 768 to 480 to target PHONES only
   const [isPhone, setIsPhone] = useState(window.innerWidth <= 480);
 
   useEffect(() => {
@@ -22,8 +20,6 @@ export default function Layout() {
   const isMessagingBase = location.pathname.startsWith("/modules/messaging");
 
   const hideFooter = isMessagingBase;
-
-  // Now this only becomes true on small mobile screens
   const hideNavForChat = isInsideSpecificChat && isPhone;
 
   useEffect(() => {

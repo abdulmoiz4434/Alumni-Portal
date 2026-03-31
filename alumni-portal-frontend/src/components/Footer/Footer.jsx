@@ -15,9 +15,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
-        {/* Top Section */}
         <div className="footer-top">
-          {/* Logo and Description */}
           <div className="footer-column footer-about">
             <div className="footer-logo">
               <div className="logo-circle">
@@ -60,7 +58,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div className="footer-column">
             <h4 className="footer-heading">Quick Links</h4>
             <ul className="footer-links">
@@ -82,7 +79,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Resources */}
           <div className="footer-column">
             <h4 className="footer-heading">Resources</h4>
             <ul className="footer-links">
@@ -104,7 +100,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
           <div className="footer-column">
             <h4 className="footer-heading">Contact Us</h4>
             <ul className="footer-contact">
@@ -124,7 +119,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Section */}
         <div className="footer-bottom">
           <p className="footer-copyright">
             © {currentYear} Alumni Portal. All rights reserved.
