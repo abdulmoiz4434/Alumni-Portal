@@ -1,7 +1,6 @@
 const Event = require('../models/Event');
 const { successResponse, errorResponse } = require('../utils/response');
 
-// Get all events (with filtering based on user role)
 exports.getAllEvents = async (req, res) => {
   try {
     const userRole = req.user.role;
