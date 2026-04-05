@@ -35,7 +35,7 @@ const eventSchema = new mongoose.Schema({
   },
   capacity: {
     type: Number,
-    default: null // null means unlimited
+    default: null
   },
   registeredUsers: [{
     type: mongoose.Schema.Types.ObjectId,

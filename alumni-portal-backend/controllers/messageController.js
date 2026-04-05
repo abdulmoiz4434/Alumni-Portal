@@ -6,7 +6,7 @@ const getOrCreateConversation = async (req, res) => {
   try {
     const senderId = req.user._id;
     const { receiverId } = req.body;
-    
+
     if (!receiverId) {
       return errorResponse(res, "Receiver ID is required", 400);
     }
@@ -15,12 +15,12 @@ const getOrCreateConversation = async (req, res) => {
       senderId,
       receiverId
     );
-    
+
     const payload = {
       ...conversation.toObject(),
       id: conversation._id.toString()
     };
-    
+
     return successResponse(res, payload, 200, "Conversation retrieved");
   } catch (error) {
     console.error("getOrCreateConversation Error:", error);
@@ -32,31 +32,31 @@ const sendMessage = async (req, res) => {
   try {
     const senderId = req.user._id;
     const { conversationId, content } = req.body;
-    
+
     if (!conversationId || !content) {
       return errorResponse(res, "Missing conversationId or content", 400);
     }
-    
+
     const conversation = await messageService.getConversationById(conversationId);
     if (!conversation) {
       return errorResponse(res, "Conversation not found", 404);
     }
-    
+
     const userIdStr = req.user._id.toString();
     const isParticipant = conversation.participants.some(
       (p) => (p._id || p).toString() === userIdStr
     );
-    
+
     if (!isParticipant) {
       return errorResponse(res, "Unauthorized access to conversation", 403);
     }
-    
+
     const message = await messageService.createMessage(
       conversationId,
       senderId,
       content
     );
-    
+
     const sender = await messageService.getUserById(message.senderId);
     const payload = {
       id: message._id.toString(),
@@ -67,7 +67,7 @@ const sendMessage = async (req, res) => {
       created_at: message.createdAt,
       sender
     };
-    
+
     return successResponse(res, payload, 201, "Message sent");
   } catch (error) {
     console.error("sendMessage Error:", error);
@@ -80,19 +80,18 @@ const getMessagesController = async (req, res) => {
     const { conversationId } = req.params;
     const userId = req.user._id;
 
-    // Validate conversationId format
     if (!mongoose.Types.ObjectId.isValid(conversationId)) {
       return errorResponse(res, "Invalid conversation ID", 400);
     }
 
     const messages = await messageService.getMessages(conversationId, userId);
-    
+
     if (messages === null) {
       return errorResponse(res, "Conversation not found or access denied", 404);
     }
 
     const conversation = await messageService.getConversationById(conversationId);
-    
+
     if (!conversation) {
       return errorResponse(res, "Conversation not found", 404);
     }

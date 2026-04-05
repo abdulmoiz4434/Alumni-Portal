@@ -248,10 +248,7 @@ export default function Events() {
 
   return (
     <div className="events">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
-
-      {/* Confirm Dialog */}
       {confirmDialog && (
         <ConfirmDialog
           message="Are you sure you want to delete this event? This action cannot be undone."
@@ -301,8 +298,6 @@ export default function Events() {
               <option value="completed">Completed</option>
               <option value="">All Status</option>
             </select>
-
-            {/* ✅ FIX: Category options use original casing to match DB enum values */}
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -372,8 +367,8 @@ export default function Events() {
                     {isPast(parseISO(event.date)) && !isToday(parseISO(event.date))
                       ? "Completed"
                       : isToday(parseISO(event.date))
-                      ? "Today"
-                      : "Upcoming"}
+                        ? "Today"
+                        : "Upcoming"}
                   </div>
                 </div>
 
@@ -417,8 +412,6 @@ export default function Events() {
           )}
         </div>
       </div>
-
-      {/* Create Event Modal */}
       {showCreateModal && (
         <div className="modal-overlay">
           <div className="event-modal">

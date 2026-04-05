@@ -10,14 +10,12 @@
   transition: transform 0.3s ease;
 }
 
-/* Navigation wrapper */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/* Shared styles for links & buttons */
 .sidebar-nav a {
   color: #d1d5db;
   text-decoration: none;
@@ -34,7 +32,6 @@
     color 0.2s ease;
 }
 
-/* Hollow circle indicator */
 .sidebar-nav a::before {
   content: "○";
   font-size: 22px;
@@ -43,7 +40,6 @@
   transition: color 0.2s ease;
 }
 
-/* Hover state */
 .sidebar-nav a:hover {
   background-color: #27272a;
   color: #ffffff;
@@ -53,7 +49,6 @@
   color: #ffffff;
 }
 
-/* Active state */
 .sidebar-nav a.active {
   background-color: #323235;
   color: #ffffff;
@@ -63,7 +58,6 @@
   color: #dbde06;
 }
 
-/* Logout button */
 .logout-btn {
   background: #323235;
   color: white;
@@ -110,7 +104,6 @@
   z-index: 999;
 }
 
-/* Sidebar container (mobile) */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -132,15 +125,12 @@
   .menu-btn {
     display: flex;
     align-items: center;
-    /* Lock to the glass top-left to avoid jumping */
     position: fixed;
-    top: 0; 
+    top: 0;
     left: 0;
-    /* Ensuring it sits above Topbar and Messaging Header */
-    z-index: 2000; 
+    z-index: 2000;
     border: none;
     border-radius: 0;
-    /* Height matches the Topbar layout */
     height: 54px;
     width: 60px;
     justify-content: center;
@@ -148,7 +138,6 @@
   }
 
   .menu-btn-text {
-    /* Reduced size to ensure it doesn't push the back arrow or logo */
     font-size: 1.5rem;
     font-weight: 600;
     font-family: 'Playfair Display', serif;
@@ -156,11 +145,11 @@
     margin-left: 10px;
   }
 
-  /* Optional: Hide text on very small phones to keep the header clean */
   @media (max-width: 480px) {
     .menu-btn-text {
       display: none;
     }
+
     .menu-btn {
       width: 50px;
     }

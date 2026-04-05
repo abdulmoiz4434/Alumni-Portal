@@ -2,7 +2,6 @@ const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
 
-// Profile Pictures Storage
 const profilePictureStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -12,7 +11,6 @@ const profilePictureStorage = new CloudinaryStorage({
   }
 });
 
-// Events Images Storage
 const eventImageStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -22,7 +20,6 @@ const eventImageStorage = new CloudinaryStorage({
   }
 });
 
-// File filter
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
   const mimetype = allowedTypes.test(file.mimetype);
@@ -34,7 +31,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Profile picture upload
 const uploadProfilePicture = multer({
   storage: profilePictureStorage,
   limits: {
@@ -43,7 +39,6 @@ const uploadProfilePicture = multer({
   fileFilter: fileFilter
 });
 
-// Event image upload
 const uploadEventImage = multer({
   storage: eventImageStorage,
   limits: {

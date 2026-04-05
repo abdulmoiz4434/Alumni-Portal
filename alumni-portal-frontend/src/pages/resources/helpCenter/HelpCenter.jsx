@@ -43,7 +43,6 @@ const HelpCenter = () => {
 
   return (
     <div className="helpcenter-container">
-      {/* Hero */}
       <div className="helpcenter-hero">
         <h1>Help Center</h1>
         <p className="helpcenter-subtitle">
@@ -52,7 +51,6 @@ const HelpCenter = () => {
         </p>
       </div>
 
-      {/* Accordion */}
       <div className="helpcenter-accordion">
         {topics.map(({ id, icon: Icon, question, answer }) => {
           const isOpen = openId === id;
@@ -81,7 +79,6 @@ const HelpCenter = () => {
         })}
       </div>
 
-      {/* Footer nudge */}
       <div className="helpcenter-footer-note">
         <p>
           Still have questions?{' '}

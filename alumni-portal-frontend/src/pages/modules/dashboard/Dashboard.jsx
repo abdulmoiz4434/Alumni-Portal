@@ -62,23 +62,23 @@ const Dashboard = () => {
 
   const formattedStats = stats
     ? [
-        {
-          label: "Upcoming Events",
-          value: stats.upcomingEvents?.toString() || "0",
-          icon: Calendar,
-          trend: stats.upcomingEventsThisWeek
-            ? `+${stats.upcomingEventsThisWeek} this week`
-            : "0 this week",
-        },
-        {
-          label: "Job Openings",
-          value: stats.jobOpenings?.toString() || "0",
-          icon: Briefcase,
-          trend: stats.recentJobsCount
-            ? `+${stats.recentJobsCount} new`
-            : "0 new",
-        },
-      ]
+      {
+        label: "Upcoming Events",
+        value: stats.upcomingEvents?.toString() || "0",
+        icon: Calendar,
+        trend: stats.upcomingEventsThisWeek
+          ? `+${stats.upcomingEventsThisWeek} this week`
+          : "0 this week",
+      },
+      {
+        label: "Job Openings",
+        value: stats.jobOpenings?.toString() || "0",
+        icon: Briefcase,
+        trend: stats.recentJobsCount
+          ? `+${stats.recentJobsCount} new`
+          : "0 new",
+      },
+    ]
     : [];
 
   if (loading) {
@@ -105,7 +105,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      {/* Header Section */}
       <header className="dashboard-header">
         <img
           src="Cover-Alumni.jpg"
@@ -123,7 +122,6 @@ const Dashboard = () => {
         </div>
       </header>
 
-      {/* Stats Grid */}
       <section className="stats-section">
         <div className="stats-grid">
           {formattedStats.map((stat) => (
@@ -141,11 +139,8 @@ const Dashboard = () => {
         </div>
       </section>
 
-      {/* Main Content Grid */}
       <div className="main-grid">
-        {/* Left Column */}
         <div className="left-column">
-          {/* Upcoming Events */}
           <section className="content-card">
             <div className="dashboard-card-header">
               <h2 className="card-title">
@@ -202,8 +197,6 @@ const Dashboard = () => {
               )}
             </div>
           </section>
-
-          {/* Recent Jobs */}
           <section className="content-card">
             <div className="dashboard-card-header">
               <h2 className="card-title">
@@ -264,7 +257,6 @@ const Dashboard = () => {
           </section>
         </div>
 
-        {/* Right Column */}
         <div className="right-column">
           <section className="content-card quick-stats-card">
             <h2 className="card-title">

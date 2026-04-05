@@ -15,7 +15,6 @@
   --auth-transition: all 0.2s;
 }
 
-/* Admin Auth Main Container */
 .admin-auth-main {
   position: relative;
   width: 100%;
@@ -27,7 +26,6 @@
   background: url("/Cover-Alumni.jpg") center / cover no-repeat;
 }
 
-/* Admin Auth Container */
 .admin-auth-container {
   position: relative;
   width: 100%;
@@ -40,7 +38,6 @@
   overflow: hidden;
 }
 
-/* Admin Panel */
 .admin-auth-panel {
   display: flex;
   flex-direction: column;
@@ -57,7 +54,6 @@
   user-select: none;
 }
 
-/* Panel Title */
 .admin-panel-title {
   color: var(--auth-white);
   font-size: 2rem;
@@ -72,7 +68,6 @@
   margin-bottom: 2rem;
 }
 
-/* Admin Form */
 .admin-auth-form {
   display: flex;
   flex-direction: column;
@@ -80,7 +75,6 @@
   gap: 1.5rem;
 }
 
-/* Admin Input */
 .admin-input {
   padding: var(--auth-padding);
   border-radius: var(--auth-radius);
@@ -108,7 +102,6 @@
   cursor: not-allowed;
 }
 
-/* Password Field */
 .admin-password-field {
   width: 100%;
   display: flex;
@@ -159,7 +152,6 @@
   pointer-events: none;
 }
 
-/* Admin Button */
 .admin-button {
   width: 100%;
   font-size: var(--auth-font-size);
@@ -179,7 +171,6 @@
   background: var(--auth-accent-hover);
 }
 
-/* Error Message */
 .admin-error-message {
   color: var(--auth-error);
   font-size: 0.875rem;
@@ -189,7 +180,6 @@
   text-align: left;
 }
 
-/* Error State for Input */
 .admin-input.input-error {
   border: 2px solid var(--auth-error);
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
@@ -199,7 +189,6 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
-/* Mobile Responsive */
 @media (min-width: 320px) and (max-width: 768px) {
   .admin-auth-main {
     min-height: 100vh;
@@ -249,7 +238,6 @@
   }
 }
 
-/* Extra Small Devices */
 @media (max-width: 380px) {
   .admin-auth-container {
     max-width: 95%;

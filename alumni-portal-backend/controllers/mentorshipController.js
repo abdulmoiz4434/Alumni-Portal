@@ -2,8 +2,6 @@ const Mentorship = require("../models/Mentorship");
 const MentorshipRequest = require("../models/MentorshipRequest");
 const { successResponse, errorResponse } = require("../utils/response");
 
-// @desc    Send a mentorship application/request
-// @route   POST /api/mentorship/apply
 const sendMentorshipRequest = async (req, res) => {
   try {
     const { alumnusId, message } = req.body;
@@ -13,12 +11,10 @@ const sendMentorshipRequest = async (req, res) => {
       return errorResponse(res, "Alumnus ID is required", 400);
     }
 
-    // Prevent applying to yourself
     if (studentId.toString() === alumnusId.toString()) {
       return errorResponse(res, "You cannot apply to your own mentorship offering.", 400);
     }
 
-    // Check if an active request already exists
     const existingRequest = await MentorshipRequest.findOne({
       student: studentId,
       alumnus: alumnusId,
@@ -43,7 +39,6 @@ const sendMentorshipRequest = async (req, res) => {
   }
 };
 
-// @desc    Create a new mentorship
 const createMentorship = async (req, res) => {
   try {
     const { title, field, duration, description, skills } = req.body;
@@ -73,7 +68,6 @@ const createMentorship = async (req, res) => {
   }
 };
 
-// @desc    Get all mentorships
 const getAllMentorships = async (req, res) => {
   try {
     const mentorships = await Mentorship.find({ status: "active" })
@@ -87,7 +81,6 @@ const getAllMentorships = async (req, res) => {
   }
 };
 
-// @desc    Get single mentorship
 const getMentorshipById = async (req, res) => {
   try {
     const mentorship = await Mentorship.findById(req.params.id)
@@ -104,7 +97,6 @@ const getMentorshipById = async (req, res) => {
   }
 };
 
-// @desc    Update mentorship
 const updateMentorship = async (req, res) => {
   try {
     let mentorship = await Mentorship.findById(req.params.id);
@@ -140,7 +132,6 @@ const updateMentorship = async (req, res) => {
   }
 };
 
-// @desc    Delete mentorship
 const deleteMentorship = async (req, res) => {
   try {
     const mentorship = await Mentorship.findById(req.params.id);

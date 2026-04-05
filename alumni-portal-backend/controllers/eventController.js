@@ -8,15 +8,12 @@ exports.getAllEvents = async (req, res) => {
 
     let filter = {};
 
-    // Role-based filtering
     if (userRole === 'student') {
       filter.targetAudience = { $in: ['all', 'students'] };
     } else if (userRole === 'alumni') {
       filter.targetAudience = { $in: ['all', 'alumni'] };
     }
-    // Admin can see all events
 
-    // ✅ FIX: Status filter now uses date-range queries instead of stored status field
     if (status === 'upcoming') {
       filter.date = { $gt: new Date() };
     } else if (status === 'completed') {
@@ -28,14 +25,11 @@ exports.getAllEvents = async (req, res) => {
       endOfDay.setHours(23, 59, 59, 999);
       filter.date = { $gte: startOfDay, $lte: endOfDay };
     }
-    // If status is empty/undefined, no date filter is applied (show all)
 
-    // ✅ FIX: Category filter uses exact value (title case) to match DB enum
     if (category && category !== 'all') {
       filter.category = category;
     }
 
-    // Search filter
     if (search) {
       filter.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -55,7 +49,6 @@ exports.getAllEvents = async (req, res) => {
   }
 };
 
-// Get single event
 exports.getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
@@ -66,7 +59,6 @@ exports.getEventById = async (req, res) => {
       return errorResponse(res, 'Event not found', 404);
     }
 
-    // Check role-based access
     const userRole = req.user.role;
     if (userRole !== 'admin') {
       if (event.targetAudience === 'students' && userRole !== 'student') {
@@ -84,7 +76,6 @@ exports.getEventById = async (req, res) => {
   }
 };
 
-// Create event (Admin only)
 exports.createEvent = async (req, res) => {
   try {
     const {
@@ -116,7 +107,6 @@ exports.createEvent = async (req, res) => {
       createdBy: req.user._id || req.user.id
     };
 
-    // Add Cloudinary image URL if uploaded
     if (req.file) {
       eventData.image = req.file.path;
     }
@@ -129,7 +119,6 @@ exports.createEvent = async (req, res) => {
   }
 };
 
-// Update event (Admin only)
 exports.updateEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -153,7 +142,6 @@ exports.updateEvent = async (req, res) => {
       isRegistrationOpen
     } = req.body;
 
-    // Update fields if provided
     if (title) event.title = title;
     if (description) event.description = description;
     if (category) event.category = category;
@@ -167,7 +155,6 @@ exports.updateEvent = async (req, res) => {
     if (status) event.status = status;
     if (isRegistrationOpen !== undefined) event.isRegistrationOpen = isRegistrationOpen;
 
-    // Update image if uploaded
     if (req.file) {
       event.image = req.file.path;
     }
@@ -181,7 +168,6 @@ exports.updateEvent = async (req, res) => {
   }
 };
 
-// Delete event (Admin only)
 exports.deleteEvent = async (req, res) => {
   try {
     const event = await Event.findByIdAndDelete(req.params.id);
@@ -197,7 +183,6 @@ exports.deleteEvent = async (req, res) => {
   }
 };
 
-// Register for event
 exports.registerForEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -206,22 +191,18 @@ exports.registerForEvent = async (req, res) => {
       return errorResponse(res, 'Event not found', 404);
     }
 
-    // Check if registration is open
     if (!event.isRegistrationOpen) {
       return errorResponse(res, 'Registration is closed for this event', 400);
     }
 
-    // Check capacity
     if (event.capacity && event.registeredUsers.length >= event.capacity) {
       return errorResponse(res, 'Event is full', 400);
     }
 
-    // Check if already registered
     if (event.registeredUsers.includes(req.user._id)) {
       return errorResponse(res, 'You are already registered for this event', 400);
     }
 
-    // Check role-based access
     const userRole = req.user.role;
     if (event.targetAudience === 'students' && userRole !== 'student') {
       return errorResponse(res, 'This event is only for students', 403);
@@ -230,7 +211,6 @@ exports.registerForEvent = async (req, res) => {
       return errorResponse(res, 'This event is only for alumni', 403);
     }
 
-    // Register user
     event.registeredUsers.push(req.user._id);
     await event.save();
 
@@ -241,7 +221,6 @@ exports.registerForEvent = async (req, res) => {
   }
 };
 
-// Unregister from event
 exports.unregisterFromEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -250,13 +229,11 @@ exports.unregisterFromEvent = async (req, res) => {
       return errorResponse(res, 'Event not found', 404);
     }
 
-    // Check if user is registered
     const userIndex = event.registeredUsers.indexOf(req.user._id);
     if (userIndex === -1) {
       return errorResponse(res, 'You are not registered for this event', 400);
     }
 
-    // Unregister user
     event.registeredUsers.splice(userIndex, 1);
     await event.save();
 

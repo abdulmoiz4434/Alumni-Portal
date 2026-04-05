@@ -40,7 +40,6 @@ gap: 4px;
   letter-spacing: 0.3px;
 }
 
-/* ===== Notification Bell Styles ===== */
 .topbar-right {
   display: flex;
   align-items: center;
@@ -85,7 +84,6 @@ gap: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* ===== Responsive Adjustments ===== */
 @media (max-width: 1024px) {
   .topbar-logo-img {
     height: 48px;
@@ -121,7 +119,6 @@ gap: 4px;
   }
 }
 
-/* Animation only on Laptop/Tablet (min-width: 768px) */
 @media (min-width: 768px) {
   .topbar-welcome {
     animation: slideInWelcome 2.5s ease-out forwards;

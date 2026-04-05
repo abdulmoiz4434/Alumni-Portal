@@ -11,37 +11,33 @@ const generateToken = (id, role) => {
   });
 };
 
-// ─── Password & Email Validators ─────────────────────────────────────────────
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const validatePasswordComplexity = (password) => {
   const errors = [];
-  if (!password || password.length < 8)       errors.push('at least 8 characters');
-  if (!/[A-Z]/.test(password))                errors.push('an uppercase letter');
-  if (!/[a-z]/.test(password))                errors.push('a lowercase letter');
-  if (!/[0-9]/.test(password))                errors.push('a number');
-  if (!/[^A-Za-z0-9]/.test(password))         errors.push('a special character');
+  if (!password || password.length < 8) errors.push('at least 8 characters');
+  if (!/[A-Z]/.test(password)) errors.push('an uppercase letter');
+  if (!/[a-z]/.test(password)) errors.push('a lowercase letter');
+  if (!/[0-9]/.test(password)) errors.push('a number');
+  if (!/[^A-Za-z0-9]/.test(password)) errors.push('a special character');
   return errors;
 };
 
 exports.registerStudent = async (req, res) => {
   try {
-    const { 
+    const {
       email, password, fullName, regNo, batch, department, semester, degree
     } = req.body;
     const normalizedEmail = email?.toLowerCase();
 
-    // ── Required fields ──
     if (!email || !password || !fullName || !regNo || !batch || !department) {
       return errorResponse(res, 'Please provide all required fields (Email, Password, Name, Reg No, Batch, Dept)');
     }
 
-    // ── Email format ──
     if (!EMAIL_REGEX.test(normalizedEmail)) {
       return errorResponse(res, 'Invalid email format. Please provide a valid email address.');
     }
 
-    // ── Password complexity ──
     const passwordErrors = validatePasswordComplexity(password);
     if (passwordErrors.length > 0) {
       return errorResponse(res, `Password must contain ${passwordErrors.join(', ')}.`);
@@ -83,22 +79,19 @@ exports.registerStudent = async (req, res) => {
 
 exports.registerAlumni = async (req, res) => {
   try {
-    const { 
+    const {
       email, password, fullName, graduationYear, regNo, department, contactNo, degree
     } = req.body;
     const normalizedEmail = email?.toLowerCase();
 
-    // ── Required fields ──
     if (!email || !password || !fullName || !graduationYear || !regNo || !department) {
       return errorResponse(res, 'Please provide all required fields (Email, Password, Name, Reg No, Grad Year, Dept)');
     }
 
-    // ── Email format ──
     if (!EMAIL_REGEX.test(normalizedEmail)) {
       return errorResponse(res, 'Invalid email format. Please provide a valid email address.');
     }
 
-    // ── Password complexity ──
     const passwordErrors = validatePasswordComplexity(password);
     if (passwordErrors.length > 0) {
       return errorResponse(res, `Password must contain ${passwordErrors.join(', ')}.`);

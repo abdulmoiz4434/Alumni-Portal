@@ -71,7 +71,6 @@ export default function Notifications() {
 
   return (
     <div className="notifications-page">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
 
       <div className="notifications-header">

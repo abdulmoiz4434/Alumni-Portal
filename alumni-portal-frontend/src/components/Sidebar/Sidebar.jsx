@@ -42,7 +42,6 @@ export default function Sidebar() {
             Dashboard
           </NavLink>
 
-          {/* HIDE PROFILE FOR ADMIN */}
           {!isAdmin && (
             <NavLink to="/modules/profile" onClick={closeSidebar}>
               Profile

@@ -23,11 +23,9 @@ function App() {
   return (
     <Router>
       <Routes>
-  {/* Public pages without layout */}
   <Route path="/" element={<AuthPage />} />
   <Route path="/admin" element={<AdminAuth />} />
 
-  {/* All pages with topbar/sidebar/footer */}
   <Route
     element={
       <ProtectedRoute>
@@ -35,7 +33,6 @@ function App() {
       </ProtectedRoute>
     }
   >
-    {/* Dashboard & Modules */}
     <Route path="/modules" element={<Dashboard />} />
     <Route path="/modules/profile" element={<Profile />} />
     <Route path="/modules/events" element={<Events />} />
@@ -47,7 +44,6 @@ function App() {
     <Route path="/modules/notifications" element={<Notifications />} />
     <Route path="/modules/messaging/:conversationId?" element={<Messaging />} />
 
-    {/* Footer resource pages */}
     <Route path="/helpCenter" element={<HelpCenter />} />
     <Route path="/faqs" element={<FAQs />} />
     <Route path="/privacyPolicy" element={<Privacy />} />

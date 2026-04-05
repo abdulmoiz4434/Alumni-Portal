@@ -219,10 +219,7 @@ export default function Mentorship() {
 
   return (
     <div className="mentorship">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
-
-      {/* Confirm Dialog */}
       {confirmDialog && (
         <ConfirmDialog
           message="Are you sure you want to delete this mentorship? This action cannot be undone."
@@ -353,8 +350,6 @@ export default function Mentorship() {
           })}
         </div>
       </div>
-
-      {/* Application Modal */}
       {showApplyModal && (
         <div className="modal-overlay" onClick={() => setShowApplyModal(false)}>
           <div className="event-modal" onClick={(e) => e.stopPropagation()}>
@@ -394,7 +389,6 @@ export default function Mentorship() {
         </div>
       )}
 
-      {/* Offer Mentorship Modal */}
       {showOfferModal && (
         <div className="modal-overlay" onClick={() => setShowOfferModal(false)}>
           <div className="event-modal" onClick={(e) => e.stopPropagation()}>
