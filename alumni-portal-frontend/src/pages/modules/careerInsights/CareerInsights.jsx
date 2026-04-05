@@ -68,7 +68,6 @@ const TrendingUpIcon = () => (
   </svg>
 );
 
-// Static — defined outside component to avoid recreation on every render
 const chartOptions = {
   indexAxis: 'y',
   responsive: true,
