@@ -79,6 +79,7 @@ export default function AuthPage() {
   const [studentRegFullName, setStudentRegFullName] = useState("");
   const [studentRegBatchNo, setStudentRegBatchNo] = useState("");
   const [studentRegNo, setStudentRegNo] = useState("");
+  const [studentRegNoError, setStudentRegNoError] = useState("");
   const [studentRegDepartment, setStudentRegDepartment] = useState("");
   const [studentRegSemester, setStudentRegSemester] = useState("");
   const [studentRegEmail, setStudentRegEmail] = useState("");
@@ -89,10 +90,12 @@ export default function AuthPage() {
   const [showStudentRegConfirmPassword, setShowStudentRegConfirmPassword] = useState(false);
   const [studentPasswordMismatch, setStudentPasswordMismatch] = useState(false);
   const [studentPasswordError, setStudentPasswordError] = useState("");
+  const [studentBatchError, setStudentBatchError] = useState("");
 
   // Alumni Registration
   const [alumniRegFullName, setAlumniRegFullName] = useState("");
   const [alumniRegNo, setAlumniRegNo] = useState("");
+  const [alumniRegNoError, setAlumniRegNoError] = useState("");
   const [alumniRegContactNo, setAlumniRegContactNo] = useState("");
   const [alumniRegDepartment, setAlumniRegDepartment] = useState("");
   const [alumniRegGradYear, setAlumniRegGradYear] = useState("");
@@ -104,6 +107,7 @@ export default function AuthPage() {
   const [showAlumniRegConfirmPassword, setShowAlumniRegConfirmPassword] = useState(false);
   const [alumniPasswordMismatch, setAlumniPasswordMismatch] = useState(false);
   const [alumniPasswordError, setAlumniPasswordError] = useState("");
+  const [alumniGradYearError, setAlumniGradYearError] = useState("");
 
   const openStudentRegistration = () => {
     setRegistrationType("student");
@@ -168,10 +172,18 @@ export default function AuthPage() {
       return;
     }
 
+    const currentYear = new Date().getFullYear();
+    if (parseInt(studentRegBatchNo) > currentYear) {
+      setStudentBatchError(`Batch year cannot be in the future (max ${currentYear})`);
+      return;
+    }
+
     try {
       setGlobalError("");
       setStudentPasswordMismatch(false);
       setStudentPasswordError("");
+      setStudentBatchError("");
+      setStudentRegNoError("");
       socketService.disconnect();
       const res = await API.post("/auth/register/student", {
         fullName: studentRegFullName,
@@ -193,7 +205,13 @@ export default function AuthPage() {
         (err.response
           ? "Registration failed"
           : "Cannot reach server. Is the backend running on the correct port?");
-      setGlobalError(msg);
+      if (msg.toLowerCase().includes("registration number")) {
+        setStudentRegNoError(msg);
+      } else if (msg.toLowerCase().includes("email")) {
+        setStudentRegEmailError(msg);
+      } else {
+        setGlobalError(msg);
+      }
     }
   };
 
@@ -213,10 +231,18 @@ export default function AuthPage() {
       return;
     }
 
+    const currentYear = new Date().getFullYear();
+    if (parseInt(alumniRegGradYear) > currentYear) {
+      setAlumniGradYearError(`Graduation year cannot be in the future (max ${currentYear})`);
+      return;
+    }
+
     try {
       setGlobalError("");
       setAlumniPasswordMismatch(false);
       setAlumniPasswordError("");
+      setAlumniGradYearError("");
+      setAlumniRegNoError("");
       socketService.disconnect();
       const res = await API.post("/auth/register/alumni", {
         fullName: alumniRegFullName,
@@ -239,7 +265,13 @@ export default function AuthPage() {
         (err.response
           ? "Registration failed"
           : "Cannot reach server. Is the backend running on the correct port?");
-      setGlobalError(msg);
+      if (msg.toLowerCase().includes("registration number")) {
+        setAlumniRegNoError(msg);
+      } else if (msg.toLowerCase().includes("email")) {
+        setAlumniRegEmailError(msg);
+      } else {
+        setGlobalError(msg);
+      }
     }
   };
 
@@ -396,6 +428,8 @@ export default function AuthPage() {
           </button>
         </div>
       </div>
+
+      {/* ── Student Registration ── */}
       <div
         className={`registration-container ${studentRegActive ? "slide-up-active" : ""}`}
         inert={!studentRegActive ? "" : undefined}
@@ -406,27 +440,38 @@ export default function AuthPage() {
           </div>
           <h2 className="registration-form-panel-title">Student Registration</h2>
           <div className="registration-form">
+            {/* ── FIX: Full Name now wrapped in form-field-wrapper to match sibling column ── */}
             <div className="form-row">
-              <input
-                className="auth-input"
-                placeholder="Full Name"
-                type="text"
-                required
-                value={studentRegFullName}
-                onChange={(e) => setStudentRegFullName(e.target.value)}
-              />
-              <input
-                className="auth-input"
-                placeholder="Registration Number  (e.g. BSCS-021....)"
-                required
-                value={studentRegNo}
-                onChange={(e) => setStudentRegNo(e.target.value)}
-              />
+              <div className="form-field-wrapper">
+                <input
+                  className="auth-input"
+                  placeholder="Full Name"
+                  type="text"
+                  required
+                  value={studentRegFullName}
+                  onChange={(e) => setStudentRegFullName(e.target.value)}
+                />
+              </div>
+              <div className="form-field-wrapper">
+                <input
+                  className={`auth-input ${studentRegNoError ? "input-error" : ""}`}
+                  placeholder="Registration Number  (e.g. BSCS-021....)"
+                  required
+                  value={studentRegNo}
+                  onChange={(e) => {
+                    setStudentRegNo(e.target.value);
+                    setStudentRegNoError("");
+                  }}
+                />
+                {studentRegNoError && (
+                  <p className="error-message">{studentRegNoError}</p>
+                )}
+              </div>
             </div>
             <div className="form-row">
               <div className="form-field-wrapper">
                 <input
-                  className={`auth-input ${studentRegEmailError || globalError ? "input-error" : ""}`}
+                  className={`auth-input ${studentRegEmailError ? "input-error" : ""}`}
                   placeholder="Email"
                   type="email"
                   required
@@ -437,9 +482,7 @@ export default function AuthPage() {
                     setGlobalError("");
                   }}
                 />
-                <p className="error-message">
-                  {globalError || studentRegEmailError || ""}
-                </p>
+                <p className="error-message">{studentRegEmailError || ""}</p>
               </div>
               <div className="form-field-wrapper">
                 <input
@@ -482,13 +525,19 @@ export default function AuthPage() {
               </div>
               <div className="form-field-wrapper">
                 <input
-                  className="auth-input"
+                  className={`auth-input ${studentBatchError ? "input-error" : ""}`}
                   type="tel"
                   required
                   placeholder="Batch No  (e.g. 2022)"
                   value={studentRegBatchNo}
-                  onChange={(e) => setStudentRegBatchNo(e.target.value)}
+                  onChange={(e) => {
+                    setStudentRegBatchNo(e.target.value);
+                    setStudentBatchError("");
+                  }}
                 />
+                {studentBatchError && (
+                  <p className="error-message">{studentBatchError}</p>
+                )}
               </div>
             </div>
             <div className="form-row">
@@ -531,6 +580,9 @@ export default function AuthPage() {
                 />
               </div>
             </div>
+            {globalError && registrationType === "student" && (
+              <p className="error-message" style={{ textAlign: "center" }}>{globalError}</p>
+            )}
             <button type="submit" className="auth-button registration-button">
               Register
             </button>
@@ -541,6 +593,8 @@ export default function AuthPage() {
                 setShowRegistration(false);
                 setGlobalError("");
                 setStudentRegEmailError("");
+                setStudentBatchError("");
+                setStudentRegNoError("");
               }}
             >
               Back to Login
@@ -548,6 +602,8 @@ export default function AuthPage() {
           </div>
         </form>
       </div>
+
+      {/* ── Alumni Registration ── */}
       <div
         className={`registration-container ${alumniRegActive ? "slide-up-active" : ""}`}
         inert={!alumniRegActive ? "" : undefined}
@@ -558,27 +614,38 @@ export default function AuthPage() {
           </div>
           <h2 className="registration-form-panel-title">Alumni Registration</h2>
           <div className="registration-form">
+            {/* ── FIX: Full Name now wrapped in form-field-wrapper to match sibling column ── */}
             <div className="form-row">
-              <input
-                className="auth-input"
-                placeholder="Full Name"
-                type="text"
-                required
-                value={alumniRegFullName}
-                onChange={(e) => setAlumniRegFullName(e.target.value)}
-              />
-              <input
-                className="auth-input"
-                placeholder="Registration Number,  (e.g. BSCS-021....)"
-                required
-                value={alumniRegNo}
-                onChange={(e) => setAlumniRegNo(e.target.value)}
-              />
+              <div className="form-field-wrapper">
+                <input
+                  className="auth-input"
+                  placeholder="Full Name"
+                  type="text"
+                  required
+                  value={alumniRegFullName}
+                  onChange={(e) => setAlumniRegFullName(e.target.value)}
+                />
+              </div>
+              <div className="form-field-wrapper">
+                <input
+                  className={`auth-input ${alumniRegNoError ? "input-error" : ""}`}
+                  placeholder="Registration Number,  (e.g. BSCS-021....)"
+                  required
+                  value={alumniRegNo}
+                  onChange={(e) => {
+                    setAlumniRegNo(e.target.value);
+                    setAlumniRegNoError("");
+                  }}
+                />
+                {alumniRegNoError && (
+                  <p className="error-message">{alumniRegNoError}</p>
+                )}
+              </div>
             </div>
             <div className="form-row">
               <div className="form-field-wrapper">
                 <input
-                  className={`auth-input ${alumniRegEmailError || globalError ? "input-error" : ""}`}
+                  className={`auth-input ${alumniRegEmailError ? "input-error" : ""}`}
                   placeholder="Email"
                   type="email"
                   required
@@ -589,20 +656,21 @@ export default function AuthPage() {
                     setGlobalError("");
                   }}
                 />
-                <p className="error-message">
-                  {globalError || alumniRegEmailError || ""}
-                </p>
+                <p className="error-message">{alumniRegEmailError || ""}</p>
               </div>
               <div className="form-field-wrapper">
                 <input
-                  className="auth-input"
+                  className={`auth-input ${alumniGradYearError ? "input-error" : ""}`}
                   type="text"
                   required
                   placeholder="Graduation Year,  (e.g. 2024)"
                   value={alumniRegGradYear}
-                  onChange={(e) => setAlumniRegGradYear(e.target.value)}
+                  onChange={(e) => {
+                    setAlumniRegGradYear(e.target.value);
+                    setAlumniGradYearError("");
+                  }}
                 />
-                <p className="error-message">{""}</p>
+                <p className="error-message">{alumniGradYearError || ""}</p>
               </div>
             </div>
             <div className="form-row">
@@ -684,6 +752,9 @@ export default function AuthPage() {
                 />
               </div>
             </div>
+            {globalError && registrationType === "alumni" && (
+              <p className="error-message" style={{ textAlign: "center" }}>{globalError}</p>
+            )}
             <button type="submit" className="auth-button registration-button">
               Register
             </button>
@@ -691,6 +762,8 @@ export default function AuthPage() {
               setShowRegistration(false);
               setGlobalError("");
               setAlumniRegEmailError("");
+              setAlumniGradYearError("");
+              setAlumniRegNoError("");
             }}>
               Back to Login
             </button>

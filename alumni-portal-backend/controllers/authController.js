@@ -46,8 +46,11 @@ exports.registerStudent = async (req, res) => {
     const userExists = await User.findOne({ email: normalizedEmail });
     if (userExists) return errorResponse(res, 'User already exists with this email');
 
-    const regNoExists = await Student.findOne({ regNo });
-    if (regNoExists) return errorResponse(res, 'Registration number already exists');
+    const regNoExistsInStudent = await Student.findOne({ regNo });
+    if (regNoExistsInStudent) return errorResponse(res, 'Registration number already exists');
+
+    const regNoExistsInAlumni = await Alumni.findOne({ regNo });
+    if (regNoExistsInAlumni) return errorResponse(res, 'Registration number already exists');
 
     const user = await User.create({ email: normalizedEmail, password, fullName, role: 'student' });
 
@@ -100,8 +103,11 @@ exports.registerAlumni = async (req, res) => {
     const userExists = await User.findOne({ email: normalizedEmail });
     if (userExists) return errorResponse(res, 'User already exists with this email');
 
-    const alumniExists = await Alumni.findOne({ regNo });
-    if (alumniExists) return errorResponse(res, 'Registration number already exists for an alumni');
+    const regNoExistsInAlumni = await Alumni.findOne({ regNo });
+    if (regNoExistsInAlumni) return errorResponse(res, 'Registration number already exists');
+
+    const regNoExistsInStudent = await Student.findOne({ regNo });
+    if (regNoExistsInStudent) return errorResponse(res, 'Registration number already exists');
 
     const user = await User.create({ email: normalizedEmail, password, fullName, role: 'alumni' });
 
